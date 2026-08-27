@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#09090b">
+<title>Damiøn — Services</title>
+<meta name="description" content="Damiøn — professional mixing, mastering and custom music production services.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="services">
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="index.html"><img src="assets/logo.svg" alt="Damiøn logo"><span class="brand-name">Damiøn</span></a>
+    <nav class="navlinks" aria-label="Primary">
+      <a class="" href="index.html">Home</a>
+      <a class="active" href="services.html">Services</a>
+      <a class="" href="portfolio.html">Portfolio</a>
+      <a class="" href="how-it-works.html">How It Works</a>
+      <a class="" href="pricing.html">Pricing</a>
+      <a class="" href="about.html">About</a>
+      <a class="" href="faq.html">FAQ</a>
+      <a class="" href="contact.html">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn" href="contact.html">Contact</a>
+      <a class="btn primary" href="services.html">Start a Project</a>
+      <button class="btn icon" aria-label="Cart" onclick="openCart()">🛒<span id="cartCount" class="count">0</span></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="page-hero">
+  <div class="wrap">
+    <div class="kicker">Services</div>
+    <h1>Professional services for every stage of the track.</h1>
+    <p>Production, mixing, mastering and custom work with clear package options and a mobile-friendly service configurator.</p>
+  </div>
+</section>
+<section class="section" style="padding-top:28px">
+  <div class="wrap">
+    <div id="serviceList" class="service-list"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap footer-grid">
+    <div>
+      <div class="footer-brand"><img src="assets/logo.svg" alt=""><b>Damiøn</b></div>
+      <p>Professional music production services for artists, singers and creators who want a polished final sound.</p>
+    </div>
+    <div>
+      <div class="foot-title">Navigate</div>
+      <div class="footer-links">
+        <a href="services.html">Services</a><a href="portfolio.html">Portfolio</a><a href="pricing.html">Pricing</a>
+        <a href="how-it-works.html">How It Works</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a>
+      </div>
+    </div>
+    <div>
+      <div class="foot-title">Legal</div>
+      <div class="footer-links">
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="refund.html">Refund Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="mobilebar">
+  <nav>
+    <a href="index.html"><b>⌂</b>Home</a>
+    <a href="services.html"><b>＋</b>Services</a>
+    <a href="portfolio.html"><b>▶</b>Work</a>
+    <button onclick="openCart()"><b>□</b>Cart</button>
+  </nav>
+</div>
+
+<div id="drawerBg" class="drawer-bg" onclick="closeCart()"></div>
+<aside id="cartDrawer" class="drawer" aria-label="Cart">
+  <div class="drawer-head"><b>Cart</b><button class="btn icon" onclick="closeCart()">×</button></div>
+  <div id="cartItems" class="drawer-body"></div>
+  <div class="drawer-foot"><div class="total"><span>Total</span><span id="cartTotal">€0.00</span></div><button class="btn primary" style="width:100%" onclick="openCheckout()">Continue to checkout</button></div>
+</aside>
+
+<div id="configModal" class="modal-bg" onclick="if(event.target===this)closeModal('configModal')">
+  <div class="modal">
+    <div class="modal-head"><div><div class="kicker">Configure service</div><h3 id="cfgTitle" style="margin:8px 0 0;font-size:30px;letter-spacing:-.04em"></h3></div><button class="btn icon" onclick="closeModal('configModal')">×</button></div>
+    <div class="modal-body">
+      <p id="cfgDesc" style="color:var(--muted);line-height:1.7;margin-top:0"></p>
+      <h4>Package</h4><div id="packages" class="packages"></div>
+      <h4>Optional extras</h4><div id="addons" class="addons"></div>
+      <div class="total" style="margin-top:20px"><span>Your total</span><span id="cfgTotal">€0.00</span></div>
+      <button class="btn primary" style="width:100%" onclick="addConfigured()">Add to cart</button>
+    </div>
+  </div>
+</div>
+
+<div id="checkoutModal" class="modal-bg" onclick="if(event.target===this)closeModal('checkoutModal')">
+  <div class="modal">
+    <div class="modal-head"><div><div class="kicker">Secure checkout</div><h3 style="margin:8px 0 0;font-size:30px;letter-spacing:-.04em">Project details</h3></div><button class="btn icon" onclick="closeModal('checkoutModal')">×</button></div>
+    <div class="modal-body checkout-grid">
+      <form id="checkoutForm" class="formgrid">
+        <div class="field"><label>First name</label><input id="first" autocomplete="given-name" maxlength="80" required></div>
+        <div class="field"><label>Last name</label><input id="last" autocomplete="family-name" maxlength="80" required></div>
+        <div class="field full"><label>Email</label><input id="email" type="email" autocomplete="email" maxlength="254" required></div>
+        <div class="field"><label>Artist name</label><input id="artist" maxlength="120"></div>
+        <div class="field"><label>Country</label><input id="country" autocomplete="country-name" maxlength="80" required></div>
+        <div class="field full"><label>Project name</label><input id="projectName" maxlength="160" required></div>
+        <div class="field full"><label>Project notes</label><textarea id="notes" rows="4" maxlength="4000" placeholder="Tell me what you want to achieve, references, deadlines or anything important."></textarea></div>
+        <div class="field full"><div class="note">Payments are processed securely by PayPal. Damiøn never receives or stores your card details.</div></div>
+        <div class="field full"><button id="checkoutContinue" class="btn primary" type="submit">Continue to PayPal</button></div>
+        <div class="field full"><div id="checkoutStatus" class="checkout-status" aria-live="polite"></div></div>
+        <div id="paypalWrap" class="field full paypal-wrap" hidden><div id="paypalButtons"></div><button class="btn" type="button" style="width:100%;margin-top:10px" onclick="resetCheckoutPayment()">Edit project details</button></div>
+      </form>
+      <aside class="summary">
+        <h4 style="margin:0 0 14px">Order summary</h4>
+        <div id="checkoutSummary"></div>
+        <div class="total" style="margin-top:15px"><span>Total</span><span id="checkoutTotal">€0.00</span></div>
+        <p class="small-muted" style="margin-top:12px">Final prices are verified by the secure backend before PayPal creates the payment.</p>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div id="genericModal" class="modal-bg" onclick="if(event.target===this)closeModal('genericModal')">
+  <div class="modal">
+    <div class="modal-head"><h3 id="genericTitle" style="margin:0;font-size:24px">Info</h3><button class="btn icon" onclick="closeModal('genericModal')">×</button></div>
+    <div id="genericBody" class="modal-body"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast">Saved</div>
+<audio id="a0"></audio><audio id="a1"></audio><audio id="a2"></audio>
+<script src="app.js"></script>
+</body></html>
