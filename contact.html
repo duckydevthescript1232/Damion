@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#09090b">
+<title>Damiøn — Contact</title>
+<meta name="description" content="Damiøn — professional mixing, mastering and custom music production services.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="contact">
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="index.html"><img src="assets/logo.svg" alt="Damiøn logo"><span class="brand-name">Damiøn</span></a>
+    <nav class="navlinks" aria-label="Primary">
+      <a href="index.html">Home</a><a href="services.html">Services</a><a href="portfolio.html">Portfolio</a><a href="how-it-works.html">How It Works</a><a href="pricing.html">Pricing</a><a href="about.html">About</a><a href="faq.html">FAQ</a><a class="active" href="contact.html">Contact</a>
+    </nav>
+    <div class="nav-actions"><a class="btn" href="contact.html">Contact</a><a class="btn primary" href="services.html">Start a Project</a><button class="btn icon" aria-label="Cart" onclick="openCart()">🛒<span id="cartCount" class="count">0</span></button></div>
+  </div>
+</header>
+<main>
+<section class="page-hero"><div class="wrap"><div class="kicker">Contact</div><h1>Not sure which service you need?</h1><p>Use this page to start a conversation about your track, deadline or the service you need. Messages are sent directly through the site.</p></div></section>
+<section class="section" style="padding-top:24px"><div class="wrap contact-grid"><div class="card" style="padding:24px"><div class="kicker">Project inquiry</div><h3 style="font-size:38px;line-height:1.02;letter-spacing:-.05em;margin:10px 0 14px">Tell me about your track.</h3><p>Genre, current stage, what you need help with and any references all help the conversation start faster.</p></div><form id="contactForm" class="formgrid card" style="padding:20px"><div class="field"><label>Name</label><input id="cn" maxlength="120" required></div><div class="field"><label>Email</label><input id="ce" type="email" maxlength="254" required></div><div class="field full"><label>Subject</label><input id="cs" value="Project inquiry" maxlength="180" required></div><div class="field full"><label>Message</label><textarea id="cm" rows="6" maxlength="5000" required placeholder="Tell me about your project, genre, current stage and what you need help with."></textarea></div><div class="hp-field" aria-hidden="true"><label>Website<input id="cw" tabindex="-1" autocomplete="off"></label></div><div class="field full"><button class="btn primary" type="submit">Send message</button></div><div id="contactStatus" class="checkout-status" aria-live="polite"></div></form></div></section>
+</main>
+<footer><div class="wrap footer-grid"><div><div class="footer-brand"><img src="assets/logo.svg" alt=""><b>Damiøn</b></div><p>Professional music production services for artists, singers and creators who want a polished final sound.</p></div><div><div class="foot-title">Navigate</div><div class="footer-links"><a href="services.html">Services</a><a href="portfolio.html">Portfolio</a><a href="pricing.html">Pricing</a><a href="how-it-works.html">How It Works</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a></div></div><div><div class="foot-title">Legal</div><div class="footer-links"><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a><a href="refund.html">Refund Policy</a></div></div></div></footer>
+<div class="mobilebar"><nav><a href="index.html"><b>⌂</b>Home</a><a href="services.html"><b>＋</b>Services</a><a href="portfolio.html"><b>▶</b>Work</a><button onclick="openCart()"><b>□</b>Cart</button></nav></div>
+<div id="drawerBg" class="drawer-bg" onclick="closeCart()"></div><aside id="cartDrawer" class="drawer" aria-label="Cart"><div class="drawer-head"><b>Cart</b><button class="btn icon" onclick="closeCart()">×</button></div><div id="cartItems" class="drawer-body"></div><div class="drawer-foot"><div class="total"><span>Total</span><span id="cartTotal">€0.00</span></div><a class="btn primary" style="width:100%" href="services.html">Choose a service</a></div></aside>
+<div id="toast" class="toast">Saved</div><audio id="a0"></audio><audio id="a1"></audio><audio id="a2"></audio><script src="app.js"></script>
+</body></html>
