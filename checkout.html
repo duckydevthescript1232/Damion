@@ -3,44 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#09090b">
-  <title>Checkout — Damiøn</title>
-  <meta name="description" content="Secure checkout for Damiøn music production services.">
+  <meta name="theme-color" content="#060806">
+  <title>Checkout — Damiønmusic</title>
+  <meta name="description" content="Secure checkout for Damiønmusic production services.">
   <link rel="stylesheet" href="/styles.css?v=20260828-4">
   <link rel="stylesheet" href="/checkout.css?v=20260828-1">
+  <link rel="stylesheet" href="/theme-v3.css?v=20260828-1">
 </head>
 <body class="checkout-page">
-  <header class="checkout-header">
-    <div class="checkout-shell checkout-topbar">
-      <a class="brand" href="/"><img src="/assets/logo.svg" alt="Damiøn logo"><span class="brand-name">Damiøn</span></a>
-      <a class="checkout-back" href="/services">← Back to services</a>
-    </div>
-  </header>
-
+  <header class="checkout-header"><div class="checkout-shell checkout-topbar"><a class="brand" href="/"><img src="/assets/logo.svg" alt="Damiønmusic logo"><span class="brand-name">Damiønmusic</span></a><a class="checkout-back" href="/services">← Back to services</a></div></header>
   <main class="checkout-shell checkout-main">
-    <section class="checkout-intro">
-      <div>
-        <span class="checkout-eyebrow">Secure checkout</span>
-        <h1>Finish your booking.</h1>
-        <p>Tell me a little about your project, review your order and choose how you want to pay.</p>
-      </div>
-      <div class="checkout-trust"><span>🔒</span><div><b>Protected payment</b><small>Payment is handled by PayPal</small></div></div>
-    </section>
-
-    <div id="emptyCheckout" class="checkout-empty" hidden>
-      <div class="checkout-empty-icon">♪</div>
-      <h2>Your cart is empty</h2>
-      <p>Choose a music service first, then come back here to complete your booking.</p>
-      <a class="btn primary" href="/services#start">Browse services</a>
-    </div>
-
+    <section class="checkout-intro"><div><span class="checkout-eyebrow">Secure checkout</span><h1>Finish your booking.</h1><p>Tell us about your project, choose your preferred delivery format and pay securely.</p></div><div class="checkout-trust"><span>🔒</span><div><b>Protected payment</b><small>Payment is handled by PayPal</small></div></div></section>
+    <div id="emptyCheckout" class="checkout-empty" hidden><div class="checkout-empty-icon">♪</div><h2>Your cart is empty</h2><p>Choose a music service first, then come back here to complete your booking.</p><a class="btn primary" href="/services#start">Browse services</a></div>
     <div id="checkoutContent" class="checkout-layout">
       <section class="checkout-card checkout-details-card">
-        <div class="checkout-step-head">
-          <span class="checkout-step-number">1</span>
-          <div><h2>Your project</h2><p>These details help me understand what you need.</p></div>
-        </div>
-
+        <div class="checkout-step-head"><span class="checkout-step-number">1</span><div><h2>Your project</h2><p>These details stay connected to your order room after payment.</p></div></div>
         <form id="checkoutPageForm" novalidate>
           <div class="checkout-fields">
             <label class="checkout-field"><span>First name</span><input id="coFirst" required autocomplete="given-name" placeholder="First name"></label>
@@ -49,54 +26,23 @@
             <label class="checkout-field"><span>Artist name <em>Optional</em></span><input id="coArtist" autocomplete="organization" placeholder="Artist / producer name"></label>
             <label class="checkout-field"><span>Country</span><input id="coCountry" required autocomplete="country-name" placeholder="Netherlands"></label>
             <label class="checkout-field checkout-field-wide"><span>Project name</span><input id="coProject" required placeholder="Track or project title"></label>
+            <label class="checkout-field checkout-field-wide"><span>Preferred delivery</span><select id="coDelivery" required><option value="Audio files (WAV/MP3/Stems)">Audio files — WAV / MP3 / stems</option><option value="FL Studio project + audio">FL Studio project + audio</option><option value="Discuss in order chat">Not sure — discuss in order chat</option></select></label>
             <label class="checkout-field checkout-field-wide"><span>Project notes <em>Optional</em></span><textarea id="coNotes" rows="5" placeholder="What sound are you going for? Add references, deadlines or anything important."></textarea></label>
           </div>
-
-          <button id="continuePayment" class="checkout-continue" type="submit">
-            <span>Continue to payment</span><span>→</span>
-          </button>
+          <button id="continuePayment" class="checkout-continue" type="submit"><span>Continue to payment</span><span>→</span></button>
         </form>
-
         <div id="paymentSection" class="checkout-payment-section" hidden>
-          <div class="checkout-divider"></div>
-          <div class="checkout-step-head">
-            <span class="checkout-step-number">2</span>
-            <div><h2>Payment</h2><p>Choose PayPal or a supported card option below.</p></div>
-          </div>
-
-          <div id="paymentLoading" class="checkout-payment-loading">
-            <span class="checkout-spinner" aria-hidden="true"></span>
-            <div><b>Preparing secure payment…</b><small>This usually takes a moment.</small></div>
-          </div>
-
-          <div id="paypalCheckoutButtons" class="checkout-paypal-buttons" hidden></div>
-          <div id="checkoutMessage" class="checkout-message" aria-live="polite"></div>
-          <button id="editDetails" type="button" class="checkout-edit">← Edit project details</button>
-          <p class="checkout-privacy">Your payment details are entered directly into PayPal's secure checkout. Damiøn does not receive or store your card number, expiry date or CVV.</p>
+          <div class="checkout-divider"></div><div class="checkout-step-head"><span class="checkout-step-number">2</span><div><h2>Payment</h2><p>Complete your booking with PayPal or a supported card option.</p></div></div>
+          <div id="paymentLoading" class="checkout-payment-loading"><span class="checkout-spinner" aria-hidden="true"></span><div><b>Preparing secure payment…</b><small>This usually takes a moment.</small></div></div>
+          <div id="paypalCheckoutButtons" class="checkout-paypal-buttons" hidden></div><div id="checkoutMessage" class="checkout-message" aria-live="polite"></div><button id="editDetails" type="button" class="checkout-edit">← Edit project details</button>
+          <p class="checkout-privacy">Payment details are entered directly into PayPal's secure checkout. Damiønmusic does not receive or store your card number, expiry date or CVV.</p>
         </div>
       </section>
-
-      <aside class="checkout-card checkout-summary-card">
-        <div class="checkout-summary-title"><div><span class="checkout-eyebrow">Your order</span><h2>Order summary</h2></div><a href="/services" aria-label="Edit order">Edit</a></div>
-        <div id="checkoutItems" class="checkout-items"></div>
-        <div class="checkout-total-row"><span>Total</span><strong id="checkoutPageTotal">€0.00</strong></div>
-        <div class="checkout-summary-note"><span>✓</span><p><b>Clear pricing</b><br>No extra checkout fees from Damiøn.</p></div>
-        <div class="checkout-summary-note"><span>✓</span><p><b>Direct communication</b><br>Your project can be discussed after booking.</p></div>
-      </aside>
+      <aside class="checkout-card checkout-summary-card"><div class="checkout-summary-title"><div><span class="checkout-eyebrow">Your order</span><h2>Order summary</h2></div><a href="/services" aria-label="Edit order">Edit</a></div><div id="checkoutItems" class="checkout-items"></div><div class="checkout-total-row"><span>Total</span><strong id="checkoutPageTotal">€0.00</strong></div><div class="checkout-summary-note"><span>✓</span><p><b>Private order room</b><br>Track progress and message support after payment.</p></div><div class="checkout-summary-note"><span>✓</span><p><b>Final delivery</b><br>Your completed files appear inside your order page.</p></div></aside>
     </div>
-
-    <section id="checkoutSuccess" class="checkout-success" hidden>
-      <div class="checkout-success-mark">✓</div>
-      <span class="checkout-eyebrow">Booking confirmed</span>
-      <h1>Thank you.</h1>
-      <p>Your payment was completed successfully. Keep your PayPal receipt for your records.</p>
-      <div class="checkout-success-order"><span>Order reference</span><strong id="successOrderId">Confirmed</strong></div>
-      <div class="checkout-success-actions"><a class="btn primary" href="/">Back to home</a><a class="btn" href="/contact">Contact Damiøn</a></div>
-    </section>
+    <section id="checkoutSuccess" class="checkout-success" hidden><div class="checkout-success-mark">✓</div><span class="checkout-eyebrow">Booking confirmed</span><h1>You're booked.</h1><p id="successText">Your payment was completed successfully and your private order room is being prepared.</p><div class="checkout-success-order"><span>Damiønmusic order</span><strong id="successOrderId">Confirmed</strong></div><div class="checkout-success-actions"><a id="successTrackOrder" class="btn primary" href="/order">Track your order</a><a class="btn" href="/contact">Get support</a></div><p class="checkout-privacy" style="margin-top:18px">Keep your PayPal receipt. If branded email notifications are enabled, your tracking link will also be sent to your email.</p></section>
   </main>
-
-  <footer class="checkout-footer"><div class="checkout-shell"><span>© Damiøn</span><div><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/refund">Refund policy</a></div></div></footer>
-
-  <script src="/checkout.js?v=20260828-1"></script>
+  <footer class="checkout-footer"><div class="checkout-shell"><span>© Damiønmusic</span><div><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/refund">Refund policy</a></div></div></footer>
+  <script src="/checkout.js?v=20260828-2"></script>
 </body>
 </html>
