@@ -1,4 +1,15 @@
-/* Homepage layout fixes: image-led hero and clean single-track player */
+/* Homepage layout fixes: readable text + FL Studio hero + clean single-track player */
+.hero-home.hero-studio-layout{padding:76px 0 62px!important}
+.hero-home.hero-studio-layout .hero-grid{display:grid!important;grid-template-columns:minmax(360px,.82fr) minmax(520px,1.18fr)!important;gap:52px!important;align-items:center!important}
+.hero-home.hero-studio-layout .hero-copy{max-width:560px!important}
+.hero-home.hero-studio-layout .hero-copy .kicker{margin-bottom:15px!important;font-size:11px!important;letter-spacing:.15em!important;color:#ff526d!important}
+.hero-home.hero-studio-layout .hero-copy h1{font-size:clamp(58px,6vw,92px)!important;line-height:.9!important;letter-spacing:-.07em!important;margin:0 0 24px!important;max-width:560px!important}
+.hero-home.hero-studio-layout .hero-copy h1 span{display:inline-block!important;color:#ff3658!important;background:none!important;-webkit-text-fill-color:initial!important;filter:none!important}
+.hero-home.hero-studio-layout .hero-copy p{max-width:520px!important;font-size:16px!important;line-height:1.65!important;color:#b0b0b8!important;margin:0 0 26px!important}
+.hero-home.hero-studio-layout .hero-cta{display:flex!important;gap:12px!important;flex-wrap:wrap!important}
+.hero-home.hero-studio-layout .hero-studio-shot{width:100%!important;max-width:none!important;margin:0!important}
+.hero-home.hero-studio-layout .hero-studio-shot img{width:100%!important;height:auto!important;display:block!important}
+
 #preview .dm-preview-shell{display:grid!important;grid-template-columns:minmax(230px,300px) minmax(0,1fr)!important;align-items:center!important;gap:34px!important;width:100%!important;padding:25px 28px!important;border-radius:14px!important;background:rgba(8,8,11,.88)!important;border:1px solid rgba(255,255,255,.09)!important;box-shadow:0 18px 48px rgba(0,0,0,.26)!important;backdrop-filter:none!important}
 #preview .dm-preview-copy{min-width:0!important;width:auto!important;max-width:300px!important}
 #preview .dm-preview-label{display:block!important;margin:0 0 8px!important;color:#ff526d!important;font-size:10px!important;font-weight:850!important;letter-spacing:.14em!important;text-transform:uppercase!important;line-height:1.2!important}
@@ -11,4 +22,6 @@
 #preview .dm-time{font-size:11px!important;line-height:1!important;color:#8c8c96!important}
 #preview .dm-volume-wrap{display:grid!important;grid-template-columns:auto minmax(70px,1fr)!important;align-items:center!important;gap:9px!important;min-width:0!important;color:#b8b8c0!important;font-size:10px!important;font-weight:800!important;letter-spacing:.08em!important}
 #preview .dm-volume{width:100%!important;min-width:0!important;max-width:none!important}
-@media(max-width:760px){#preview .dm-preview-shell{grid-template-columns:1fr!important;gap:20px!important;padding:20px!important}#preview .dm-preview-copy{max-width:none!important}#preview .dm-player-controls{grid-template-columns:50px minmax(0,1fr)!important}#preview .dm-volume-wrap{grid-column:1/-1!important;grid-template-columns:36px minmax(0,1fr)!important}}
+
+@media(max-width:1050px){.hero-home.hero-studio-layout .hero-grid{grid-template-columns:1fr!important;gap:34px!important}.hero-home.hero-studio-layout .hero-copy{max-width:720px!important}.hero-home.hero-studio-layout .hero-copy h1{max-width:720px!important;font-size:clamp(54px,9vw,84px)!important}.hero-home.hero-studio-layout .hero-studio-shot{max-width:920px!important}}
+@media(max-width:760px){.hero-home.hero-studio-layout{padding:48px 0 42px!important}.hero-home.hero-studio-layout .hero-grid{gap:28px!important}.hero-home.hero-studio-layout .hero-copy h1{font-size:clamp(48px,15vw,70px)!important;line-height:.92!important}.hero-home.hero-studio-layout .hero-copy p{font-size:15px!important}.hero-home.hero-studio-layout .hero-studio-shot{border-radius:8px!important}#preview .dm-preview-shell{grid-template-columns:1fr!important;gap:20px!important;padding:20px!important}#preview .dm-preview-copy{max-width:none!important}#preview .dm-player-controls{grid-template-columns:50px minmax(0,1fr)!important}#preview .dm-volume-wrap{grid-column:1/-1!important;grid-template-columns:36px minmax(0,1fr)!important}}
