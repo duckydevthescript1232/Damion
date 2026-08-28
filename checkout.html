@@ -14,7 +14,7 @@
 <body class="checkout-page">
   <header class="checkout-header"><div class="checkout-shell checkout-topbar"><a class="brand" href="/"><img src="/assets/logo.svg" alt="DamianMusic logo"><span class="brand-name">DamianMusic</span></a><a class="checkout-back" href="/services">← Back to services</a></div></header>
   <main class="checkout-shell checkout-main">
-    <section class="checkout-intro"><div><span class="checkout-eyebrow">Secure checkout</span><h1>Finish your booking.</h1><p>Tell us about your project, choose your preferred delivery format and pay securely.</p></div><div class="checkout-trust"><span>🔒</span><div><b>Protected payment</b><small>PayPal + iDEAL supported</small></div></div></section>
+    <section class="checkout-intro"><div><span class="checkout-eyebrow">Secure checkout</span><h1>Finish your booking.</h1><p>Tell us about your project, choose your preferred delivery format and pay securely.</p></div><div class="checkout-trust"><span>🔒</span><div><b>Protected payment</b><small>Available methods are shown at checkout</small></div></div></section>
     <div id="emptyCheckout" class="checkout-empty" hidden><div class="checkout-empty-icon">♪</div><h2>Your cart is empty</h2><p>Choose a music service first, then come back here to complete your booking.</p><a class="btn primary" href="/services#start">Browse services</a></div>
     <div id="checkoutContent" class="checkout-layout">
       <section class="checkout-card checkout-details-card">
@@ -33,7 +33,7 @@
           <button id="continuePayment" class="checkout-continue" type="submit"><span>Continue to payment</span><span>→</span></button>
         </form>
         <div id="paymentSection" class="checkout-payment-section" hidden>
-          <div class="checkout-divider"></div><div class="checkout-step-head"><span class="checkout-step-number">2</span><div><h2>Payment</h2><p>Pay with iDEAL, PayPal or another supported PayPal checkout option.</p></div></div>
+          <div class="checkout-divider"></div><div class="checkout-step-head"><span class="checkout-step-number">2</span><div><h2>Payment</h2><p id="paymentMethodHint">Checking available payment methods…</p></div></div>
           <div id="paymentLoading" class="checkout-payment-loading"><span class="checkout-spinner" aria-hidden="true"></span><div><b>Preparing secure payment…</b><small>This usually takes a moment.</small></div></div>
 
           <div id="idealCheckout" class="checkout-ideal" hidden>
@@ -48,7 +48,7 @@
           <div id="paypalSeparator" class="checkout-payment-separator" hidden><span>or use PayPal / card</span></div>
           <div id="paypalCheckoutButtons" class="checkout-paypal-buttons" hidden></div>
           <div id="checkoutMessage" class="checkout-message" aria-live="polite"></div><button id="editDetails" type="button" class="checkout-edit">← Edit project details</button>
-          <p class="checkout-privacy">Payment details are handled by PayPal's secure checkout. For iDEAL, you are redirected to your bank to approve the payment. DamianMusic does not receive or store your card or bank-login details.</p>
+          <p class="checkout-privacy">Payment details are handled by PayPal's secure checkout. If iDEAL is available, you are redirected to your bank to approve the payment. DamianMusic does not receive or store your card or bank-login details.</p>
         </div>
       </section>
       <aside class="checkout-card checkout-summary-card"><div class="checkout-summary-title"><div><span class="checkout-eyebrow">Your order</span><h2>Order summary</h2></div><a href="/services" aria-label="Edit order">Edit</a></div><div id="checkoutItems" class="checkout-items"></div><div class="checkout-total-row"><span>Total</span><strong id="checkoutPageTotal">€0.00</strong></div><div class="checkout-summary-note"><span>✓</span><p><b>Private order room</b><br>Track progress and message support after payment.</p></div><div class="checkout-summary-note"><span>✓</span><p><b>Final delivery</b><br>Your completed files appear inside your order page.</p></div></aside>
@@ -56,6 +56,6 @@
     <section id="checkoutSuccess" class="checkout-success" hidden><div class="checkout-success-mark">✓</div><span class="checkout-eyebrow">Booking confirmed</span><h1>You're booked.</h1><p id="successText">Your payment was completed successfully and your private order room is being prepared.</p><div class="checkout-success-order"><span>DamianMusic order</span><strong id="successOrderId">Confirmed</strong></div><div class="checkout-success-actions"><a id="successTrackOrder" class="btn primary" href="/order">Track your order</a><a class="btn" href="/contact">Get support</a></div><p class="checkout-privacy" style="margin-top:18px">Keep your payment receipt. If branded email notifications are enabled, your tracking link will also be sent to your email.</p></section>
   </main>
   <footer class="checkout-footer"><div class="checkout-shell"><span>© DamianMusic</span><div><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/refund">Refund policy</a></div></div></footer>
-  <script src="/checkout.js?v=20260829-1"></script>
+  <script src="/checkout.js?v=20260829-2"></script>
 </body>
 </html>
