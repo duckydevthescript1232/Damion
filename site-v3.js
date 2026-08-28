@@ -1,4 +1,5 @@
 (()=>{
+  if(!document.querySelector('link[data-dm-brandfx]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/brandfx.css?v=20260828-1';l.dataset.dmBrandfx='1';document.head.appendChild(l)}
   const BRAND='Damiønmusic';
   const fixBrandText=v=>String(v||'').replaceAll('Damiønmusicmusic',BRAND).replace(/Damiøn(?!music)/g,BRAND);
   document.querySelectorAll('.brand-name').forEach(el=>el.textContent=BRAND);
