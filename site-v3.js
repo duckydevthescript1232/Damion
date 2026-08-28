@@ -1,7 +1,7 @@
 (()=>{
   if(!document.querySelector('link[data-dm-brandfx]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/brandfx.css?v=20260828-1';l.dataset.dmBrandfx='1';document.head.appendChild(l)}
   const BRAND='DamianMusic';
-  const AUDIO='/assets/preview/damionmusic-preview.mp3?v=20260828-1';
+  const AUDIO='https://wutlhceqkioshepfbykf.supabase.co/storage/v1/object/public/service-media/site/damianmusic-preview-full.mp3?v=20260828-full-1';
   const fixBrandText=v=>String(v||'').replaceAll('Damiønmusicmusic',BRAND).replaceAll('Damiønmusic',BRAND).replaceAll('DAMIØNMUSIC','DAMIANMUSIC').replaceAll('Damiøn',BRAND).replaceAll('DAMIØN','DAMIANMUSIC');
 
   document.querySelectorAll('.brand-name').forEach(el=>el.textContent=BRAND);
@@ -35,12 +35,13 @@
   const previewHost=document.getElementById('trackList');
   if(previewHost){
     previewHost.innerHTML=`<div class="dm-preview-shell">
-      <div class="dm-preview-copy"><span class="dm-preview-label">DamianMusic / preview</span><div class="dm-preview-title">Official audio preview</div><div class="dm-preview-sub">One supplied track.</div></div>
-      <div class="dm-player-controls"><button class="dm-play" type="button" aria-label="Play audio">▶</button><div class="dm-seek-wrap"><input class="dm-range" type="range" min="0" max="100" value="0" aria-label="Track position"><div class="dm-time">0:00 / 0:00</div></div><label class="dm-volume-wrap"><span>VOL</span><input class="dm-volume" type="range" min="0" max="1" step="0.05" value="0.85" aria-label="Volume"></label></div>
+      <div class="dm-preview-copy"><span class="dm-preview-label">DamianMusic / preview</span><div class="dm-preview-title">Official audio preview</div><div class="dm-preview-sub">Full supplied track.</div></div>
+      <div class="dm-player-controls"><button class="dm-play" type="button" aria-label="Play audio" disabled>▶</button><div class="dm-seek-wrap"><input class="dm-range" type="range" min="0" max="100" value="0" aria-label="Track position" disabled><div class="dm-time">Loading audio…</div></div><label class="dm-volume-wrap"><span>VOL</span><input class="dm-volume" type="range" min="0" max="1" step="0.05" value="0.85" aria-label="Volume"></label></div>
     </div>`;
     const audio=new Audio(AUDIO);const play=previewHost.querySelector('.dm-play'),seek=previewHost.querySelector('.dm-range'),vol=previewHost.querySelector('.dm-volume'),time=previewHost.querySelector('.dm-time');audio.preload='metadata';audio.volume=.85;
     const fmt=s=>`${Math.floor((s||0)/60)}:${String(Math.floor((s||0)%60)).padStart(2,'0')}`;
-    play.addEventListener('click',()=>audio.paused?audio.play().catch(()=>{}):audio.pause());audio.addEventListener('play',()=>play.textContent='Ⅱ');audio.addEventListener('pause',()=>play.textContent='▶');audio.addEventListener('ended',()=>{play.textContent='▶';seek.value='0'});audio.addEventListener('loadedmetadata',()=>time.textContent=`0:00 / ${fmt(audio.duration)}`);audio.addEventListener('timeupdate',()=>{seek.value=audio.duration?String(audio.currentTime/audio.duration*100):'0';time.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`});seek.addEventListener('input',()=>{if(audio.duration)audio.currentTime=Number(seek.value)/100*audio.duration});vol.addEventListener('input',()=>audio.volume=Number(vol.value));
+    const ready=()=>{play.disabled=false;seek.disabled=false;time.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`};
+    play.addEventListener('click',()=>audio.paused?audio.play().catch(()=>{time.textContent='Could not play audio'}):audio.pause());audio.addEventListener('loadedmetadata',ready);audio.addEventListener('canplay',ready);audio.addEventListener('error',()=>{play.disabled=true;seek.disabled=true;time.textContent='Full preview is being updated…'});audio.addEventListener('play',()=>play.textContent='Ⅱ');audio.addEventListener('pause',()=>play.textContent='▶');audio.addEventListener('ended',()=>{play.textContent='▶';seek.value='0'});audio.addEventListener('timeupdate',()=>{seek.value=audio.duration?String(audio.currentTime/audio.duration*100):'0';time.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`});seek.addEventListener('input',()=>{if(audio.duration)audio.currentTime=Number(seek.value)/100*audio.duration});vol.addEventListener('input',()=>audio.volume=Number(vol.value));audio.load();
   }
 
   const hoverSelector='.service-row,.starter-card,.price-card,.dm-preview-shell,.hero-studio-shot,.brand';
