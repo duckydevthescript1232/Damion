@@ -1,6 +1,6 @@
 (()=>{
   if(!document.querySelector('link[data-dm-brandfx]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/brandfx.css?v=20260828-1';l.dataset.dmBrandfx='1';document.head.appendChild(l)}
-  if(!document.querySelector('script[data-dm-presence]')){const s=document.createElement('script');s.src='/presence.js?v=20260829-1';s.defer=true;s.dataset.dmPresence='1';document.head.appendChild(s)}
+  if(!document.querySelector('script[data-dm-presence]')){const s=document.createElement('script');s.src='/presence.js?v=20260829-2';s.defer=true;s.dataset.dmPresence='1';document.head.appendChild(s)}
   const BRAND='DamianMusic';
   const AUDIO='https://wutlhceqkioshepfbykf.supabase.co/storage/v1/object/public/service-media/site/damianmusic-preview-full.mp3?v=20260828-full-1';
   const fixBrandText=v=>String(v||'').replaceAll('Damiønmusicmusic',BRAND).replaceAll('Damiønmusic',BRAND).replaceAll('DAMIØNMUSIC','DAMIANMUSIC').replaceAll('Damiøn',BRAND).replaceAll('DAMIØN','DAMIANMUSIC');
