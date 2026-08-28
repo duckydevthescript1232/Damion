@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#050506">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Live Stats — DamianMusic</title>
+  <style>
+    :root{color-scheme:dark;--bg:#070709;--card:#111114;--line:#26262d;--text:#f5f5f7;--muted:#8d8d98;--red:#ff304f;--green:#55dc86}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% -10%,rgba(255,48,79,.12),transparent 34%),var(--bg);color:var(--text);font:14px/1.5 Inter,Arial,sans-serif;min-height:100vh}.wrap{width:min(980px,calc(100% - 28px));margin:0 auto;padding:38px 0 64px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:18px}.brand img{width:34px;height:34px}.back{color:#b7b7bf;text-decoration:none;border:1px solid var(--line);padding:10px 13px;border-radius:10px;background:#0d0d10}.eyebrow{font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#ff6379}.hero h1{font-size:clamp(40px,7vw,72px);line-height:.94;letter-spacing:-.06em;margin:8px 0 12px}.hero p{color:var(--muted);max-width:650px;margin:0 0 28px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:linear-gradient(180deg,#121216,#0d0d10);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 22px 50px rgba(0,0,0,.22)}.card.live{border-color:rgba(85,220,134,.32);box-shadow:0 0 35px rgba(85,220,134,.07)}.label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#777782;font-weight:850}.num{font-size:42px;line-height:1;font-weight:950;letter-spacing:-.06em;margin:12px 0 7px}.live .num{color:var(--green)}.sub{font-size:12px;color:var(--muted)}.status{margin-top:18px;padding:14px 16px;background:#0d0d10;border:1px solid var(--line);border-radius:13px;color:#898994;display:flex;justify-content:space-between;gap:12px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 14px rgba(85,220,134,.7);margin-right:8px}.error{color:#ff8092}.note{margin-top:18px;color:#70707a;font-size:12px;line-height:1.65}.refresh{border:0;background:var(--red);color:white;font-weight:900;padding:11px 14px;border-radius:10px;cursor:pointer}@media(max-width:760px){.grid{grid-template-columns:1fr 1fr}.top{align-items:flex-start}.hero h1{font-size:48px}}@media(max-width:430px){.grid{grid-template-columns:1fr}.status{display:block}.status span:last-child{display:block;margin-top:6px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="top"><div class="brand"><img src="/assets/logo.svg" alt="DamianMusic logo"><span>DamianMusic</span></div><a class="back" href="/">← Website</a></div>
+    <section class="hero"><div class="eyebrow">Website analytics</div><h1>Live visitors.</h1><p>See how many people are currently active on DamianMusic. This dashboard refreshes automatically every 10 seconds.</p></section>
+    <section class="grid">
+      <article class="card live"><div class="label">Online now</div><div class="num" id="online">—</div><div class="sub">Seen in the last 90 seconds</div></article>
+      <article class="card"><div class="label">Active 5 min</div><div class="num" id="active">—</div><div class="sub">Visitors recently active</div></article>
+      <article class="card"><div class="label">Visitors today</div><div class="num" id="today">—</div><div class="sub">Unique browser IDs seen today</div></article>
+      <article class="card"><div class="label">Total tracked</div><div class="num" id="total">—</div><div class="sub">Since this tracker was enabled</div></article>
+    </section>
+    <div class="status"><span id="status"><i class="dot"></i>Live tracking connected</span><span id="updated">Updating…</span></div>
+    <p class="note">This only stores a random browser ID, the current page path and timestamps. It does not store names, email addresses or bank/payment details. Numbers start from the moment this tracker was enabled.</p>
+  </main>
+  <script>
+    const ENDPOINT='https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damian-site-presence?action=stats';
+    const $=id=>document.getElementById(id);
+    async function load(){
+      try{
+        const r=await fetch(ENDPOINT,{cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not load stats');
+        $('online').textContent=d.online_now??0;$('active').textContent=d.active_5m??0;$('today').textContent=d.visitors_today??0;$('total').textContent=d.total_visitors??0;
+        $('status').className='';$('status').innerHTML='<i class="dot"></i>Live tracking connected';$('updated').textContent='Updated '+new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      }catch(e){$('status').className='error';$('status').textContent=e.message||'Could not load live stats';$('updated').textContent='Retrying…'}
+    }
+    load();setInterval(load,10000);
+  </script>
+</body>
+</html>
