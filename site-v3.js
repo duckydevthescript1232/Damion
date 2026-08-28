@@ -35,7 +35,7 @@
   const previewHost=document.getElementById('trackList');
   if(previewHost){
     previewHost.innerHTML=`<div class="dm-preview-shell">
-      <div class="dm-preview-copy"><span class="dm-preview-label">Damiøn / studio preview</span><div class="dm-preview-title">Official audio preview</div><div class="dm-preview-sub">One supplied track. No demo replacements.</div></div>
+      <div class="dm-preview-copy"><span class="dm-preview-label">Damiøn / preview</span><div class="dm-preview-title">Official audio preview</div><div class="dm-preview-sub">One supplied track.</div></div>
       <div class="dm-player-controls"><button class="dm-play" type="button" aria-label="Play audio">▶</button><div class="dm-seek-wrap"><input class="dm-range" type="range" min="0" max="100" value="0" aria-label="Track position"><div class="dm-time">0:00 / 0:00</div></div><label class="dm-volume-wrap"><span>VOL</span><input class="dm-volume" type="range" min="0" max="1" step="0.05" value="0.85" aria-label="Volume"></label></div>
     </div>`;
     const audio=new Audio(AUDIO);const play=previewHost.querySelector('.dm-play'),seek=previewHost.querySelector('.dm-range'),vol=previewHost.querySelector('.dm-volume'),time=previewHost.querySelector('.dm-time');audio.preload='metadata';audio.volume=.85;
