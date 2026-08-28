@@ -2,6 +2,11 @@ const DIRECT_PAYPAL_CLIENT_ID = "BAA6wn4RzBI6RFBOokMqSzQJCxrLjWFoLrYDbMHC_gVg-a6
 let __directPayPalLoaded = false;
 let __directPayPalRendered = false;
 
+window.openCheckout = function(){
+  if(!cart?.length){ toast("Add a service first"); return; }
+  window.location.href = "/checkout";
+};
+
 async function loadDirectPayPalSdk(){
   if(window.paypal?.Buttons && __directPayPalLoaded) return;
   const old = document.querySelector('script[data-damion-paypal]');
@@ -13,7 +18,7 @@ async function loadDirectPayPalSdk(){
     s.dataset.damionPaypal='1';
     s.async=true;
     s.onload=()=>{__directPayPalLoaded=true;resolve();};
-    s.onerror=()=>reject(new Error('PayPal Live SDK could not load.'));
+    s.onerror=()=>reject(new Error('Secure payment could not load.'));
     document.head.appendChild(s);
   });
 }
@@ -28,46 +33,38 @@ window.payWithPayPal = async function(){
   if(!wrap || !container) return;
   wrap.hidden=false;
   try{
-    setCheckoutStatus('Loading PayPal Live…');
+    setCheckoutStatus('Preparing secure payment…');
     await loadDirectPayPalSdk();
-    if(!window.paypal?.Buttons) throw new Error('PayPal button component did not load.');
+    if(!window.paypal?.Buttons) throw new Error('PayPal button did not load.');
     if(!__directPayPalRendered){
       container.innerHTML='';
       const buttons=window.paypal.Buttons({
         style:{layout:'vertical',shape:'rect',label:'paypal',height:48,tagline:false},
         createOrder:(data,actions)=>{
           const total=cart.reduce((sum,item)=>sum+Number(item.price||0),0).toFixed(2);
-          return actions.order.create({
-            purchase_units:[{
-              description:'Damiøn music services',
-              amount:{currency_code:'EUR',value:total}
-            }]
-          });
+          return actions.order.create({purchase_units:[{description:'Damiøn music services',amount:{currency_code:'EUR',value:total}}]});
         },
         onApprove:async(data,actions)=>{
           try{
-            setCheckoutStatus('Confirming PayPal Live payment…');
+            setCheckoutStatus('Confirming your payment…');
             const details=await actions.order.capture();
-            if(details?.status!=='COMPLETED') throw new Error('PayPal did not complete the payment.');
+            if(details?.status!=='COMPLETED') throw new Error('The payment was not completed.');
             const orderID=details.id||data.orderID;
             const amount=details?.purchase_units?.[0]?.payments?.captures?.[0]?.amount?.value||cart.reduce((s,x)=>s+Number(x.price||0),0).toFixed(2);
-            cart=[];saveCart();closeModal('checkoutModal');
-            showReceipt({status:'COMPLETED',orderID,amount,currency:'EUR'});
+            cart=[];saveCart();closeModal('checkoutModal');showReceipt({status:'COMPLETED',orderID,amount,currency:'EUR'});
           }catch(err){
-            console.error(err);
-            setCheckoutStatus(err?.message||'Could not confirm PayPal payment.','error');
+            console.error(err);setCheckoutStatus(err?.message||'Could not confirm payment.','error');
           }
         },
-        onCancel:()=>setCheckoutStatus('PayPal checkout was cancelled. Nothing was charged.','warn'),
-        onError:err=>{console.error(err);setCheckoutStatus('PayPal could not open or complete checkout.','error');}
+        onCancel:()=>setCheckoutStatus('Payment cancelled. Nothing was charged.','warn'),
+        onError:err=>{console.error(err);setCheckoutStatus('PayPal could not complete checkout. Please try again.','error');}
       });
-      if(typeof buttons.isEligible==='function' && !buttons.isEligible()) throw new Error('PayPal checkout is not eligible for this Live app/account right now.');
+      if(typeof buttons.isEligible==='function' && !buttons.isEligible()) throw new Error('PayPal is not available right now.');
       await buttons.render('#paypalButtons');
       __directPayPalRendered=true;
     }
-    setCheckoutStatus('PayPal Live is ready. Click the PayPal button below.','ok');
+    setCheckoutStatus('Choose a payment option below.','ok');
   }catch(err){
-    console.error(err);
-    setCheckoutStatus(err?.message||'PayPal Live is unavailable.','error');
+    console.error(err);setCheckoutStatus(err?.message||'Secure payment is temporarily unavailable.','error');
   }
 };
