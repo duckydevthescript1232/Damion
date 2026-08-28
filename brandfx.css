@@ -1,0 +1,12 @@
+.brand,.footer-brand,.order-brand{perspective:700px}
+.brand img,.footer-brand img,.order-brand img{transform-origin:50% 58%;will-change:transform,filter;transition:transform .28s cubic-bezier(.2,.9,.2,1),filter .28s ease!important;filter:drop-shadow(0 0 12px rgba(255,35,73,.28))!important}
+.brand-name,.order-brand span{transition:transform .24s ease,color .24s ease,text-shadow .24s ease}
+.brand:hover img,.order-brand:hover img{transform:translateY(-4px) rotate(-8deg) scale(1.12);filter:drop-shadow(0 0 8px rgba(255,90,115,.82)) drop-shadow(0 0 24px rgba(255,35,73,.55))!important;animation:dmLogoKick .58s cubic-bezier(.2,.8,.2,1)}
+.brand:hover .brand-name,.order-brand:hover span{transform:translateX(3px);color:#fff;text-shadow:0 0 18px rgba(255,35,73,.32)}
+.brand:active img,.order-brand:active img{transform:translateY(-1px) rotate(-3deg) scale(1.04)}
+.footer-brand:hover img{transform:translateY(-3px) rotate(7deg) scale(1.10);filter:drop-shadow(0 0 18px rgba(255,35,73,.5))!important}
+.logo-panel img{transition:transform .38s cubic-bezier(.2,.9,.2,1),filter .3s ease!important;filter:drop-shadow(0 0 28px rgba(255,35,73,.18))}
+.logo-panel:hover img{transform:perspective(800px) rotateX(4deg) rotateY(-7deg) translateY(-6px) scale(1.035);filter:drop-shadow(0 18px 30px rgba(0,0,0,.42)) drop-shadow(0 0 34px rgba(255,35,73,.38))}
+@keyframes dmLogoKick{0%{transform:translateY(0) rotate(0) scale(1)}55%{transform:translateY(-6px) rotate(-10deg) scale(1.14)}100%{transform:translateY(-4px) rotate(-8deg) scale(1.12)}}
+body.dm-reduced .brand img,body.dm-reduced .footer-brand img,body.dm-reduced .order-brand img{animation:none!important;transform:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){.brand img,.footer-brand img,.order-brand img,.logo-panel img{animation:none!important;transform:none!important;transition:none!important}}
