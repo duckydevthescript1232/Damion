@@ -1,4 +1,9 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": false,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "alias": [
+    "damionmusic.nl",
+    "www.damionmusic.nl"
+  ]
 }
