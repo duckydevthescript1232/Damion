@@ -1,4 +1,4 @@
-const DIRECT_PAYPAL_CLIENT_ID = "BAA36wrQNptWlEKeyk4yrNv52bL79vQNbMab71YlkMiokUQjVIq7C5cil3Er5rt3tAXuJeT3DhwEJ0pzhE";
+const DIRECT_PAYPAL_CLIENT_ID = "BAA6wn4RzBI6RFBOokMqSzQJCxrLjWFoLrYDbMHC_gVg-a6ySTfq8A3Yg_4TD8Jf9xmgY-Z0VeAOzKL63E";
 let __directPayPalLoaded = false;
 let __directPayPalRendered = false;
 
@@ -13,7 +13,7 @@ async function loadDirectPayPalSdk(){
     s.dataset.damionPaypal='1';
     s.async=true;
     s.onload=()=>{__directPayPalLoaded=true;resolve();};
-    s.onerror=()=>reject(new Error('PayPal SDK could not load.'));
+    s.onerror=()=>reject(new Error('PayPal Live SDK could not load.'));
     document.head.appendChild(s);
   });
 }
@@ -28,7 +28,7 @@ window.payWithPayPal = async function(){
   if(!wrap || !container) return;
   wrap.hidden=false;
   try{
-    setCheckoutStatus('Loading PayPal Sandbox…');
+    setCheckoutStatus('Loading PayPal Live…');
     await loadDirectPayPalSdk();
     if(!window.paypal?.Buttons) throw new Error('PayPal button component did not load.');
     if(!__directPayPalRendered){
@@ -46,7 +46,7 @@ window.payWithPayPal = async function(){
         },
         onApprove:async(data,actions)=>{
           try{
-            setCheckoutStatus('Confirming PayPal Sandbox payment…');
+            setCheckoutStatus('Confirming PayPal Live payment…');
             const details=await actions.order.capture();
             if(details?.status!=='COMPLETED') throw new Error('PayPal did not complete the payment.');
             const orderID=details.id||data.orderID;
@@ -61,13 +61,13 @@ window.payWithPayPal = async function(){
         onCancel:()=>setCheckoutStatus('PayPal checkout was cancelled. Nothing was charged.','warn'),
         onError:err=>{console.error(err);setCheckoutStatus('PayPal could not open or complete checkout.','error');}
       });
-      if(typeof buttons.isEligible==='function' && !buttons.isEligible()) throw new Error('PayPal checkout is not eligible for this sandbox app/account.');
+      if(typeof buttons.isEligible==='function' && !buttons.isEligible()) throw new Error('PayPal checkout is not eligible for this Live app/account right now.');
       await buttons.render('#paypalButtons');
       __directPayPalRendered=true;
     }
-    setCheckoutStatus('PayPal Sandbox is ready. Click the PayPal button below.','ok');
+    setCheckoutStatus('PayPal Live is ready. Click the PayPal button below.','ok');
   }catch(err){
     console.error(err);
-    setCheckoutStatus(err?.message||'PayPal Sandbox is unavailable.','error');
+    setCheckoutStatus(err?.message||'PayPal Live is unavailable.','error');
   }
 };
