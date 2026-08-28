@@ -59,6 +59,7 @@ function saveCart(){ localStorage.setItem("damion_cart", JSON.stringify(cart)); 
 async function apiCall(fn, body){
   const res = await fetch(`${BACKEND.functionsBase}/${fn}`, {
     method:"POST",
+    cache:"no-store",
     headers:{
       "Content-Type":"application/json",
       "apikey":BACKEND.anonKey,
@@ -137,31 +138,38 @@ function setCheckoutStatus(msg,type=""){
 }
 
 async function loadPayPal(){
- if(window.paypal) return;
- if(!paypalConfig){
-   paypalConfig = await apiCall("damion-paypal", {action:"config"});
- }
- if(!paypalConfig?.configured || !paypalConfig?.clientId) throw new Error("Payments are temporarily unavailable.");
- await new Promise((resolve,reject)=>{
-   const existing=document.querySelector('script[data-damion-paypal]');
-   if(existing){ existing.addEventListener("load",resolve,{once:true}); existing.addEventListener("error",reject,{once:true}); return; }
-   const s=document.createElement("script");
-   s.src=`https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(paypalConfig.clientId)}&currency=EUR&intent=capture`;
-   s.dataset.damionPaypal="1";
-   s.onload=resolve; s.onerror=()=>reject(new Error("Unable to load PayPal."));
-   document.head.appendChild(s);
- });
+  paypalConfig = await apiCall("damion-paypal", {action:"config",ts:Date.now()});
+  if(!paypalConfig?.configured || !paypalConfig?.clientId){
+    paypalConfig = null;
+    throw new Error("PayPal is not configured in the connected Supabase project yet.");
+  }
+  if(window.paypal) return;
+  await new Promise((resolve,reject)=>{
+    const existing=document.querySelector('script[data-damion-paypal]');
+    if(existing){
+      if(existing.dataset.loaded==="1"){ resolve(); return; }
+      existing.addEventListener("load",resolve,{once:true});
+      existing.addEventListener("error",reject,{once:true});
+      return;
+    }
+    const s=document.createElement("script");
+    s.src=`https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(paypalConfig.clientId)}&currency=EUR&intent=capture`;
+    s.dataset.damionPaypal="1";
+    s.onload=()=>{ s.dataset.loaded="1"; resolve(); };
+    s.onerror=()=>reject(new Error("Unable to load PayPal."));
+    document.head.appendChild(s);
+  });
 }
 
 async function showPayPalButtons(){
   const wrap=byId("paypalWrap"), buttons=byId("paypalButtons"), continueBtn=byId("checkoutContinue");
   if(!wrap||!buttons) return;
   try{
-    setCheckoutStatus("Loading secure payment…");
+    setCheckoutStatus("Checking PayPal connection…");
     if(continueBtn) continueBtn.disabled=true;
     await loadPayPal();
     wrap.hidden=false;
-    setCheckoutStatus(paypalConfig?.environment === "sandbox" ? "PayPal sandbox is connected for testing." : "PayPal is ready. Complete payment below.", paypalConfig?.environment === "sandbox" ? "warn" : "ok");
+    setCheckoutStatus(paypalConfig?.environment === "sandbox" ? "PayPal sandbox is connected for testing." : "PayPal Live is connected. Complete payment below.", paypalConfig?.environment === "sandbox" ? "warn" : "ok");
     if(paypalRendered) return;
     paypalRendered=true;
     window.paypal.Buttons({
@@ -196,6 +204,7 @@ function resetCheckoutPayment(){
   if(btn) btn.disabled=false;
   if(f) Array.from(f.elements).forEach(el=>{ if(el.tagName==="INPUT"||el.tagName==="TEXTAREA") el.readOnly=false; });
   paypalRendered=false;
+  paypalConfig=null;
   setCheckoutStatus("");
 }
 
@@ -274,7 +283,8 @@ function setupContact(){
      toast("Message sent");
    }catch(err){
      if(status){ status.textContent=err?.message || "Could not send your message."; status.className="checkout-status error"; }
-   }finally{ if(btn){ btn.disabled=false; btn.textContent=original; } }
+   }finally{ if(btn){ btn.disabled=false; btn.textContent=original; }
+ }
  });
 }
 
