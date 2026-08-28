@@ -1,10 +1,11 @@
 (()=>{
   const BRAND='Damiønmusic';
+  const fixBrandText=value=>String(value||'').replaceAll('Damiønmusicmusic',BRAND).replace(/Damiøn(?!music)/g,BRAND);
   document.querySelectorAll('.brand-name').forEach(el=>el.textContent=BRAND);
   document.querySelectorAll('.footer-brand b').forEach(el=>el.textContent=BRAND);
   document.querySelectorAll('img[alt*="Damiøn"]').forEach(el=>el.alt='Damiønmusic logo');
-  if(document.title.includes('Damiøn')) document.title=document.title.replaceAll('Damiøn',BRAND);
-  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);for(const n of nodes){if(n.nodeValue&&n.nodeValue.includes('Damiøn'))n.nodeValue=n.nodeValue.replaceAll('Damiøn',BRAND)}
+  document.title=fixBrandText(document.title);
+  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);for(const n of nodes){if(n.nodeValue&&n.nodeValue.includes('Damiøn'))n.nodeValue=fixBrandText(n.nodeValue)}
   const nav=document.querySelector('.nav-actions');if(nav&&!nav.querySelector('[data-orders-link]')){const a=document.createElement('a');a.href='/order';a.className='btn';a.dataset.ordersLink='1';a.textContent='Track order';nav.prepend(a)}
 
   const previewHost=document.getElementById('trackList');
