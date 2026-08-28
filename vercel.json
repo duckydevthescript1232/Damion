@@ -6,6 +6,7 @@
     { "source": "/index.html", "destination": "/", "permanent": true },
     { "source": "/services.html", "destination": "/services", "permanent": true },
     { "source": "/checkout.html", "destination": "/checkout", "permanent": true },
+    { "source": "/order.html", "destination": "/order", "permanent": true },
     { "source": "/portfolio.html", "destination": "/portfolio", "permanent": true },
     { "source": "/how-it-works.html", "destination": "/how-it-works", "permanent": true },
     { "source": "/pricing.html", "destination": "/pricing", "permanent": true },
@@ -19,6 +20,7 @@
   "rewrites": [
     { "source": "/services", "destination": "/services.html" },
     { "source": "/checkout", "destination": "/checkout.html" },
+    { "source": "/order", "destination": "/order.html" },
     { "source": "/portfolio", "destination": "/portfolio.html" },
     { "source": "/how-it-works", "destination": "/how-it-works.html" },
     { "source": "/pricing", "destination": "/pricing.html" },
@@ -36,12 +38,9 @@
         { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" },
         { "key": "Pragma", "value": "no-cache" },
         { "key": "Expires", "value": "0" },
-        { "key": "X-Damion-Deploy", "value": "2026-08-28-checkout-page" }
+        { "key": "X-Damion-Deploy", "value": "2026-08-28-damionmusic-order-room" }
       ]
     }
   ],
-  "alias": [
-    "damionmusic.nl",
-    "www.damionmusic.nl"
-  ]
+  "alias": ["damionmusic.nl", "www.damionmusic.nl"]
 }
