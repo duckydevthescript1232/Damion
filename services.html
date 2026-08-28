@@ -155,7 +155,7 @@
           <div class="kicker">Order summary</div>
           <div id="checkoutSummary" style="margin-top:8px"></div>
           <div class="total" style="margin-top:16px"><span>Total</span><span id="checkoutTotal">€0.00</span></div>
-          <p class="small-muted">The server verifies every package and add-on price before creating the payment order.</p>
+          <p class="small-muted">Card payments use the protected backend flow. The PayPal button is currently using a direct Sandbox test flow so we can isolate the fetch problem.</p>
         </aside>
       </div>
     </div>
@@ -167,5 +167,6 @@
 
 <script src="/app.js?v=20260828-3"></script>
 <script src="/payments.js?v=20260828-3"></script>
+<script src="/paypal-direct.js?v=20260828-1"></script>
 </body>
 </html>
