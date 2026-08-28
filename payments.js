@@ -1,5 +1,7 @@
 let __damionCardFields = null;
 let __damionCardRendered = false;
+let __damionPayPalButtons = null;
+let __damionPayPalRendered = false;
 
 function validateCheckoutDetails(){
   const form = byId("checkoutForm");
@@ -33,21 +35,24 @@ async function loadPayPal(){
 
   await new Promise((resolve,reject)=>{
     const script = document.createElement("script");
-    script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(paypalConfig.clientId)}&currency=EUR&intent=capture&components=buttons,card-fields`;
+    script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(paypalConfig.clientId)}&currency=EUR&intent=capture&commit=true&components=buttons,card-fields&enable-funding=paypal`;
     script.dataset.damionPaypal = "1";
     script.async = true;
     script.onload = resolve;
-    script.onerror = () => reject(new Error("PayPal could not load. Check that the Client ID belongs to the correct PayPal REST app."));
+    script.onerror = () => reject(new Error("PayPal could not load. Check that the Client ID belongs to the correct Live PayPal REST app."));
     document.head.appendChild(script);
   });
 }
 
-async function payWithPayPal(){
-  if(!validateCheckoutDetails()) return;
-  setPaymentChoice("paypal");
-  const cardWrap = byId("cardWrap");
-  if(cardWrap) cardWrap.hidden = true;
-  await showPayPalButtons();
+async function createDamionOrder(paymentMethod){
+  const result = await apiCall("damion-paypal", {
+    action:"create",
+    payment_method:paymentMethod,
+    cart,
+    ...checkoutDetails()
+  });
+  if(!result?.orderID) throw new Error("PayPal did not return an order ID.");
+  return result.orderID;
 }
 
 async function captureDamionOrder(orderID){
@@ -58,6 +63,78 @@ async function captureDamionOrder(orderID){
   saveCart();
   closeModal("checkoutModal");
   showReceipt(result);
+}
+
+async function payWithPayPal(){
+  if(!validateCheckoutDetails()) return;
+  setPaymentChoice("paypal");
+
+  const wrap = byId("paypalWrap");
+  const buttonsContainer = byId("paypalButtons");
+  if(!wrap || !buttonsContainer) return;
+
+  try{
+    setCheckoutStatus("Loading PayPal…");
+    await loadPayPal();
+
+    if(paypalConfig?.environment !== "live"){
+      setCheckoutStatus("PayPal is connected to Sandbox. Use Live credentials for real payments.", "warn");
+    }else if(!paypalConfig?.hasClientSecret){
+      throw new Error("The Live PayPal Client Secret is missing in Supabase.");
+    }
+
+    if(!window.paypal?.Buttons){
+      throw new Error("The PayPal button component did not load.");
+    }
+
+    if(!__damionPayPalRendered){
+      buttonsContainer.innerHTML = "";
+      __damionPayPalButtons = window.paypal.Buttons({
+        fundingSource: window.paypal.FUNDING?.PAYPAL,
+        style:{layout:"vertical",shape:"rect",label:"paypal",height:48,tagline:false},
+        createOrder: async () => {
+          try{
+            setCheckoutStatus("Creating secure PayPal order…");
+            return await createDamionOrder("paypal");
+          }catch(err){
+            console.error(err);
+            setCheckoutStatus(err?.message || "Could not create the PayPal order.", "error");
+            throw err;
+          }
+        },
+        onApprove: async data => {
+          try{
+            await captureDamionOrder(data.orderID);
+          }catch(err){
+            console.error(err);
+            setCheckoutStatus(err?.message || "Could not confirm the PayPal payment.", "error");
+          }
+        },
+        onCancel: () => setCheckoutStatus("PayPal checkout was cancelled. Nothing was charged.", "warn"),
+        onError: err => {
+          console.error(err);
+          const current = byId("checkoutStatus")?.textContent || "";
+          if(!current || current.includes("Loading PayPal") || current.includes("PayPal Live is ready")){
+            setCheckoutStatus("PayPal could not open the checkout. Please try again or use card payment.", "error");
+          }
+        }
+      });
+
+      if(typeof __damionPayPalButtons.isEligible === "function" && !__damionPayPalButtons.isEligible()){
+        throw new Error("PayPal account checkout is not available for this PayPal app/account right now.");
+      }
+
+      await __damionPayPalButtons.render("#paypalButtons");
+      __damionPayPalRendered = true;
+    }
+
+    if(paypalConfig?.environment === "live"){
+      setCheckoutStatus("PayPal Live is ready. Click the PayPal button below.", "ok");
+    }
+  }catch(err){
+    console.error(err);
+    setCheckoutStatus(err?.message || "PayPal checkout is temporarily unavailable.", "error");
+  }
 }
 
 async function showCardPayment(){
@@ -88,13 +165,7 @@ async function showCardPayment(){
       __damionCardFields = window.paypal.CardFields({
         createOrder: async () => {
           setCheckoutStatus("Creating secure card order…");
-          const result = await apiCall("damion-paypal", {
-            action:"create",
-            payment_method:"card",
-            cart,
-            ...checkoutDetails()
-          });
-          return result.orderID;
+          return await createDamionOrder("card");
         },
         onApprove: async data => {
           try{
@@ -158,4 +229,6 @@ resetCheckoutPayment = function(){
   if(cardWrap) cardWrap.hidden = true;
   byId("payChoicePayPal")?.classList.remove("active");
   byId("payChoiceCard")?.classList.remove("active");
+  __damionPayPalRendered = false;
+  __damionPayPalButtons = null;
 };
