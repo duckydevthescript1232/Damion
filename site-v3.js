@@ -124,4 +124,3 @@
     play.addEventListener('click',()=>audio.paused?audio.play().catch(()=>{time.textContent='Could not play audio'}):audio.pause());audio.addEventListener('loadedmetadata',ready);audio.addEventListener('canplay',ready);audio.addEventListener('error',()=>{play.disabled=true;seek.disabled=true;time.textContent='Full preview is being updated…'});audio.addEventListener('play',()=>play.textContent='Ⅱ');audio.addEventListener('pause',()=>play.textContent='▶');audio.addEventListener('ended',()=>{play.textContent='▶';seek.value='0'});audio.addEventListener('timeupdate',()=>{seek.value=audio.duration?String(audio.currentTime/audio.duration*100):'0';time.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`});seek.addEventListener('input',()=>{if(audio.duration)audio.currentTime=Number(seek.value)/100*audio.duration});vol.addEventListener('input',()=>audio.volume=Number(vol.value));audio.load();
   }
 })();
-

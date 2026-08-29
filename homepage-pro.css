@@ -64,6 +64,23 @@
   transition: transform .65s cubic-bezier(.22,1,.36,1), box-shadow .65s cubic-bezier(.22,1,.36,1) !important;
 }
 
+.home .studio-trailer-frame::after { opacity: .28; }
+
+.home .hero-trailer {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 10px;
+  background: #050506;
+  box-shadow: 0 12px 36px rgba(0,0,0,.38);
+  object-fit: cover;
+  transition: transform .75s cubic-bezier(.22,1,.36,1), filter .5s ease;
+}
+
 .home .hero-studio-shot:hover .studio-neon-frame {
   transform: translateY(-4px) rotateX(.6deg) rotateY(-.8deg);
   box-shadow: 0 34px 90px rgba(0,0,0,.52),0 0 38px rgba(196,20,48,.18);
@@ -76,6 +93,12 @@
 .home .hero-studio-shot:hover img {
   transform: scale(1.018);
   filter: saturate(1.04) contrast(1.02);
+}
+
+.home .hero-studio-shot:hover .hero-trailer,
+.home .hero-studio-shot:focus-within .hero-trailer {
+  transform: scale(1.008);
+  filter: saturate(1.03) contrast(1.015);
 }
 
 .home .hero-reassurance span {
@@ -284,6 +307,7 @@
   .home .hero-copy h1 span::after { height: 2px; }
   .home .hero-studio-shot:hover .studio-neon-frame,
   .home .hero-studio-shot:hover img,
+  .home .hero-studio-shot:hover .hero-trailer,
   .home .editorial-strip .item:hover { transform: none; }
   .home .service-row { grid-template-columns: 28px minmax(0,1fr) !important; }
   .home .service-row .service-configure { grid-column: 2; grid-row: auto; width: 100%; }
@@ -294,9 +318,9 @@
   .home .hero-copy h1 span::after { animation: none; transform: none; }
   .home .studio-neon-frame,
   .home .hero-studio-shot img,
+  .home .hero-trailer,
   .home .editorial-strip .item,
   .home .service-row,
   .home .service-row::after,
   .home .process-editorial li { transition: none !important; }
 }
-
