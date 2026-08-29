@@ -6,6 +6,15 @@
     document.getElementById('dmAuthGate')?.remove();
   };
 
+  const ensureSafariCompat=()=>{
+    if(document.querySelector('script[data-dm-safari-compat]'))return;
+    const s=document.createElement('script');
+    s.src='/safari-compat-v1.js?v=20260829-1';
+    s.defer=true;
+    s.dataset.dmSafariCompat='1';
+    document.head.appendChild(s);
+  };
+
   const ensureServiceControls=()=>{
     if(!document.getElementById('serviceList'))return;
     if(window.__dmServicesControlsV2){window.dmEnsureServicesModal?.();return;}
@@ -18,6 +27,7 @@
     document.body.appendChild(s);
   };
 
+  ensureSafariCompat();
   clearLocks();
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{clearLocks();ensureServiceControls()},{once:true});
   else ensureServiceControls();
