@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#08090b">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Damiønmusic — Admin Studio Sandbox</title>
+  <link rel="stylesheet" href="/admin-studio-preview.css?v=20260829-1">
+</head>
+<body>
+  <a class="skip-link" href="#workspace">Skip to workspace</a>
+
+  <div class="sandbox-banner" role="status">
+    <strong>Sandbox mode</strong>
+    <span>No API connection · No customer data · Nothing can be published</span>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="/admin-studio-preview.html" aria-label="Damiønmusic Admin Studio home">
+      <img src="/assets/logo.svg" alt="">
+      <span><b>Damiønmusic</b><small>Admin Studio</small></span>
+    </a>
+    <div class="topbar-actions">
+      <span class="environment"><i></i> Local preview</span>
+      <button class="button button-quiet" id="exportButton" type="button">Export mock data</button>
+      <button class="button button-danger" id="resetButton" type="button">Reset sandbox</button>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Admin Studio navigation">
+      <div class="nav-label">Workspace</div>
+      <nav class="panel-nav">
+        <button class="nav-item is-active" type="button" data-panel-target="overview" aria-current="page">
+          <span class="nav-icon">01</span><span><b>Overview</b><small>Sandbox activity</small></span>
+        </button>
+        <button class="nav-item" type="button" data-panel-target="grants">
+          <span class="nav-icon">02</span><span><b>Service grants</b><small>Mock customer access</small></span>
+        </button>
+        <button class="nav-item" type="button" data-panel-target="announcements">
+          <span class="nav-icon">03</span><span><b>Announcements</b><small>Write & preview messages</small></span>
+        </button>
+        <button class="nav-item" type="button" data-panel-target="extras">
+          <span class="nav-icon">04</span><span><b>Customer extras</b><small>Credits, revisions, notes</small></span>
+        </button>
+      </nav>
+
+      <div class="safety-card">
+        <span class="eyebrow">Safety boundary</span>
+        <h2>Separate from the live site.</h2>
+        <p>This page is not linked from the public navigation. Every action remains inside this browser tab.</p>
+        <ul>
+          <li>No payment access</li>
+          <li>No email delivery</li>
+          <li>No database writes</li>
+        </ul>
+      </div>
+    </aside>
+
+    <main id="workspace" class="workspace" tabindex="-1">
+      <section class="panel is-active" id="overview" aria-labelledby="overviewTitle">
+        <div class="page-head">
+          <div><span class="eyebrow">Prototype control room</span><h1 id="overviewTitle">Admin overview</h1><p>Test the workflow before any real authentication, database or website publishing is connected.</p></div>
+          <div class="date-card"><span>Session</span><strong id="sessionDate">—</strong></div>
+        </div>
+
+        <div class="stat-grid">
+          <article class="stat-card"><span>Mock grants</span><strong id="grantCount">0</strong><small>Saved in this tab</small></article>
+          <article class="stat-card"><span>Draft messages</span><strong id="announcementCount">0</strong><small>Not published</small></article>
+          <article class="stat-card"><span>Customer extras</span><strong id="extraCount">0</strong><small>Simulation only</small></article>
+          <article class="stat-card stat-safe"><span>Live changes</span><strong>0</strong><small>Protected by sandbox</small></article>
+        </div>
+
+        <div class="overview-grid">
+          <section class="surface quick-actions" aria-labelledby="quickTitle">
+            <div class="surface-head"><div><span class="eyebrow">Quick actions</span><h2 id="quickTitle">What do you want to test?</h2></div></div>
+            <div class="action-grid">
+              <button type="button" data-go="grants"><span>Give a service</span><small>Create a mock service grant for a customer.</small><b>Open →</b></button>
+              <button type="button" data-go="announcements"><span>Say hi to everyone</span><small>Write a message and see how it could look.</small><b>Open →</b></button>
+              <button type="button" data-go="extras"><span>Add something extra</span><small>Test credit, revisions, priority or a custom note.</small><b>Open →</b></button>
+            </div>
+          </section>
+
+          <section class="surface activity-card" aria-labelledby="activityTitle">
+            <div class="surface-head"><div><span class="eyebrow">This session</span><h2 id="activityTitle">Recent mock activity</h2></div></div>
+            <div id="activityList" class="activity-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="panel" id="grants" aria-labelledby="grantsTitle" hidden>
+        <div class="page-head compact">
+          <div><span class="eyebrow">Customer access</span><h1 id="grantsTitle">Give a service</h1><p>Create a realistic mock grant. No email is sent and no order is created.</p></div>
+          <span class="mode-pill">Simulation only</span>
+        </div>
+
+        <div class="editor-layout">
+          <form class="surface form-card" id="grantForm">
+            <div class="surface-head"><div><span class="step">Step 1</span><h2>Grant details</h2></div></div>
+            <div class="form-grid">
+              <label class="field"><span>Customer name</span><input name="customerName" autocomplete="off" placeholder="Example: Alex" required maxlength="80"></label>
+              <label class="field"><span>Customer email</span><input name="customerEmail" type="email" autocomplete="off" placeholder="alex@example.com" required maxlength="140"></label>
+              <label class="field"><span>Service</span><select name="service" required>
+                <option value="">Choose a service</option>
+                <option>Mixing</option><option>Mastering</option><option>Vocal Processing</option><option>Custom Beat</option><option>MIDI / Melody Creation</option><option>Mix + Master</option><option>Custom Instrumental</option><option>Remix Production</option><option>Full Track Production</option><option>Beat Feedback</option>
+              </select></label>
+              <label class="field"><span>Package</span><select name="package" required><option value="">Choose a package</option><option>Starter</option><option>Standard</option><option>Full</option><option>Custom</option></select></label>
+              <label class="field"><span>Expires</span><select name="expires"><option>Never</option><option>7 days</option><option>30 days</option><option>90 days</option></select></label>
+              <label class="field"><span>Mock status</span><select name="status"><option>Ready to use</option><option>Waiting for files</option><option>Needs approval</option></select></label>
+              <label class="field field-full"><span>Private admin note</span><textarea name="note" rows="4" maxlength="500" placeholder="Why are you giving this service?"></textarea></label>
+            </div>
+            <div class="form-actions"><button class="button button-primary" type="submit">Create mock grant</button><span>Saved only for this browser session.</span></div>
+          </form>
+
+          <aside class="surface preview-card" aria-labelledby="grantPreviewTitle">
+            <span class="eyebrow">Customer view preview</span>
+            <div class="grant-preview">
+              <div class="preview-logo"><img src="/assets/logo.svg" alt=""><span>Service access</span></div>
+              <span class="preview-status">Ready to use</span>
+              <h2 id="grantPreviewTitle">Choose a service</h2>
+              <p id="grantPreviewCustomer">Customer name will appear here.</p>
+              <dl><div><dt>Package</dt><dd id="grantPreviewPackage">—</dd></div><div><dt>Expires</dt><dd id="grantPreviewExpires">Never</dd></div></dl>
+              <button class="button button-disabled" type="button" disabled>Open project room</button>
+            </div>
+          </aside>
+        </div>
+
+        <section class="surface list-card" aria-labelledby="grantListTitle">
+          <div class="surface-head split"><div><span class="eyebrow">Sandbox records</span><h2 id="grantListTitle">Mock service grants</h2></div><span id="grantListCount" class="count-pill">0 records</span></div>
+          <div id="grantList" class="record-list"></div>
+        </section>
+      </section>
+
+      <section class="panel" id="announcements" aria-labelledby="announcementsTitle" hidden>
+        <div class="page-head compact">
+          <div><span class="eyebrow">Message composer</span><h1 id="announcementsTitle">Write something cool</h1><p>Draft a friendly update such as “Hi guys” and preview it without showing it on the website.</p></div>
+          <span class="mode-pill">Not published</span>
+        </div>
+
+        <div class="editor-layout announcement-layout">
+          <form class="surface form-card" id="announcementForm">
+            <div class="surface-head"><div><span class="step">Composer</span><h2>Announcement</h2></div></div>
+            <div class="form-grid">
+              <label class="field field-full"><span>Small label</span><input name="label" value="Studio update" maxlength="40"></label>
+              <label class="field field-full"><span>Headline</span><input name="headline" value="Hi guys 👋" required maxlength="90"></label>
+              <label class="field field-full"><span>Message</span><textarea name="message" rows="6" required maxlength="600">I’m working on new music services and a better project experience. Thanks for checking out Damiønmusic.</textarea><small><b id="messageCount">113</b>/600 characters</small></label>
+              <label class="field"><span>Audience</span><select name="audience"><option>Everyone</option><option>New visitors</option><option>Returning customers</option><option>Customers with an order</option></select></label>
+              <label class="field"><span>Style</span><select name="style"><option value="studio">Studio red</option><option value="minimal">Minimal dark</option><option value="success">Good news</option></select></label>
+              <label class="field"><span>Button text</span><input name="buttonText" value="Explore services" maxlength="40"></label>
+              <label class="field"><span>Button link</span><input name="buttonLink" value="/services" maxlength="180"></label>
+            </div>
+            <div class="form-actions"><button class="button button-primary" type="submit">Save mock announcement</button><span>Publishing is intentionally unavailable.</span></div>
+          </form>
+
+          <aside class="surface preview-card announcement-preview-wrap" aria-labelledby="announcementPreviewHeading">
+            <span class="eyebrow">Website preview</span>
+            <div class="announcement-preview is-studio" id="announcementPreview">
+              <span id="previewLabel">Studio update</span>
+              <h2 id="announcementPreviewHeading">Hi guys 👋</h2>
+              <p id="previewMessage">I’m working on new music services and a better project experience. Thanks for checking out Damiønmusic.</p>
+              <a href="/services" id="previewButton" tabindex="-1">Explore services →</a>
+            </div>
+            <div class="preview-note"><i></i><span>This is only a visual preview. The link is disabled here.</span></div>
+          </aside>
+        </div>
+
+        <section class="surface list-card" aria-labelledby="announcementListTitle">
+          <div class="surface-head split"><div><span class="eyebrow">Draft queue</span><h2 id="announcementListTitle">Saved mock messages</h2></div><span id="announcementListCount" class="count-pill">0 drafts</span></div>
+          <div id="announcementList" class="record-list"></div>
+        </section>
+      </section>
+
+      <section class="panel" id="extras" aria-labelledby="extrasTitle" hidden>
+        <div class="page-head compact">
+          <div><span class="eyebrow">Flexible customer help</span><h1 id="extrasTitle">Add something extra</h1><p>Prototype store credit, revisions, priority, bonus files or a personal note.</p></div>
+          <span class="mode-pill">Simulation only</span>
+        </div>
+
+        <div class="editor-layout">
+          <form class="surface form-card" id="extraForm">
+            <div class="surface-head"><div><span class="step">Mock extra</span><h2>Extra details</h2></div></div>
+            <div class="form-grid">
+              <label class="field"><span>Customer</span><input name="customer" placeholder="Example: Alex" required maxlength="80"></label>
+              <label class="field"><span>Extra type</span><select name="type" required><option value="">Choose an extra</option><option>Store credit</option><option>Free revision</option><option>Priority queue</option><option>Bonus stems</option><option>Personal note</option><option>Custom extra</option></select></label>
+              <label class="field field-full"><span>Value or description</span><input name="value" placeholder="Example: €10 credit or 1 extra revision" required maxlength="120"></label>
+              <label class="field field-full"><span>Internal reason</span><textarea name="reason" rows="4" maxlength="500" placeholder="Optional context for the future admin log"></textarea></label>
+            </div>
+            <div class="form-actions"><button class="button button-primary" type="submit">Save mock extra</button><span>No customer account is changed.</span></div>
+          </form>
+
+          <aside class="surface preview-card">
+            <span class="eyebrow">Future safe flow</span>
+            <ol class="future-flow">
+              <li><span>1</span><div><b>Sign in securely</b><small>Server-side owner authentication and roles.</small></div></li>
+              <li><span>2</span><div><b>Choose a real customer</b><small>Search verified orders, never type random IDs.</small></div></li>
+              <li><span>3</span><div><b>Review the change</b><small>Show exactly what the customer receives.</small></div></li>
+              <li><span>4</span><div><b>Confirm & audit</b><small>Save who changed what and when.</small></div></li>
+            </ol>
+          </aside>
+        </div>
+
+        <section class="surface list-card" aria-labelledby="extraListTitle">
+          <div class="surface-head split"><div><span class="eyebrow">Sandbox records</span><h2 id="extraListTitle">Mock customer extras</h2></div><span id="extraListCount" class="count-pill">0 records</span></div>
+          <div id="extraList" class="record-list"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="/admin-studio-preview.js?v=20260829-1"></script>
+</body>
+</html>
+
