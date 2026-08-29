@@ -7,18 +7,20 @@
   if(!document.querySelector('script[data-dm-buttonfx]')){const s=document.createElement('script');s.src='/button-fx.js?v=20260829-1';s.defer=true;s.dataset.dmButtonfx='1';document.head.appendChild(s)}
   if(!document.querySelector('script[data-dm-motionv5]')){const s=document.createElement('script');s.src='/motion-v5.js?v=20260829-5';s.defer=true;s.dataset.dmMotionv5='1';document.head.appendChild(s)}
   if(!document.querySelector('script[data-dm-headerv6]')){const s=document.createElement('script');s.src='/header-polish-v6.js?v=20260829-1';s.defer=true;s.dataset.dmHeaderv6='1';document.head.appendChild(s)}
-  if(!document.querySelector('script[data-dm-presence]')){const s=document.createElement('script');s.src='/presence.js?v=20260829-2';s.defer=true;s.dataset.dmPresence='1';document.head.appendChild(s)}
   if(!document.querySelector('script[data-dm-support]')){const s=document.createElement('script');s.src='/support.js?v=20260829-1';s.defer=true;s.dataset.dmSupport='1';document.head.appendChild(s)}
 
   const BRAND='Damiønmusic';
   const AUDIO='https://wutlhceqkioshepfbykf.supabase.co/storage/v1/object/public/service-media/site/damianmusic-preview-full.mp3?v=20260828-full-1';
-  const fixBrandText=v=>String(v||'').replaceAll('Damiønmusicmusic',BRAND).replaceAll('DamianMusic',BRAND).replaceAll('DamionMusic',BRAND).replaceAll('Damiøn',BRAND).replaceAll('DAMIANMUSIC','DAMIØNMUSIC').replaceAll('DAMIØN','DAMIØNMUSIC');
+  const fixBrandText=v=>String(v||'')
+    .replace(/Damiønmusicmusic/gi,BRAND)
+    .replace(/DamianMusic/gi,BRAND)
+    .replace(/DamionMusic/gi,BRAND);
 
   document.querySelectorAll('.brand-name').forEach(el=>el.textContent=BRAND);
   document.querySelectorAll('.footer-brand b').forEach(el=>el.textContent=BRAND);
   document.querySelectorAll('img[src*="/assets/logo.svg"],img[alt*="Damiøn"],img[alt*="Damian"]').forEach(el=>el.alt='Damiønmusic logo');
   document.title=fixBrandText(document.title);
-  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);for(const n of nodes){if(n.nodeValue&&(n.nodeValue.includes('Damiøn')||n.nodeValue.includes('DamianMusic')||n.nodeValue.includes('DamionMusic')))n.nodeValue=fixBrandText(n.nodeValue)}
+  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);for(const n of nodes){if(n.nodeValue&&(n.nodeValue.includes('Damiønmusicmusic')||n.nodeValue.includes('DamianMusic')||n.nodeValue.includes('DamionMusic')))n.nodeValue=fixBrandText(n.nodeValue)}
 
   const navLinks=document.querySelector('.navlinks');
   if(navLinks&&!navLinks.querySelector('a[href="/support"],a[href="support.html"]')){
@@ -122,3 +124,4 @@
     play.addEventListener('click',()=>audio.paused?audio.play().catch(()=>{time.textContent='Could not play audio'}):audio.pause());audio.addEventListener('loadedmetadata',ready);audio.addEventListener('canplay',ready);audio.addEventListener('error',()=>{play.disabled=true;seek.disabled=true;time.textContent='Full preview is being updated…'});audio.addEventListener('play',()=>play.textContent='Ⅱ');audio.addEventListener('pause',()=>play.textContent='▶');audio.addEventListener('ended',()=>{play.textContent='▶';seek.value='0'});audio.addEventListener('timeupdate',()=>{seek.value=audio.duration?String(audio.currentTime/audio.duration*100):'0';time.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`});seek.addEventListener('input',()=>{if(audio.duration)audio.currentTime=Number(seek.value)/100*audio.duration});vol.addEventListener('input',()=>audio.volume=Number(vol.value));audio.load();
   }
 })();
+
