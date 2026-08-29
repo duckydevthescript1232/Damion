@@ -1,0 +1,77 @@
+/* Damiønmusic unified theme v2 — Home follows the Services canvas */
+html,
+body,
+body.home,
+body.services{
+  background-color:#070708!important;
+}
+
+/* The global Max UI background belongs to body. Page sections stay transparent. */
+body.home main,
+body.services main{
+  background:transparent!important;
+}
+
+body.home .hero-home,
+body.home .home-trustbar,
+body.home .home-popular,
+body.home .home-preview,
+body.home .home-story,
+body.home .home-process,
+body.home .home-proof,
+body.home .home-faq,
+body.home .home-final,
+body.home .section{
+  background-color:transparent!important;
+  background-image:none!important;
+}
+
+/* Remove page-sized decorative fills that made Home look like another theme. */
+body.home main::before,
+body.services main::before{
+  background:transparent!important;
+}
+body.home .hero-home::before,
+body.home .hero-home::after,
+body.home .home-proof::before,
+body.home .home-proof::after,
+body.home .home-story::before,
+body.home .home-story::after,
+body.home .home-process::before,
+body.home .home-process::after,
+body.home .home-faq::before,
+body.home .home-faq::after{
+  pointer-events:none;
+}
+
+/* Keep section separation structural, not with different page backgrounds. */
+body.home .section,
+body.services .section{
+  border-top-color:rgba(255,255,255,.055)!important;
+}
+
+/* Match the Services panel language across Home. */
+body.home .home-trustbar,
+body.home .final-band,
+body.home .studio-note,
+body.home .dm-preview-shell,
+body.home .service-row,
+body.home .card{
+  border-color:rgba(255,255,255,.105)!important;
+}
+
+/* Avoid expensive full-page filters and accidental paint layers. */
+body.home main,
+body.services main,
+body.home .section,
+body.services .section{
+  filter:none!important;
+  -webkit-filter:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+@media (max-width:760px){
+  body.home .section,
+  body.services .section{contain:layout style}
+}
