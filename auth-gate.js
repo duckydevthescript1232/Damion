@@ -186,13 +186,13 @@
     if(!document.querySelector('link[data-dm-broadcast]')){
       const l=document.createElement('link');
       l.rel='stylesheet';
-      l.href='/broadcast-v1.css?v=20260829-4';
+      l.href='/broadcast-v1.css?v=20260829-5';
       l.dataset.dmBroadcast='1';
       document.head.appendChild(l);
     }
-    if(window.__dmBroadcastV4||document.querySelector('script[data-dm-broadcast]'))return;
+    if(window.__dmBroadcastV5||document.querySelector('script[data-dm-broadcast]'))return;
     const s=document.createElement('script');
-    s.src='/broadcast-v1.js?v=20260829-4';
+    s.src='/broadcast-v1.js?v=20260829-5';
     s.defer=true;
     s.dataset.dmBroadcast='1';
     document.head.appendChild(s);
