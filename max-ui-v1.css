@@ -1,0 +1,199 @@
+/* Damiønmusic Max UI v1 — premium depth without heavy continuous effects */
+:root{
+  --dm-max-red:#f23855;
+  --dm-max-red-hi:#ff6b80;
+  --dm-max-ink:#070708;
+  --dm-max-panel:#101116;
+  --dm-max-line:rgba(255,255,255,.105);
+  --dm-max-ease:cubic-bezier(.2,.8,.2,1);
+}
+
+html{
+  background:#060607;
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+body{
+  background-color:#070708!important;
+  background-image:
+    radial-gradient(900px 520px at 8% -5%,rgba(242,56,85,.10),transparent 62%),
+    radial-gradient(760px 520px at 100% 30%,rgba(114,42,255,.045),transparent 65%),
+    linear-gradient(45deg,rgba(255,255,255,.018) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.018) 75%),
+    linear-gradient(-45deg,rgba(255,255,255,.012) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.012) 75%)!important;
+  background-size:auto,auto,34px 34px,34px 34px!important;
+  background-position:0 0,0 0,0 0,17px 17px!important;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* crisp, scalable text depth — no filter blur */
+.hero-copy h1,
+.page-hero h1,
+.checkout-intro h1,
+.order-hero h1,
+.admin-hero h1,
+.section-head h2,
+.final-band h2,
+.story-copy h2,
+.proof-layout h2,
+.faq-intro h2{
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.055),
+    0 2px 0 rgba(0,0,0,.7),
+    0 9px 22px rgba(0,0,0,.34),
+    0 22px 54px rgba(0,0,0,.23);
+  letter-spacing:-.045em;
+}
+.hero-copy h1 span,
+.page-hero h1 span,
+.dm-package-badge,
+.kicker{
+  text-shadow:0 0 20px rgba(242,56,85,.15);
+}
+
+/* raised controls */
+.btn,
+.checkout-continue,
+.dm-live-pill,
+.dm-menu-btn,
+.package,
+.addon{
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+.btn,
+.checkout-continue{
+  border-top-color:rgba(255,255,255,.16)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -1px 0 rgba(0,0,0,.35),
+    0 8px 18px rgba(0,0,0,.18)!important;
+  transition:transform 150ms var(--dm-max-ease),box-shadow 180ms ease,border-color 180ms ease,background-color 180ms ease!important;
+}
+.btn.primary,
+.checkout-continue{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.22),
+    inset 0 -2px 0 rgba(112,7,24,.32),
+    0 9px 22px rgba(242,56,85,.20),
+    0 2px 0 rgba(255,96,118,.13)!important;
+}
+@media (hover:hover) and (pointer:fine){
+  .btn:hover,.checkout-continue:hover{transform:translate3d(0,-2px,0)}
+  .btn.primary:hover,.checkout-continue:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.25),inset 0 -2px 0 rgba(112,7,24,.34),0 14px 30px rgba(242,56,85,.25)!important}
+}
+.btn:active,.checkout-continue:active{transform:translate3d(0,1px,0) scale(.985)!important;transition-duration:65ms!important}
+
+/* stronger 3D cards, still compositor-friendly */
+.card,
+.soft-card,
+.hero-panel,
+.service-row,
+.price-card,
+.final-band,
+.checkout-card,
+.order-card,
+.order-summary,
+.modal,
+.dm-preview-shell,
+.service-starter{
+  border-color:rgba(255,255,255,.105)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    inset 0 -1px 0 rgba(0,0,0,.32),
+    0 1px 0 rgba(255,255,255,.018),
+    0 16px 38px rgba(0,0,0,.20)!important;
+}
+@media (hover:hover) and (pointer:fine){
+  .card:hover,.service-row:hover,.price-card:hover,.starter-card:hover{
+    transform:translate3d(0,-3px,0)!important;
+    border-color:rgba(255,92,113,.26)!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 22px 44px rgba(0,0,0,.26)!important;
+  }
+}
+
+/* package UI depth */
+.package,.addon{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(180deg,#14161b,#0d0f13)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 8px 18px rgba(0,0,0,.13);
+  transition:transform 150ms var(--dm-max-ease),border-color 180ms ease,box-shadow 180ms ease!important;
+}
+.package.active,.addon.active{
+  background:linear-gradient(180deg,rgba(99,21,35,.72),rgba(37,12,18,.88))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),inset 3px 0 0 var(--dm-max-red),0 10px 24px rgba(0,0,0,.2)!important;
+}
+
+/* online panel is intentionally visible again. Higher specificity beats the old hide rule. */
+html body #dmLiveVisitors{display:block!important}
+#dmLiveVisitors .dm-live-pill{
+  border-color:rgba(255,255,255,.14)!important;
+  background:linear-gradient(180deg,rgba(21,22,27,.99),rgba(9,10,13,.99))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 16px 38px rgba(0,0,0,.38),0 0 28px rgba(242,56,85,.09)!important;
+}
+#dmLiveVisitors .dm-live-panel{
+  border-color:rgba(255,255,255,.13)!important;
+  background:linear-gradient(180deg,#111217,#090a0d)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 26px 68px rgba(0,0,0,.56)!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+#dmLiveVisitors .dm-live-dot{animation:dmMaxOnlinePulse 2.4s ease-in-out infinite}
+@keyframes dmMaxOnlinePulse{0%,100%{opacity:.72}50%{opacity:1}}
+
+/* language control: clearly clickable and consistent */
+.dm-lang-switch{
+  display:inline-flex!important;
+  align-items:center;
+  gap:3px;
+  padding:3px;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:10px;
+  background:#0e1014;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 7px 18px rgba(0,0,0,.16);
+}
+.dm-lang-switch button{
+  min-width:34px;
+  height:32px;
+  padding:0 8px;
+  border:0;
+  border-radius:7px;
+  background:transparent;
+  color:#7f838c;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.06em;
+  cursor:pointer;
+  transition:transform 120ms ease,background-color 150ms ease,color 150ms ease,box-shadow 150ms ease;
+}
+.dm-lang-switch button[aria-pressed="true"]{
+  color:#fff;
+  background:linear-gradient(180deg,#f34a61,#da243f);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 5px 13px rgba(220,36,63,.18);
+}
+.dm-lang-switch button:active{transform:scale(.94)}
+html.dm-lang-changing body{opacity:.55;transition:opacity 85ms linear}
+
+/* High-refresh performance: avoid permanent filter/repaint layers in main UI */
+.dm-max-ui body:not(.dm-cart-open) .card,
+.dm-max-ui body:not(.dm-cart-open) .service-row,
+.dm-max-ui body:not(.dm-cart-open) .price-card{
+  will-change:auto;
+}
+.dm-max-ui .section{contain:layout style}
+.dm-max-ui img,.dm-max-ui video{image-rendering:auto}
+
+@media (max-width:760px){
+  body{background-size:auto,auto,28px 28px,28px 28px!important;background-position:0 0,0 0,0 0,14px 14px!important}
+  #dmLiveVisitors{right:10px!important;bottom:138px!important}
+  #dmLiveVisitors .dm-live-pill{min-width:142px!important;max-width:170px!important;padding:9px 10px!important}
+  .dm-lang-switch button{min-width:32px;height:30px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  #dmLiveVisitors .dm-live-dot{animation:none}
+  .btn,.checkout-continue,.card,.service-row,.price-card,.package,.addon{transition:none!important}
+}
