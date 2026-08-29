@@ -18,7 +18,7 @@
 </style>
 </head>
 <body class="services">
-<header><div class="wrap nav"><a class="brand" href="/"><img src="/assets/logo.svg" alt="Damiønmusic logo"><span class="brand-name">Damiønmusic</span></a><nav class="navlinks" aria-label="Primary"><a href="/">Home</a><a class="active" href="/services">Services</a><a href="/portfolio">Work</a><a href="/pricing">Pricing</a><a href="/about">About</a><a href="/faq">FAQ</a><a href="/support">Support</a></nav><div class="nav-actions"><a class="btn primary" href="#start">See services</a><button class="btn icon" aria-label="Cart" onclick="openCart()">🛒<span id="cartCount" class="count">0</span></button></div></div></header>
+<header><div class="wrap nav"><a class="brand" href="/"><img src="/assets/logo.svg" alt="Damiønmusic logo"><span class="brand-name">Damiønmusic</span></a><nav class="navlinks" aria-label="Primary"><a href="/">Home</a><a class="active" href="/services">Services</a><a href="/portfolio">Work</a><a href="/pricing">Pricing</a><a href="/about">About</a><a href="/faq">FAQ</a><a href="/support">Support</a></nav><div class="nav-actions"><button class="btn icon" aria-label="Cart" onclick="openCart()">🛒<span id="cartCount" class="count">0</span></button></div></div></header>
 
 <main>
 <section class="page-hero"><div class="wrap"><div class="kicker">Damiønmusic services</div><h1>Pick a service.<br>See the price clearly.</h1><p>Choose the service that matches your project, compare the package options and add only the extras you actually want. If you are unsure, ask me before paying.</p><div class="hero-cta"><a class="btn primary" href="#start">Browse services</a><button class="btn" type="button" onclick="openSupportChat('Something else')">Ask a question</button></div></div></section>
@@ -41,6 +41,12 @@
 <div id="toast" class="toast">Saved</div>
 <script src="/app.js?v=20260828-3"></script>
 <script src="/service-pricing-v2.js?v=20260829-1"></script>
+<script>
+window.addEventListener('DOMContentLoaded',()=>{
+  const id=new URLSearchParams(location.search).get('service');
+  if(id&&typeof configure==='function')setTimeout(()=>{configure(id);document.getElementById('start')?.scrollIntoView({block:'start'})},80);
+});
+</script>
 <script src="/motion-v5.js?v=20260829-5" defer data-dm-motionv5="1"></script>
 <script src="/site-v3.js?v=20260829-2"></script>
 </body>
