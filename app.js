@@ -30,13 +30,23 @@ let current=null,pkg=0,extras=new Set();
 
 const eur=n=>`€${Number(n||0).toFixed(2)}`;
 const byId=id=>document.getElementById(id);
-const escapeHtml=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
+const escapeHtml=v=>String(v??"").replace(/[&<>'\"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'\"':"&quot;"}[c]));
 
 function toast(msg){const t=byId("toast");if(!t)return;t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
 function openModal(id){byId(id)?.classList.add("open")}
 function closeModal(id){byId(id)?.classList.remove("open")}
-function openCart(){renderCart();byId("drawerBg")?.classList.add("open");byId("cartDrawer")?.classList.add("open")}
-function closeCart(){byId("drawerBg")?.classList.remove("open");byId("cartDrawer")?.classList.remove("open")}
+function openCart(){
+  renderCart();
+  const bg=byId("drawerBg"),drawer=byId("cartDrawer");
+  bg?.classList.add("open");drawer?.classList.add("open");
+  document.body.classList.add("cart-open");
+}
+function closeCart(){
+  const bg=byId("drawerBg"),drawer=byId("cartDrawer");
+  bg?.classList.remove("open");drawer?.classList.remove("open");
+  document.body.classList.remove("cart-open");
+  document.body.style.removeProperty("overflow");
+}
 function saveCart(){localStorage.setItem("damion_cart",JSON.stringify(cart));renderCart()}
 function removeItem(i){cart.splice(i,1);saveCart()}
 
@@ -50,13 +60,13 @@ async function apiCall(fn,body){
 function renderCart(){
   const count=byId("cartCount");if(count)count.textContent=cart.length;
   const items=byId("cartItems"),total=byId("cartTotal");
-  if(items)items.innerHTML=cart.length?cart.map((x,i)=>`<div class="cartitem"><h4>${escapeHtml(x.name)}</h4><p>${escapeHtml(x.package)}${x.addons?.length?" · "+x.addons.map(escapeHtml).join(", "):""}</p><div class="row"><b>${eur(x.price)}</b><button class="remove" onclick="removeItem(${i})">Remove</button></div></div>`).join(""):`<p style="color:var(--muted)">Your cart is empty.</p>`;
+  if(items)items.innerHTML=cart.length?cart.map((x,i)=>`<div class="cartitem"><h4>${escapeHtml(x.name)}</h4><p>${escapeHtml(x.package)}${x.addons?.length?" · "+x.addons.map(escapeHtml).join(", "):""}</p><div class="row"><b>${eur(x.price)}</b><button class="remove" type="button" onclick="removeItem(${i})">Remove</button></div></div>`).join(""):`<p style="color:var(--muted)">Your cart is empty.</p>`;
   if(total)total.textContent=eur(cart.reduce((s,x)=>s+Number(x.price||0),0));
 }
 
 function renderServiceRows(targetId){
   const el=byId(targetId);if(!el)return;
-  el.innerHTML=SERVICES.map((s,i)=>`<article class="service-row"><div class="no">${String(i+1).padStart(2,"0")}</div><div class="title"><b>${escapeHtml(s.name)}</b><span>${escapeHtml(s.desc)}</span></div><div class="service-included"><small>Includes</small><span>${s.included.map(escapeHtml).join(" · ")}</span></div><div class="service-turn"><small>Turnaround</small><b>${escapeHtml(s.turnaround)}</b></div><div class="price"><small>from</small><b>${eur(s.from)}</b></div><button class="btn service-configure" onclick="configure('${s.id}')">Order</button></article>`).join("");
+  el.innerHTML=SERVICES.map((s,i)=>`<article class="service-row"><div class="no">${String(i+1).padStart(2,"0")}</div><div class="title"><b>${escapeHtml(s.name)}</b><span>${escapeHtml(s.desc)}</span></div><div class="service-included"><small>Includes</small><span>${s.included.map(escapeHtml).join(" · ")}</span></div><div class="service-turn"><small>Turnaround</small><b>${escapeHtml(s.turnaround)}</b></div><div class="price"><small>from</small><b>${eur(s.from)}</b></div><button class="btn service-configure" type="button" onclick="configure('${s.id}')">Order</button></article>`).join("");
 }
 
 function renderPricing(){
@@ -84,7 +94,7 @@ function addConfigured(){
   cart.push({key:Date.now()+Math.random(),id:current.id,name:current.name,package:p[0],addons:ex.map(x=>x[0]),price:p[1]+ex.reduce((s,x)=>s+x[1],0)});
   saveCart();closeModal("configModal");openCart();toast("Added to cart");
 }
-function openCheckout(){if(!cart.length){toast("Add a service first");return}location.href="/checkout"}
+function openCheckout(){if(!cart.length){toast("Add a service first");return}closeCart();location.href="/checkout"}
 
 function buildBars(){const meter=byId("compareBars");if(meter)meter.innerHTML=Array.from({length:34},(_,i)=>`<i style="--h:${18+Math.abs(Math.sin(i*.71))*52+(i%4)*5}%"></i>`).join("")}
 function setCompare(mode){
@@ -100,4 +110,16 @@ function setupContact(){
   f.addEventListener("submit",async e=>{e.preventDefault();if(!f.reportValidity())return;const original=btn?.textContent||"Send message";if(btn){btn.disabled=true;btn.textContent="Sending…"}const status=byId("contactStatus");if(status){status.textContent="";status.className="checkout-status"}try{await apiCall("damion-contact",{name:byId("cn")?.value||"",email:byId("ce")?.value||"",subject:byId("cs")?.value||"Project inquiry",message:byId("cm")?.value||"",website:byId("cw")?.value||""});f.reset();if(status){status.textContent="Message sent successfully.";status.className="checkout-status ok"}toast("Message sent")}catch(err){if(status){status.textContent=err?.message||"Could not send your message.";status.className="checkout-status error"}}finally{if(btn){btn.disabled=false;btn.textContent=original}}});
 }
 
-window.addEventListener("DOMContentLoaded",()=>{renderCart();renderServiceRows("serviceList");renderPricing();buildBars();setupHeroPlayer();setupContact()});
+function setupCartSafety(){
+  closeCart();
+  const bg=byId("drawerBg"),drawer=byId("cartDrawer");
+  bg?.addEventListener("click",closeCart);
+  drawer?.querySelector('.drawer-head .btn.icon')?.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();closeCart()});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCart()});
+  document.addEventListener("click",e=>{
+    const closeButton=e.target.closest?.('[data-close-cart], .drawer-head .btn.icon');
+    if(closeButton){e.preventDefault();e.stopPropagation();closeCart();}
+  },true);
+}
+
+window.addEventListener("DOMContentLoaded",()=>{setupCartSafety();renderCart();renderServiceRows("serviceList");renderPricing();buildBars();setupHeroPlayer();setupContact()});
