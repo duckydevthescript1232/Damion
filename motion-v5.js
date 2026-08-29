@@ -8,15 +8,18 @@
   mark();
   new MutationObserver(mark).observe(document.body,{childList:true,subtree:true});
 
-  const nativeView=!reduced && ('startViewTransition' in document) && !!window.CSS?.supports?.('view-transition-name: root');
-  if(nativeView)document.documentElement.classList.add('dm-native-view');
-  requestAnimationFrame(()=>document.documentElement.classList.add('dm-motion-ready'));
+  const root=document.documentElement;
+  const playEnter=()=>{
+    root.classList.remove('dm-page-leaving','dm-motion-ready');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.add('dm-motion-ready')));
+  };
+  playEnter();
 
-  if(reduced||nativeView)return;
+  if(reduced)return;
 
-  /* Fallback only: tiny fade/glide before normal same-origin navigation. */
+  let navigating=false;
   document.addEventListener('click',e=>{
-    if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+    if(navigating||e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
     const a=e.target.closest?.('a[href]');
     if(!a)return;
     if(a.target&&a.target!=='_self')return;
@@ -31,9 +34,13 @@
     if(url.pathname===location.pathname&&url.search===location.search&&url.hash)return;
 
     e.preventDefault();
-    document.documentElement.classList.add('dm-page-leaving');
-    setTimeout(()=>{location.href=url.href},225);
+    navigating=true;
+    root.classList.add('dm-page-leaving');
+    window.setTimeout(()=>{location.href=url.href},160);
   });
 
-  window.addEventListener('pageshow',()=>document.documentElement.classList.remove('dm-page-leaving'));
+  window.addEventListener('pageshow',()=>{
+    navigating=false;
+    playEnter();
+  });
 })();
