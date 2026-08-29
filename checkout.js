@@ -1,7 +1,7 @@
 const CART_KEY = "damion_cart";
 const DETAILS_KEY = "damion_checkout_details";
-const MOLLIE_CREATE_API = "https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damion-mollie-create";
-const ORDER_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1dGxoY2Vxa2lvc2hlcGZieWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMDAxMDUsImV4cCI6MjEwMTU3NjEwNX0.Ad9wROEhZ2uKxKx9H5AHqCCmFa0nTezrBHkAn-Zwyws";
+const MOLLIE_CREATE_API = "/api/mollie-create";
+const ORDER_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6Ind1dGxoY2Vxa2lvc2hlcGZieWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMDAxMDUsImV4cCI6MjEwMTU3NjEwNX0.Ad9wROEhZ2uKxKx9H5AHqCCmFa0nTezrBHkAn-Zwyws";
 
 var checkoutCart = [];
 var $ = function(id){ return document.getElementById(id); };
