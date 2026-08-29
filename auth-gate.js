@@ -185,7 +185,7 @@
   const ensureNavCleanup=()=>{
     if(window.__dmNavCleanupV1||document.querySelector('script[data-dm-nav-cleanup]'))return;
     const s=document.createElement('script');
-    s.src='/nav-cleanup-v1.js?v=20260829-1';
+    s.src='/nav-cleanup-v1.js?v=20260829-2';
     s.defer=true;
     s.dataset.dmNavCleanup='1';
     document.head.appendChild(s);
