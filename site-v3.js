@@ -1,7 +1,9 @@
 (()=>{
   if(!document.querySelector('link[data-dm-brandfx]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/brandfx.css?v=20260828-1';l.dataset.dmBrandfx='1';document.head.appendChild(l)}
   if(!document.querySelector('link[data-dm-buttonfx]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/button-fx.css?v=20260829-1';l.dataset.dmButtonfx='1';document.head.appendChild(l)}
+  if(!document.querySelector('link[data-dm-motionv5]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/motion-v5.css?v=20260829-1';l.dataset.dmMotionv5='1';document.head.appendChild(l)}
   if(!document.querySelector('script[data-dm-buttonfx]')){const s=document.createElement('script');s.src='/button-fx.js?v=20260829-1';s.defer=true;s.dataset.dmButtonfx='1';document.head.appendChild(s)}
+  if(!document.querySelector('script[data-dm-motionv5]')){const s=document.createElement('script');s.src='/motion-v5.js?v=20260829-1';s.defer=true;s.dataset.dmMotionv5='1';document.head.appendChild(s)}
   if(!document.querySelector('script[data-dm-presence]')){const s=document.createElement('script');s.src='/presence.js?v=20260829-2';s.defer=true;s.dataset.dmPresence='1';document.head.appendChild(s)}
   const BRAND='DamianMusic';
   const AUDIO='https://wutlhceqkioshepfbykf.supabase.co/storage/v1/object/public/service-media/site/damianmusic-preview-full.mp3?v=20260828-full-1';
@@ -46,9 +48,4 @@
     const ready=()=>{play.disabled=false;seek.disabled=false;time.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`};
     play.addEventListener('click',()=>audio.paused?audio.play().catch(()=>{time.textContent='Could not play audio'}):audio.pause());audio.addEventListener('loadedmetadata',ready);audio.addEventListener('canplay',ready);audio.addEventListener('error',()=>{play.disabled=true;seek.disabled=true;time.textContent='Full preview is being updated…'});audio.addEventListener('play',()=>play.textContent='Ⅱ');audio.addEventListener('pause',()=>play.textContent='▶');audio.addEventListener('ended',()=>{play.textContent='▶';seek.value='0'});audio.addEventListener('timeupdate',()=>{seek.value=audio.duration?String(audio.currentTime/audio.duration*100):'0';time.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`});seek.addEventListener('input',()=>{if(audio.duration)audio.currentTime=Number(seek.value)/100*audio.duration});vol.addEventListener('input',()=>audio.volume=Number(vol.value));audio.load();
   }
-
-  const hoverSelector='.service-row,.starter-card,.price-card,.dm-preview-shell,.hero-studio-shot,.brand';
-  const mark=()=>document.querySelectorAll(hoverSelector).forEach(el=>el.classList.add('dm-hoverfx'));mark();new MutationObserver(mark).observe(document.body,{childList:true,subtree:true});
-  document.addEventListener('pointermove',e=>{const el=e.target.closest?.(hoverSelector);if(!el||document.body.classList.contains('dm-reduced'))return;const r=el.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;el.style.setProperty('--mx',`${x}px`);el.style.setProperty('--my',`${y}px`);if(el.classList.contains('brand')){const ry=((x/r.width)-.5)*4,rx=((y/r.height)-.5)*-3;el.style.transform=`perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-1px)`}else if(el.classList.contains('hero-studio-shot')){const ry=((x/r.width)-.5)*2.6,rx=((y/r.height)-.5)*-2.6;el.style.transform=`perspective(1200px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-3px)`}else{const ry=((x/r.width)-.5)*1.6,rx=((y/r.height)-.5)*-1.6;el.style.transform=`perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-2px)`}});
-  document.addEventListener('pointerout',e=>{const el=e.target.closest?.(hoverSelector);if(!el)return;if(e.relatedTarget&&el.contains(e.relatedTarget))return;el.style.transform=''});
 })();
