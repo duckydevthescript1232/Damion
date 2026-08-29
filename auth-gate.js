@@ -35,9 +35,9 @@
   };
 
   const ensureUISounds=()=>{
-    if(window.__dmUISoundsV1||document.querySelector('script[data-dm-ui-sounds]'))return;
+    if(window.__dmUISoundsV2||document.querySelector('script[data-dm-ui-sounds]'))return;
     const s=document.createElement('script');
-    s.src='/ui-sounds-v1.js?v=20260829-1';
+    s.src='/ui-sounds-v1.js?v=20260829-2';
     s.defer=true;
     s.dataset.dmUiSounds='1';
     document.head.appendChild(s);
