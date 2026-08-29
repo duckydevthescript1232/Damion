@@ -9,6 +9,15 @@
   let state=loadState();
   let toastTimer;
 
+  function ensureAbuseStyles(){
+    if(document.querySelector('link[data-dm-abuse-message]'))return;
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='/admin-abuse-message-v2.css?v=20260829-1';
+    link.dataset.dmAbuseMessage='1';
+    document.head.appendChild(link);
+  }
+
   function loadState(){
     try{
       const saved=JSON.parse(sessionStorage.getItem(STORAGE_KEY)||'null');
@@ -281,6 +290,7 @@
   }
 
   function init(){
+    ensureAbuseStyles();
     simplifyMessagePanel();
     $('miniAdminBtn')?.addEventListener('click',openPanel);
     window.addEventListener('dm-owner-ready',openRequestedPanel);
