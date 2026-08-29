@@ -16,7 +16,7 @@
 <header><div class="wrap nav"><a class="brand" href="/"><img src="/assets/logo.svg" alt="Damiønmusic logo"><span class="brand-name">Damiønmusic</span></a><nav class="navlinks" aria-label="Primary"><a href="/">Home</a><a class="active" href="/services">Services</a><a href="/portfolio">Work</a><a href="/about">About</a><a href="/faq">FAQ</a><a href="/support">Support</a></nav><div class="nav-actions"><button class="btn icon" aria-label="Cart" onclick="openCart()">🛒<span id="cartCount" class="count">0</span></button></div></div></header>
 
 <main>
-<section class="page-hero"><div class="wrap"><div class="kicker">Damiønmusic services</div><h1>Pick a service.<br>See the price clearly.</h1><p>Choose the service that matches your project, compare the package options and add only the extras you actually want. If you are unsure, ask me before ordering.</p><div class="hero-cta"><a class="btn primary" href="#start">Browse services</a><button class="btn" type="button" data-open-support="Something else" onclick="document.querySelector('.dm-support-fab')?.click()">Ask a question</button></div></div></section>
+<section class="page-hero"><div class="wrap"><div class="kicker">Damiønmusic services</div><h1>Pick a service.<br>See the price clearly.</h1><p>Choose the service that matches your project, compare the package options and add only the extras you actually want. If you are unsure, ask me before ordering.</p><div class="hero-cta"><a class="btn primary" href="#start">Browse services</a><button class="btn" type="button" data-open-support="Something else">Ask a question</button></div></div></section>
 
 <section id="start" class="section" style="padding-top:26px"><div class="wrap">
 <div class="service-proof-strip" data-stagger>
@@ -36,7 +36,7 @@
 </div></section>
 
 <section class="section"><div class="wrap"><div class="section-head"><div><div class="kicker">After ordering</div><h2>Your project stays organized.</h2></div><p>Your order request stays connected to one private project room instead of being scattered across different apps.</p></div><div class="card-grid"><article class="card"><span class="badge">01 · Saved</span><h3>Your order room opens</h3><p>You get an order number, status and private tracking link after submitting the order request.</p></article><article class="card"><span class="badge">02 · Pending payment</span><h3>Payment comes later</h3><p>The project stays pending until a payment method is connected and payment is confirmed.</p></article><article class="card"><span class="badge">03 · Project</span><h3>Message the studio</h3><p>Your project details and messages stay connected to the exact service you selected.</p></article></div></div></section>
-<section class="section services-final"><div class="wrap final-band" data-reveal><div><span class="kicker">Need a recommendation?</span><h2>Describe the song first.</h2><p>Tell me what you have, what sounds wrong and what you want the final result to feel like.</p></div><div class="final-actions"><button class="btn primary" type="button" data-open-support="Help choosing a service" onclick="document.querySelector('.dm-support-fab')?.click()">Help me choose</button><a class="btn" href="/portfolio">Hear the work</a></div></div></section>
+<section class="section services-final"><div class="wrap final-band" data-reveal><div><span class="kicker">Need a recommendation?</span><h2>Describe the song first.</h2><p>Tell me what you have, what sounds wrong and what you want the final result to feel like.</p></div><div class="final-actions"><button class="btn primary" type="button" data-open-support="Help choosing a service">Help me choose</button><a class="btn" href="/portfolio">Hear the work</a></div></div></section>
 </main>
 
 <footer><div class="wrap footer-grid"><div><div class="footer-brand"><img src="/assets/logo.svg" alt="Damiønmusic logo"><b>Damiønmusic</b></div><p>Independent music production with clear prices, direct communication and support before or after ordering.</p></div><div><div class="foot-title">Explore</div><div class="footer-links"><a href="/services">Services</a><a href="/portfolio">Work</a><a href="/about">About</a></div></div><div><div class="foot-title">Help</div><div class="footer-links"><a href="/support">Support</a><a href="/faq">FAQ</a><a href="/contact">Contact</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div></div></div></footer>
@@ -44,7 +44,7 @@
 <div class="mobilebar"><nav><a href="/"><b>⌂</b>Home</a><a href="/services"><b>＋</b>Services</a><a href="/portfolio"><b>▶</b>Work</a><button onclick="openCart()"><b>□</b>Cart</button></nav></div>
 <div id="drawerBg" class="drawer-bg" onclick="closeCart()"></div><aside id="cartDrawer" class="drawer"><div class="drawer-head"><b>Your cart</b><button class="btn icon" type="button" aria-label="Close cart" onclick="closeCart()">×</button></div><div id="cartItems" class="drawer-body"></div><div class="drawer-foot"><div class="total"><span>Total</span><span id="cartTotal">€0.00</span></div><a class="btn primary" style="width:100%" href="/checkout">Continue to order</a></div></aside>
 <div id="configModal" class="modal-bg" onclick="if(event.target===this)closeModal('configModal')"><div class="modal"><div class="modal-head"><div><div class="kicker">Package options</div><h3 id="cfgTitle" style="margin:7px 0 0"></h3></div><button class="btn icon" type="button" aria-label="Close package options" onclick="closeModal('configModal')">×</button></div><div class="modal-body"><p id="cfgDesc" style="color:var(--muted);line-height:1.65"></p><h4>1. Choose package</h4><div id="packages" class="packages"></div><h4>2. Optional extras</h4><div id="addons" class="addons"></div><div class="total" style="margin-top:18px"><span>Total</span><span id="cfgTotal">€0.00</span></div><button class="btn primary" style="width:100%" onclick="addConfigured()">Add to cart</button></div></div></div>
-<div class="mobile-project-cta" aria-label="Quick project actions"><a href="/services">Start a project</a><button type="button" data-open-support="Something else" onclick="document.querySelector('.dm-support-fab')?.click()" aria-label="Ask a question">?</button></div>
+<div class="mobile-project-cta" aria-label="Quick project actions"><a href="/services">Start a project</a><button type="button" data-open-support="Something else" aria-label="Ask a question">?</button></div>
 <div id="toast" class="toast">Saved</div>
 <script src="/app.js?v=20260828-3"></script>
 <script src="/service-pricing-v2.js?v=20260829-1"></script>
@@ -56,7 +56,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 </script>
 <script src="/motion-v5.js?v=20260829-5" defer data-dm-motionv5="1"></script>
 <script src="/language-extra-v2.js?v=20260829-1" defer data-dm-language-extra="1"></script>
-<script src="/finished-ui-v1.js?v=20260829-2" defer data-dm-finished-ui="1"></script>
+<script src="/finished-ui-v1.js?v=20260829-3" defer data-dm-finished-ui="1"></script>
 <script src="/site-v3.js?v=20260829-2"></script>
 </body>
 </html>

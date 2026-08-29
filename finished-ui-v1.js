@@ -63,6 +63,19 @@
     });
   };
 
+  const mountSupportTriggers=()=>{
+    document.querySelectorAll('[data-open-support]:not([data-support-bound])').forEach(trigger=>{
+      trigger.dataset.supportBound='1';
+      trigger.addEventListener('click',event=>{
+        event.preventDefault();
+        event.stopPropagation();
+        const panel=document.querySelector('.dm-support-panel');
+        if(panel?.classList.contains('open'))return;
+        document.querySelector('.dm-support-fab')?.click();
+      });
+    });
+  };
+
   const syncDrawer=()=>{
     const drawer=document.getElementById('cartDrawer');
     if(!drawer||drawer.dataset.uiObserved)return;
@@ -74,7 +87,7 @@
   let mountTimer;
   const mount=()=>{
     clearTimeout(mountTimer);
-    mountTimer=setTimeout(()=>{mountReveals();mountTrailer();syncDrawer();updateHeader()},20);
+    mountTimer=setTimeout(()=>{mountReveals();mountTrailer();mountSupportTriggers();syncDrawer();updateHeader()},20);
   };
   setupObserver();
   mount();
