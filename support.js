@@ -3,7 +3,7 @@
   const API='https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damion-support';
   const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1dGxoY2Vxa2lvc2hlcGZieWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMDAxMDUsImV4cCI6MjEwMTU3NjEwNX0.Ad9wROEhZ2uKxKx9H5AHqCCmFa0nTezrBHkAn-Zwyws';
   const DRAFT='damion_support_draft';
-  if(!document.querySelector('link[data-dm-support]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/support.css?v=20260829-1';l.dataset.dmSupport='1';document.head.appendChild(l)}
+  if(!document.querySelector('link[data-dm-support]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/support.css?v=20260829-2';l.dataset.dmSupport='1';document.head.appendChild(l)}
 
   const read=()=>{try{return JSON.parse(localStorage.getItem(DRAFT)||'{}')}catch(_){return {}}};
   const save=data=>{try{localStorage.setItem(DRAFT,JSON.stringify(data))}catch(_){}};
