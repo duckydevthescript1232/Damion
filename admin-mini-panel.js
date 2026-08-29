@@ -113,6 +113,10 @@
     $('miniAdminBtn')?.focus();
   }
 
+  function openRequestedPanel(){
+    if(location.hash==='#mini-panel'&&isOwnerDashboardOpen())openPanel();
+  }
+
   function switchTab(name){
     document.querySelectorAll('[data-dm-mini-tab]').forEach(button=>{
       const active=button.dataset.dmMiniTab===name;
@@ -217,6 +221,7 @@
 
   function init(){
     $('miniAdminBtn')?.addEventListener('click',openPanel);
+    window.addEventListener('dm-owner-ready',openRequestedPanel);
     $('dmMiniClose')?.addEventListener('click',closePanel);
     $('dmMiniScreenMessageClose')?.addEventListener('click',()=>$('dmMiniScreenMessage')?.classList.remove('show'));
     $('dmMiniMinimize')?.addEventListener('click',()=>$('dmMiniAdmin')?.classList.toggle('is-minimized'));
@@ -245,6 +250,7 @@
     enableDrag();
     updateMessagePreview();
     render();
+    setTimeout(openRequestedPanel,0);
   }
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});
