@@ -7,11 +7,25 @@
   mark();
   new MutationObserver(mark).observe(document.body,{childList:true,subtree:true});
 
-  /* Navigation is handled only by CSS cross-document View Transitions now.
-     No click delays, no fake exit class, no second animation fighting it. */
+  /* Page navigation is CSS/native only. No click delays and no fake exit animation. */
   document.documentElement.classList.remove('dm-page-leaving','dm-motion-ready','dm-native-view');
 
-  /* Warm internal pages before the click so the real navigation transition has less work to wait for. */
+  /* Chrome/Opera can prerender a nav target while the pointer is considering it.
+     That makes the next document ready before the click and keeps the real transition fluid. */
+  try{
+    if(HTMLScriptElement.supports?.('speculationrules')&&!document.querySelector('script[data-dm-speculation]')){
+      const rules=document.createElement('script');
+      rules.type='speculationrules';
+      rules.dataset.dmSpeculation='1';
+      rules.textContent=JSON.stringify({
+        prerender:[{where:{selector_matches:'.navlinks a[href]'},eagerness:'moderate'}],
+        prefetch:[{where:{selector_matches:'a[href]'},eagerness:'conservative'}]
+      });
+      document.head.appendChild(rules);
+    }
+  }catch(err){console.debug('Speculation rules unavailable',err)}
+
+  /* Fallback warming for browsers without speculation rules. */
   const prefetched=new Set();
   const warm=a=>{
     if(!a||a.target==='_blank'||a.hasAttribute('download'))return;
