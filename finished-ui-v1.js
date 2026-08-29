@@ -27,6 +27,16 @@
     },{rootMargin:'0px 0px -9% 0px',threshold:.08});
   };
 
+  document.addEventListener('click',event=>{
+    const trigger=event.target.closest('[data-open-support]');
+    if(!trigger)return;
+    event.preventDefault();
+    const panel=document.querySelector('.dm-support-panel');
+    if(panel?.classList.contains('open'))return;
+    if(typeof window.openSupportChat==='function')window.openSupportChat(trigger.dataset.openSupport||'');
+    else document.querySelector('.dm-support-fab')?.click();
+  });
+
   let ticking=false;
   const updateHeader=()=>{
     document.querySelector('header')?.classList.toggle('dm-scrolled',window.scrollY>18);
