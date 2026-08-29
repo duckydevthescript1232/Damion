@@ -1,12 +1,30 @@
-.brand,.footer-brand,.order-brand{perspective:700px}
-.brand img,.footer-brand img,.order-brand img{transform-origin:50% 58%;will-change:transform,filter;transition:transform .28s cubic-bezier(.2,.9,.2,1),filter .28s ease!important;filter:drop-shadow(0 0 12px rgba(255,35,73,.28))!important}
-.brand-name,.order-brand span{transition:transform .24s ease,color .24s ease,text-shadow .24s ease}
-.brand:hover img,.order-brand:hover img{transform:translateY(-4px) rotate(-8deg) scale(1.12);filter:drop-shadow(0 0 8px rgba(255,90,115,.82)) drop-shadow(0 0 24px rgba(255,35,73,.55))!important;animation:dmLogoKick .58s cubic-bezier(.2,.8,.2,1)}
-.brand:hover .brand-name,.order-brand:hover span{transform:translateX(3px);color:#fff;text-shadow:0 0 18px rgba(255,35,73,.32)}
-.brand:active img,.order-brand:active img{transform:translateY(-1px) rotate(-3deg) scale(1.04)}
-.footer-brand:hover img{transform:translateY(-3px) rotate(7deg) scale(1.10);filter:drop-shadow(0 0 18px rgba(255,35,73,.5))!important}
-.logo-panel img{transition:transform .38s cubic-bezier(.2,.9,.2,1),filter .3s ease!important;filter:drop-shadow(0 0 28px rgba(255,35,73,.18))}
-.logo-panel:hover img{transform:perspective(800px) rotateX(4deg) rotateY(-7deg) translateY(-6px) scale(1.035);filter:drop-shadow(0 18px 30px rgba(0,0,0,.42)) drop-shadow(0 0 34px rgba(255,35,73,.38))}
-@keyframes dmLogoKick{0%{transform:translateY(0) rotate(0) scale(1)}55%{transform:translateY(-6px) rotate(-10deg) scale(1.14)}100%{transform:translateY(-4px) rotate(-8deg) scale(1.12)}}
-body.dm-reduced .brand img,body.dm-reduced .footer-brand img,body.dm-reduced .order-brand img{animation:none!important;transform:none!important;transition:none!important}
-@media(prefers-reduced-motion:reduce){.brand img,.footer-brand img,.order-brand img,.logo-panel img{animation:none!important;transform:none!important;transition:none!important}}
+.brand,.footer-brand,.order-brand{perspective:900px;position:relative;isolation:isolate}
+.brand{padding:6px 10px 6px 7px;border-radius:14px;transition:background-color .55s ease,border-color .55s ease,box-shadow .55s ease!important}
+.brand:before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;background:linear-gradient(110deg,transparent 18%,rgba(255,255,255,.06) 42%,rgba(255,55,86,.10) 52%,transparent 72%);background-size:220% 100%;background-position:100% 0;transition:opacity .55s ease,background-position 1.15s cubic-bezier(.2,.7,.2,1);z-index:-1}
+.brand:hover{background:rgba(255,255,255,.025);box-shadow:0 10px 34px rgba(0,0,0,.18),0 0 24px rgba(255,35,73,.045)}
+.brand:hover:before{opacity:1;background-position:0 0}
+.brand img,.footer-brand img,.order-brand img{transform-origin:50% 58%;will-change:transform,filter;transition:transform .72s cubic-bezier(.16,.8,.25,1),filter .72s ease!important;filter:drop-shadow(0 0 9px rgba(255,35,73,.20))!important}
+.brand-name,.order-brand span{transition:transform .62s cubic-bezier(.16,.8,.25,1),color .55s ease,text-shadow .65s ease,letter-spacing .55s ease!important}
+.brand:hover img,.order-brand:hover img{transform:translateY(-2px) rotate(-3deg) scale(1.065);filter:drop-shadow(0 4px 9px rgba(0,0,0,.34)) drop-shadow(0 0 17px rgba(255,35,73,.38))!important}
+.brand:hover .brand-name,.order-brand:hover span{transform:translateX(1.5px);color:#fff;text-shadow:0 0 14px rgba(255,35,73,.18);letter-spacing:-.028em}
+.brand:active img,.order-brand:active img{transition-duration:.18s!important;transform:translateY(0) rotate(-1deg) scale(1.025)}
+.footer-brand img{transition-duration:.8s!important}
+.footer-brand:hover img{transform:translateY(-2px) rotate(3deg) scale(1.055);filter:drop-shadow(0 0 15px rgba(255,35,73,.30))!important}
+.logo-panel img{transition:transform .9s cubic-bezier(.16,.8,.25,1),filter .75s ease!important;filter:drop-shadow(0 0 22px rgba(255,35,73,.14))}
+.logo-panel:hover img{transform:perspective(1000px) rotateX(2deg) rotateY(-3deg) translateY(-4px) scale(1.025);filter:drop-shadow(0 14px 25px rgba(0,0,0,.36)) drop-shadow(0 0 25px rgba(255,35,73,.27))}
+
+/* Slow, premium motion across interactive surfaces. */
+.dm-hoverfx{transition:transform .62s cubic-bezier(.16,.8,.25,1),border-color .48s ease,box-shadow .58s ease,background-color .48s ease!important}
+.dm-hoverfx:after{transition:opacity .55s ease!important}
+.service-row,.starter-card,.price-card,.card,.hero-studio-shot,.btn,.navlinks a,.payment-choice,.checkout-card{transition-property:transform,border-color,background-color,box-shadow,color,opacity!important;transition-duration:.42s!important;transition-timing-function:cubic-bezier(.16,.8,.25,1)!important}
+.service-row:hover,.starter-card:hover,.price-card:hover,.card:hover{transform:translateY(-2px)!important}
+.btn:hover{transform:translateY(-1px)!important}
+.hero-studio-shot:hover{transform:translateY(-3px) scale(1.006)!important}
+
+/* Keep pointer tilt elegant instead of twitchy. */
+body:not(.dm-reduced) .brand.dm-hoverfx{transition:transform .72s cubic-bezier(.12,.72,.18,1),background-color .55s ease,box-shadow .55s ease!important}
+body:not(.dm-reduced) .hero-studio-shot.dm-hoverfx{transition:transform .72s cubic-bezier(.12,.72,.18,1),border-color .55s ease,box-shadow .62s ease!important}
+body:not(.dm-reduced) .service-row.dm-hoverfx,body:not(.dm-reduced) .starter-card.dm-hoverfx,body:not(.dm-reduced) .price-card.dm-hoverfx,body:not(.dm-reduced) .dm-preview-shell.dm-hoverfx{transition:transform .5s cubic-bezier(.12,.72,.18,1),border-color .42s ease,box-shadow .5s ease!important}
+
+body.dm-reduced .brand img,body.dm-reduced .footer-brand img,body.dm-reduced .order-brand img,body.dm-reduced .dm-hoverfx{animation:none!important;transform:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){.brand img,.footer-brand img,.order-brand img,.logo-panel img,.dm-hoverfx,.service-row,.starter-card,.price-card,.card,.hero-studio-shot,.btn{animation:none!important;transform:none!important;transition:none!important}}
