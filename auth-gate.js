@@ -104,7 +104,7 @@
     }
     if(window.__dmMaxUIV1||document.querySelector('script[data-dm-max-ui]'))return;
     const s=document.createElement('script');
-    s.src='/max-ui-v1.js?v=20260829-1';
+    s.src='/max-ui-v1.js?v=20260829-2';
     s.defer=true;
     s.dataset.dmMaxUi='1';
     document.head.appendChild(s);
