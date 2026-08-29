@@ -1,0 +1,58 @@
+/* Damiønmusic navigation v8 — one page transition system only */
+html,body{background:#08090a}
+
+/* Native cross-document transitions on modern Chromium/Opera/Chrome. */
+@view-transition{navigation:auto}
+
+main{view-transition-name:dm-page}
+
+::view-transition-image-pair(root),
+::view-transition-image-pair(dm-page){
+  isolation:auto;
+}
+
+/* Keep the shell/header visually steady. */
+::view-transition-old(root){
+  animation:dmShellOut .12s ease-out both;
+  mix-blend-mode:normal;
+}
+::view-transition-new(root){
+  animation:dmShellIn .18s ease-out both;
+  mix-blend-mode:normal;
+}
+
+/* Only the actual page content gets a tiny glide. */
+::view-transition-group(dm-page){
+  animation-duration:.30s;
+  animation-timing-function:cubic-bezier(.22,1,.36,1);
+}
+::view-transition-old(dm-page){
+  animation:dmPageOut .14s cubic-bezier(.4,0,.6,1) both;
+  mix-blend-mode:normal;
+}
+::view-transition-new(dm-page){
+  animation:dmPageIn .30s cubic-bezier(.22,1,.36,1) both;
+  mix-blend-mode:normal;
+}
+
+@keyframes dmShellOut{to{opacity:.88}}
+@keyframes dmShellIn{from{opacity:.88}to{opacity:1}}
+@keyframes dmPageOut{to{opacity:0;transform:translate3d(-6px,0,0)}}
+@keyframes dmPageIn{from{opacity:0;transform:translate3d(8px,0,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+
+/* Never let old JS page-leave classes interfere with navigation. */
+html.dm-page-leaving main,
+html.dm-motion-ready main{
+  animation:none!important;
+  opacity:1!important;
+  transform:none!important;
+  pointer-events:auto!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  ::view-transition-old(root),::view-transition-new(root),
+  ::view-transition-old(dm-page),::view-transition-new(dm-page),
+  ::view-transition-group(dm-page){
+    animation:none!important;
+  }
+}
