@@ -1,6 +1,6 @@
 (()=>{
-  if(window.__dmBroadcastV2)return;
-  window.__dmBroadcastV2=true;
+  if(window.__dmBroadcastV3)return;
+  window.__dmBroadcastV3=true;
 
   const ENDPOINT='https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damian-site-presence';
   const OWNER_KEY='damion_site_session';
@@ -61,10 +61,31 @@
     document.body.appendChild(modal);
 
     const input=modal.querySelector('textarea'),count=modal.querySelector('.dm-broadcast-count'),send=modal.querySelector('.dm-broadcast-send'),status=modal.querySelector('.dm-broadcast-status');
-    const close=()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true')};
-    const open=()=>{modal.classList.add('open');modal.setAttribute('aria-hidden','false');requestAnimationFrame(()=>input.focus())};
+
+    /* Critical inline fallback: popup still works even if an old cached stylesheet is present. */
+    Object.assign(modal.style,{position:'fixed',inset:'0',zIndex:'2147482450',display:'grid',placeItems:'center',padding:'18px',background:'rgba(0,0,0,.52)',opacity:'0',visibility:'hidden',pointerEvents:'none'});
+
+    const close=()=>{
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+      modal.style.opacity='0';
+      modal.style.visibility='hidden';
+      modal.style.pointerEvents='none';
+    };
+    const open=e=>{
+      if(e){e.preventDefault?.();e.stopPropagation?.()}
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+      modal.style.display='grid';
+      modal.style.opacity='1';
+      modal.style.visibility='visible';
+      modal.style.pointerEvents='auto';
+      requestAnimationFrame(()=>input?.focus?.({preventScroll:true}));
+    };
+
+    button.addEventListener('pointerdown',e=>{if(e.button===0)open(e)});
     button.addEventListener('click',open);
-    modal.querySelector('.dm-broadcast-close').addEventListener('click',close);
+    modal.querySelector('.dm-broadcast-close').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();close()});
     modal.addEventListener('click',e=>{if(e.target===modal)close()});
     input.addEventListener('input',()=>count.textContent=`${input.value.length} / 160`);
     input.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();send.click()}});
@@ -79,6 +100,14 @@
       }catch(err){status.textContent=err?.message||'Could not send.';status.className='dm-broadcast-status error'}finally{send.disabled=false}
     });
     document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))close()});
+
+    /* Capture fallback for sites with global click handlers. */
+    document.addEventListener('click',e=>{
+      const target=e.target instanceof Element?e.target:null;
+      if(target?.closest?.('#dmBroadcastAdminButton'))open(e);
+    },true);
+
+    window.dmOpenBroadcast=open;
   };
 
   const poll=async()=>{
