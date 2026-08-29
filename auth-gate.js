@@ -150,6 +150,22 @@
     document.head.appendChild(s);
   };
 
+  const ensureBroadcast=()=>{
+    if(!document.querySelector('link[data-dm-broadcast]')){
+      const l=document.createElement('link');
+      l.rel='stylesheet';
+      l.href='/broadcast-v1.css?v=20260829-1';
+      l.dataset.dmBroadcast='1';
+      document.head.appendChild(l);
+    }
+    if(window.__dmBroadcastV1||document.querySelector('script[data-dm-broadcast]'))return;
+    const s=document.createElement('script');
+    s.src='/broadcast-v1.js?v=20260829-1';
+    s.defer=true;
+    s.dataset.dmBroadcast='1';
+    document.head.appendChild(s);
+  };
+
   const ensureMaxUI=()=>{
     if(!document.querySelector('link[data-dm-max-ui]')){
       const l=document.createElement('link');
@@ -194,6 +210,7 @@
   ensureSafariCompat();
   ensureCartDrawerFix();
   ensurePresence();
+  ensureBroadcast();
   ensureMaxUI();
   ensureInteraction();
   ensureUISounds();
@@ -211,6 +228,7 @@
     ensureNavCleanup();
     ensureCartDrawerFix();
     ensurePresence();
+    ensureBroadcast();
     ensureMaxUI();
     ensureInteraction();
     ensureUISounds();
