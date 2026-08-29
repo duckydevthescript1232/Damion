@@ -1,10 +1,10 @@
-/* Damiønmusic navigation v9 — soft navigation + one lightweight transition */
+/* Damiønmusic navigation v10 — slower cinematic soft-page swipes */
 html,body{background:#08090a}
 
 @view-transition{navigation:auto}
 main{view-transition-name:dm-page}
 
-/* Keep the persistent shell steady. Only <main> should feel like it moved. */
+/* Keep the persistent header/footer shell stable while <main> glides. */
 ::view-transition-old(root),
 ::view-transition-new(root){
   animation:none;
@@ -12,28 +12,44 @@ main{view-transition-name:dm-page}
 }
 
 ::view-transition-group(dm-page){
-  animation-duration:.40s;
-  animation-timing-function:cubic-bezier(.16,1,.3,1);
+  animation-duration:.68s;
+  animation-timing-function:cubic-bezier(.22,.8,.18,1);
+  overflow:clip;
+}
+::view-transition-image-pair(dm-page){
+  isolation:isolate;
+  overflow:clip;
 }
 ::view-transition-old(dm-page){
-  animation:dmPageOut .16s cubic-bezier(.4,0,.6,1) both;
+  animation:dmPageOut .52s cubic-bezier(.32,.05,.25,1) both;
   mix-blend-mode:normal;
+  transform-origin:center;
 }
 ::view-transition-new(dm-page){
-  animation:dmPageIn .40s cubic-bezier(.16,1,.3,1) both;
+  animation:dmPageIn .68s cubic-bezier(.16,1,.3,1) both;
   mix-blend-mode:normal;
+  transform-origin:center;
 }
 
 @keyframes dmPageOut{
-  to{opacity:0;transform:translate3d(-5px,0,0)}
+  0%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+  70%{opacity:.24}
+  100%{opacity:0;transform:translate3d(-46px,0,0) scale(.986);filter:blur(4px)}
 }
 @keyframes dmPageIn{
-  0%{opacity:0;transform:translate3d(7px,0,0)}
-  55%{opacity:1}
-  100%{opacity:1;transform:translate3d(0,0,0)}
+  0%{opacity:0;transform:translate3d(54px,0,0) scale(.982);filter:blur(6px)}
+  36%{opacity:.72;filter:blur(2px)}
+  72%{opacity:1}
+  100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
 }
 
-/* Old navigation classes must never compete with the new soft navigation. */
+/* Tiny depth cue while a route is changing. */
+html.dm-soft-nav-active header{
+  box-shadow:0 14px 42px rgba(0,0,0,.28),0 1px 0 rgba(255,255,255,.02)!important;
+  transition:box-shadow .55s ease;
+}
+
+/* Old navigation classes must never compete with the soft navigation. */
 html.dm-page-leaving main,
 html.dm-motion-ready main{
   animation:none!important;
@@ -45,5 +61,5 @@ html.dm-motion-ready main{
 @media(prefers-reduced-motion:reduce){
   ::view-transition-old(root),::view-transition-new(root),
   ::view-transition-old(dm-page),::view-transition-new(dm-page),
-  ::view-transition-group(dm-page){animation:none!important}
+  ::view-transition-group(dm-page){animation:none!important;filter:none!important}
 }
