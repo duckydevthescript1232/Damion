@@ -1,5 +1,5 @@
 (()=>{
-  if(!document.querySelector('script[data-dm-auth-gate]')){const s=document.createElement('script');s.src='/auth-gate.js?v=20260829-2';s.async=false;s.dataset.dmAuthGate='1';document.head.appendChild(s)}
+  if(!document.querySelector('script[data-dm-auth-gate]')){const s=document.createElement('script');s.src='/auth-gate.js?v=20260829-5';s.async=false;s.dataset.dmAuthGate='1';document.head.appendChild(s)}
   if(!document.querySelector('link[data-dm-brandfx]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/brandfx.css?v=20260828-1';l.dataset.dmBrandfx='1';document.head.appendChild(l)}
   if(!document.querySelector('link[data-dm-buttonfx]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/button-fx.css?v=20260829-1';l.dataset.dmButtonfx='1';document.head.appendChild(l)}
   if(!document.querySelector('link[data-dm-motionv5]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/motion-v5.css?v=20260829-2';l.dataset.dmMotionv5='1';document.head.appendChild(l)}
