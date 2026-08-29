@@ -1,0 +1,113 @@
+/* Damiønmusic button interactions — lightweight, CSS-only hover motion */
+.dm-btnfx{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  will-change:transform;
+  transition:
+    transform .22s cubic-bezier(.2,.75,.2,1),
+    border-color .28s ease,
+    background-color .28s ease,
+    box-shadow .30s ease,
+    filter .28s ease,
+    color .20s ease!important;
+}
+
+.dm-btnfx::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:inherit;
+  pointer-events:none;
+  z-index:0;
+  opacity:0;
+  background:linear-gradient(105deg,
+    transparent 16%,
+    rgba(255,255,255,.025) 34%,
+    rgba(255,255,255,.12) 44%,
+    rgba(255,54,88,.20) 52%,
+    rgba(255,255,255,.07) 60%,
+    transparent 78%);
+  transform:translateX(-130%);
+  transition:transform .62s cubic-bezier(.16,.78,.2,1),opacity .24s ease;
+}
+
+.dm-btnfx:hover::before{
+  opacity:1;
+  transform:translateX(130%);
+}
+
+.dm-btnfx:hover{
+  transform:translateY(-2px) scale(1.012)!important;
+  border-color:rgba(255,91,114,.58)!important;
+  box-shadow:
+    0 10px 26px rgba(0,0,0,.28),
+    0 0 0 1px rgba(255,54,88,.06),
+    0 0 24px rgba(255,54,88,.12)!important;
+}
+
+.dm-btnfx.primary:hover,
+.dm-btnfx.payment-choice.active:hover{
+  filter:brightness(1.055) saturate(1.08);
+  box-shadow:
+    0 13px 30px rgba(0,0,0,.30),
+    0 0 30px rgba(255,54,88,.24),
+    inset 0 1px 0 rgba(255,255,255,.15)!important;
+}
+
+.dm-btnfx:active,
+.dm-btnfx.dm-fx-down{
+  transform:translateY(0) scale(.972)!important;
+  transition-duration:.075s!important;
+  filter:brightness(.97);
+}
+
+.dm-btn-ripple{
+  position:absolute;
+  width:10px;
+  height:10px;
+  margin:-5px 0 0 -5px;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:3;
+  background:radial-gradient(circle,rgba(255,255,255,.34) 0 20%,rgba(255,74,104,.25) 35%,rgba(255,54,88,0) 72%);
+  transform:scale(0);
+  animation:dmButtonRipple .46s cubic-bezier(.12,.65,.25,1) forwards;
+}
+
+@keyframes dmButtonRipple{
+  0%{transform:scale(0);opacity:.9}
+  70%{opacity:.42}
+  100%{transform:scale(14);opacity:0}
+}
+
+/* Slightly calmer treatment for compact icon/utility buttons. */
+.btn.icon.dm-btnfx:hover,
+.dm-side-close.dm-btnfx:hover{
+  transform:translateY(-1px) scale(1.045)!important;
+}
+
+/* Don't disturb layout for text links that happen to be styled as controls. */
+.dm-btnfx[aria-disabled="true"],
+.dm-btnfx:disabled{
+  transform:none!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+
+@media(hover:none){
+  .dm-btnfx:hover{transform:none!important}
+  .dm-btnfx:hover::before{opacity:0;transform:translateX(-130%)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .dm-btnfx,
+  .dm-btnfx::before,
+  .dm-btn-ripple{
+    transition:none!important;
+    animation:none!important;
+    transform:none!important;
+  }
+}
