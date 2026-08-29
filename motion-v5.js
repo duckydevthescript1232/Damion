@@ -2,25 +2,15 @@
   if(window.__dmMotionV5)return;
   window.__dmMotionV5=true;
 
-  const ensureLanguageAssets=()=>{
-    if(!document.querySelector('link[data-dm-language]')){
-      const l=document.createElement('link');l.rel='stylesheet';l.href='/language-v1.css?v=20260829-1';l.dataset.dmLanguage='1';document.head.appendChild(l);
-    }
-    if(!document.querySelector('script[data-dm-language]')){
-      const s=document.createElement('script');s.src='/language-v1.js?v=20260829-1';s.defer=true;s.dataset.dmLanguage='1';document.head.appendChild(s);
-    }
-  };
-  ensureLanguageAssets();
-
-  const hoverSelector='.service-row,.starter-card,.price-card,.card,.dm-preview-shell,.hero-studio-shot,.brand';
-  const mark=()=>document.querySelectorAll(hoverSelector).forEach(el=>el.classList.add('dm-hoverfx'));
-  mark();
-  new MutationObserver(mark).observe(document.body,{childList:true,subtree:true});
-
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const parser=new DOMParser();
   const cache=new Map();
   let navigating=false;
+
+  const hoverSelector='.service-row,.starter-card,.price-card,.card,.browse-card,.dm-preview-shell,.hero-studio-shot,.brand';
+  const mark=()=>document.querySelectorAll(hoverSelector).forEach(el=>el.classList.add('dm-hoverfx'));
+  mark();
+  new MutationObserver(mark).observe(document.body,{childList:true,subtree:true});
 
   const canonicalPath=value=>{
     const u=value instanceof URL?value:new URL(value,location.href);
@@ -30,8 +20,13 @@
     return p||'/';
   };
 
-  const softPaths=new Set(['/','/services','/portfolio','/pricing','/how-it-works','/contact','/about','/faq','/terms','/privacy','/refund']);
-  const canSoftNavigate=url=>url.origin===location.origin&&softPaths.has(canonicalPath(url));
+  const softPaths=new Set(['/','/browse-services','/services','/how-it-works','/contact','/about','/faq','/terms','/privacy','/refund']);
+  const canSoftNavigate=url=>{
+    if(url.origin!==location.origin)return false;
+    const path=canonicalPath(url);
+    if(path==='/services'&&url.searchParams.has('service'))return false;
+    return softPaths.has(path);
+  };
 
   const ensureStyles=(doc,baseUrl)=>{
     document.querySelectorAll('style[data-dm-route-style]').forEach(el=>el.remove());
@@ -95,12 +90,15 @@
     const target=canonicalPath(url);
     document.querySelectorAll('.navlinks a[href]').forEach(a=>{
       let active=false;
-      try{active=canonicalPath(new URL(a.href,location.href))===target}catch(_){}
+      try{
+        const p=canonicalPath(new URL(a.href,location.href));
+        active=p===target||(target==='/browse-services'&&p==='/services');
+      }catch(_){}
       a.classList.toggle('active',active);
     });
   };
 
-  const reinitPage=async doc=>{
+  const reinitPage=async()=>{
     window.closeCart?.();
     window.renderCart?.();
     window.renderServiceRows?.('serviceList');
@@ -131,6 +129,18 @@
     try{return await promise}catch(err){cache.delete(key);throw err}
   };
 
+  const animateIn=main=>{
+    if(reduced||document.body.classList.contains('dm-reduced')||typeof main.animate!=='function')return;
+    main.animate([
+      {opacity:.01,transform:'translate3d(0,6px,0)'},
+      {opacity:1,transform:'translate3d(0,0,0)'}
+    ],{
+      duration:150,
+      easing:'cubic-bezier(.2,.75,.2,1)',
+      fill:'both'
+    });
+  };
+
   const applyPage=async(url,{push=true}={})=>{
     if(navigating)return;
     navigating=true;
@@ -145,32 +155,21 @@
       const newMain=document.importNode(incoming,true);
       const preservedReduced=document.body.classList.contains('dm-reduced');
 
-      const swap=()=>{
-        current.replaceWith(newMain);
-        document.title=doc.title||document.title;
-        const meta=doc.querySelector('meta[name="description"]')?.getAttribute('content');
-        if(meta){
-          let currentMeta=document.querySelector('meta[name="description"]');
-          if(!currentMeta){currentMeta=document.createElement('meta');currentMeta.name='description';document.head.appendChild(currentMeta)}
-          currentMeta.setAttribute('content',meta);
-        }
-        document.body.className=doc.body.className||'';
-        if(preservedReduced)document.body.classList.add('dm-reduced');
-        updateActiveNav(url);
-        if(push)history.pushState({dmSoft:true},'',url.href);
-      };
-
-      if(!reduced&&document.startViewTransition){
-        document.documentElement.classList.add('dm-soft-nav-active');
-        const transition=document.startViewTransition(swap);
-        await transition.updateCallbackDone.catch(()=>{});
-        await reinitPage(doc);
-        await transition.finished.catch(()=>{});
-        document.documentElement.classList.remove('dm-soft-nav-active');
-      }else{
-        swap();
-        await reinitPage(doc);
+      current.replaceWith(newMain);
+      document.title=doc.title||document.title;
+      const meta=doc.querySelector('meta[name="description"]')?.getAttribute('content');
+      if(meta){
+        let currentMeta=document.querySelector('meta[name="description"]');
+        if(!currentMeta){currentMeta=document.createElement('meta');currentMeta.name='description';document.head.appendChild(currentMeta)}
+        currentMeta.setAttribute('content',meta);
       }
+      document.body.className=doc.body.className||'';
+      if(preservedReduced)document.body.classList.add('dm-reduced');
+      updateActiveNav(url);
+      if(push)history.pushState({dmSoft:true},'',url.href);
+
+      animateIn(newMain);
+      await reinitPage();
 
       requestAnimationFrame(()=>{
         if(url.hash){document.querySelector(url.hash)?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'})}
@@ -192,7 +191,7 @@
     if(!raw||raw.startsWith('#')||raw.startsWith('mailto:')||raw.startsWith('tel:')||raw.startsWith('javascript:'))return;
     let url;try{url=new URL(a.href,location.href)}catch(_){return}
     if(!canSoftNavigate(url))return;
-    if(canonicalPath(url)===canonicalPath(location.href)&&url.search===location.search){return}
+    if(canonicalPath(url)===canonicalPath(location.href)&&url.search===location.search)return;
     e.preventDefault();
     applyPage(url,{push:true});
   },true);
@@ -212,5 +211,5 @@
     else location.reload();
   });
 
-  document.documentElement.classList.remove('dm-page-leaving','dm-motion-ready','dm-native-view');
+  document.documentElement.classList.remove('dm-page-leaving','dm-motion-ready','dm-native-view','dm-soft-nav-active');
 })();
