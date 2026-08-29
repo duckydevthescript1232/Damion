@@ -1,10 +1,11 @@
 (()=>{
   if(!document.querySelector('link[data-dm-brandfx]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/brandfx.css?v=20260828-1';l.dataset.dmBrandfx='1';document.head.appendChild(l)}
   if(!document.querySelector('link[data-dm-buttonfx]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/button-fx.css?v=20260829-1';l.dataset.dmButtonfx='1';document.head.appendChild(l)}
-  if(!document.querySelector('link[data-dm-motionv5]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/motion-v5.css?v=20260829-1';l.dataset.dmMotionv5='1';document.head.appendChild(l)}
+  if(!document.querySelector('link[data-dm-motionv5]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/motion-v5.css?v=20260829-2';l.dataset.dmMotionv5='1';document.head.appendChild(l)}
   if(!document.querySelector('link[data-dm-headerv6]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/header-polish-v6.css?v=20260829-1';l.dataset.dmHeaderv6='1';document.head.appendChild(l)}
+  if(!document.querySelector('link[data-dm-sidebarv7]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/sidebar-v7.css?v=20260829-1';l.dataset.dmSidebarv7='1';document.head.appendChild(l)}
   if(!document.querySelector('script[data-dm-buttonfx]')){const s=document.createElement('script');s.src='/button-fx.js?v=20260829-1';s.defer=true;s.dataset.dmButtonfx='1';document.head.appendChild(s)}
-  if(!document.querySelector('script[data-dm-motionv5]')){const s=document.createElement('script');s.src='/motion-v5.js?v=20260829-1';s.defer=true;s.dataset.dmMotionv5='1';document.head.appendChild(s)}
+  if(!document.querySelector('script[data-dm-motionv5]')){const s=document.createElement('script');s.src='/motion-v5.js?v=20260829-2';s.defer=true;s.dataset.dmMotionv5='1';document.head.appendChild(s)}
   if(!document.querySelector('script[data-dm-headerv6]')){const s=document.createElement('script');s.src='/header-polish-v6.js?v=20260829-1';s.defer=true;s.dataset.dmHeaderv6='1';document.head.appendChild(s)}
   if(!document.querySelector('script[data-dm-presence]')){const s=document.createElement('script');s.src='/presence.js?v=20260829-2';s.defer=true;s.dataset.dmPresence='1';document.head.appendChild(s)}
   const BRAND='DamianMusic';
@@ -21,22 +22,84 @@
 
   const nav=document.querySelector('.nav-actions');
   if(nav&&!nav.querySelector('.dm-menu-btn')){
-    const btn=document.createElement('button');btn.type='button';btn.className='btn dm-menu-btn';btn.setAttribute('aria-label','Open customer menu');btn.innerHTML='<span aria-hidden="true">☰</span>';nav.appendChild(btn);
-    const backdrop=document.createElement('div');backdrop.className='dm-side-backdrop';
-    const panel=document.createElement('aside');panel.className='dm-sidepanel';panel.setAttribute('aria-label','Customer menu');panel.innerHTML=`
-      <div class="dm-side-head"><div><small>DamianMusic</small><br><b>Customer area</b></div><button class="dm-side-close" type="button" aria-label="Close menu">×</button></div>
-      <div class="dm-side-links">
-        <a class="dm-side-link" href="/order#messages"><span><b>Messages</b><small>Open your order conversation</small></span><span>↗</span></a>
-        <a class="dm-side-link" href="/order"><span><b>Track order</b><small>Status, progress and downloads</small></span><span>↗</span></a>
-        <button class="dm-side-link" id="dmSettingsOpen" type="button"><span><b>Settings</b><small>Motion preference</small></span><span>+</span></button>
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='btn dm-menu-btn';
+    btn.setAttribute('aria-label','Open customer menu');
+    btn.setAttribute('aria-expanded','false');
+    btn.innerHTML='<span aria-hidden="true">☰</span>';
+    nav.appendChild(btn);
+
+    const backdrop=document.createElement('div');
+    backdrop.className='dm-side-backdrop';
+
+    const icon=(path)=>`<span class="dm-side-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="${path}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+    const panel=document.createElement('aside');
+    panel.className='dm-sidepanel';
+    panel.setAttribute('aria-label','Customer menu');
+    panel.setAttribute('aria-hidden','true');
+    panel.innerHTML=`
+      <div class="dm-side-head">
+        <div class="dm-side-brand"><img src="/assets/logo.svg" alt=""><div class="dm-side-brand-copy"><b>Damiønmusic</b><small>Your studio hub</small></div></div>
+        <button class="dm-side-close" type="button" aria-label="Close menu">×</button>
       </div>
-      <div class="dm-side-settings" id="dmSettingsBox" hidden><div class="dm-toggle-row"><span>Smooth hover effects</span><button class="dm-switch on" id="dmMotionToggle" type="button" aria-label="Toggle smooth effects"><i></i></button></div></div>`;
+      <div class="dm-side-body">
+        <div class="dm-side-intro"><span class="dm-side-kicker">Customer area</span><h3>Everything for your project.</h3><p>Track an order, message the studio or start something new from one clean place.</p></div>
+
+        <div class="dm-side-section-label">Orders & support</div>
+        <div class="dm-side-links">
+          <a class="dm-side-link" href="/order">${icon('M5 5.5h14v13H5z M8 9h8 M8 12h5')}<span class="dm-side-link-copy"><b>Track your order</b><small>Progress, delivery and downloads</small></span><span class="dm-side-link-arrow">›</span></a>
+          <a class="dm-side-link" href="/order#messages">${icon('M4.5 5.5h15v10h-8l-4.5 3v-3H4.5z')}<span class="dm-side-link-copy"><b>Messages</b><small>Keep support connected to your project</small></span><span class="dm-side-link-arrow">›</span></a>
+          <a class="dm-side-link" href="/contact">${icon('M12 4.5a7.5 7.5 0 1 0 0 15 M8.5 10.5h7 M8.5 13.5h4')}<span class="dm-side-link-copy"><b>Contact support</b><small>Ask a question before or after booking</small></span><span class="dm-side-link-arrow">›</span></a>
+        </div>
+
+        <div class="dm-side-section-label">Booking</div>
+        <div class="dm-side-links">
+          <a class="dm-side-link dm-side-primary" href="/services">${icon('M12 4.5v15 M4.5 12h15')}<span class="dm-side-link-copy"><b>Start a new project</b><small>Browse services and build your order</small></span><span class="dm-side-link-arrow">›</span></a>
+          <button class="dm-side-link" id="dmSettingsOpen" type="button">${icon('M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7 M4.5 12h1.5 M18 12h1.5 M12 4.5V6 M12 18v1.5')}<span class="dm-side-link-copy"><b>Motion settings</b><small>Turn smooth hover effects on or off</small></span><span class="dm-side-link-arrow">+</span></button>
+        </div>
+        <div class="dm-side-settings" id="dmSettingsBox" hidden><div class="dm-toggle-row"><span>Smooth interface motion</span><button class="dm-switch on" id="dmMotionToggle" type="button" aria-label="Toggle smooth effects"><i></i></button></div></div>
+      </div>
+      <div class="dm-side-foot">Secure checkout · Order tracking · Direct studio support</div>`;
+
     document.body.append(backdrop,panel);
-    const close=()=>{backdrop.classList.remove('open');panel.classList.remove('open');document.body.style.overflow=''};
-    const open=()=>{backdrop.classList.add('open');panel.classList.add('open');document.body.style.overflow='hidden'};
-    btn.addEventListener('click',open);backdrop.addEventListener('click',close);panel.querySelector('.dm-side-close').addEventListener('click',close);document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
-    const settingsBtn=panel.querySelector('#dmSettingsOpen'),settingsBox=panel.querySelector('#dmSettingsBox'),toggle=panel.querySelector('#dmMotionToggle');settingsBtn.addEventListener('click',()=>{settingsBox.hidden=!settingsBox.hidden});
-    const reduced=localStorage.getItem('damion_reduce_effects')==='1';document.body.classList.toggle('dm-reduced',reduced);toggle.classList.toggle('on',!reduced);toggle.addEventListener('click',()=>{const next=!document.body.classList.contains('dm-reduced');document.body.classList.toggle('dm-reduced',next);toggle.classList.toggle('on',!next);localStorage.setItem('damion_reduce_effects',next?'1':'0')});
+
+    const close=()=>{
+      backdrop.classList.remove('open');
+      panel.classList.remove('open');
+      panel.setAttribute('aria-hidden','true');
+      btn.setAttribute('aria-expanded','false');
+      document.body.style.overflow='';
+    };
+    const open=()=>{
+      backdrop.classList.add('open');
+      panel.classList.add('open');
+      panel.setAttribute('aria-hidden','false');
+      btn.setAttribute('aria-expanded','true');
+      document.body.style.overflow='hidden';
+      setTimeout(()=>panel.querySelector('.dm-side-close')?.focus({preventScroll:true}),120);
+    };
+    btn.addEventListener('click',open);
+    backdrop.addEventListener('click',close);
+    panel.querySelector('.dm-side-close').addEventListener('click',close);
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('open')){close();btn.focus({preventScroll:true})}});
+
+    const settingsBtn=panel.querySelector('#dmSettingsOpen');
+    const settingsBox=panel.querySelector('#dmSettingsBox');
+    const toggle=panel.querySelector('#dmMotionToggle');
+    settingsBtn.addEventListener('click',()=>{
+      settingsBox.hidden=!settingsBox.hidden;
+      settingsBtn.querySelector('.dm-side-link-arrow').textContent=settingsBox.hidden?'+':'−';
+    });
+    const reduced=localStorage.getItem('damion_reduce_effects')==='1';
+    document.body.classList.toggle('dm-reduced',reduced);
+    toggle.classList.toggle('on',!reduced);
+    toggle.addEventListener('click',()=>{
+      const next=!document.body.classList.contains('dm-reduced');
+      document.body.classList.toggle('dm-reduced',next);
+      toggle.classList.toggle('on',!next);
+      localStorage.setItem('damion_reduce_effects',next?'1':'0');
+    });
   }
 
   const previewHost=document.getElementById('trackList');
