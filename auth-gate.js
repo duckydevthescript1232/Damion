@@ -60,12 +60,53 @@
     document.head.appendChild(s);
   };
 
+  const ensureLanguageBase=()=>{
+    if(!document.querySelector('link[data-dm-language-base]')){
+      const l=document.createElement('link');
+      l.rel='stylesheet';
+      l.href='/language-v1.css?v=20260829-3';
+      l.dataset.dmLanguageBase='1';
+      document.head.appendChild(l);
+    }
+    if(window.__dmLanguageV1||document.querySelector('script[data-dm-language-base]'))return;
+    const s=document.createElement('script');
+    s.src='/language-v1.js?v=20260829-3';
+    s.async=false;
+    s.dataset.dmLanguageBase='1';
+    document.head.appendChild(s);
+  };
+
   const ensureLanguageFinal=()=>{
     if(document.querySelector('script[data-dm-language-final]'))return;
     const s=document.createElement('script');
-    s.src='/language-final-v3.js?v=20260829-1';
+    s.src='/language-final-v3.js?v=20260829-2';
     s.defer=true;
     s.dataset.dmLanguageFinal='1';
+    document.head.appendChild(s);
+  };
+
+  const ensurePresence=()=>{
+    if(window.__dmPresenceLoaded||document.querySelector('script[data-dm-presence]'))return;
+    const s=document.createElement('script');
+    s.src='/presence.js?v=20260829-7';
+    s.defer=true;
+    s.dataset.dmPresence='1';
+    document.head.appendChild(s);
+  };
+
+  const ensureMaxUI=()=>{
+    if(!document.querySelector('link[data-dm-max-ui]')){
+      const l=document.createElement('link');
+      l.rel='stylesheet';
+      l.href='/max-ui-v1.css?v=20260829-1';
+      l.dataset.dmMaxUi='1';
+      document.head.appendChild(l);
+    }
+    if(window.__dmMaxUIV1||document.querySelector('script[data-dm-max-ui]'))return;
+    const s=document.createElement('script');
+    s.src='/max-ui-v1.js?v=20260829-1';
+    s.defer=true;
+    s.dataset.dmMaxUi='1';
     document.head.appendChild(s);
   };
 
@@ -91,15 +132,30 @@
   };
 
   ensureOrderProxy();
+  ensureLanguageBase();
   ensureSafariCompat();
   ensureCartDrawerFix();
   ensureUISounds();
+  ensurePresence();
+  ensureMaxUI();
   ensureNavCleanup();
-  setTimeout(ensureLanguageFinal,300);
+  setTimeout(ensureLanguageFinal,350);
   clearLocks();
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{clearLocks();ensureServiceControls();ensureNavCleanup();ensureCartDrawerFix();ensureUISounds()},{once:true});
-  else {ensureServiceControls();ensureNavCleanup();ensureCartDrawerFix();ensureUISounds();}
-  document.addEventListener('dm:pagechange',()=>setTimeout(()=>{ensureServiceControls();ensureNavCleanup();ensureCartDrawerFix();ensureUISounds()},0));
+
+  const refreshGlobalLayers=()=>{
+    clearLocks();
+    ensureLanguageBase();
+    ensureServiceControls();
+    ensureNavCleanup();
+    ensureCartDrawerFix();
+    ensureUISounds();
+    ensurePresence();
+    ensureMaxUI();
+  };
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',refreshGlobalLayers,{once:true});
+  else refreshGlobalLayers();
+  document.addEventListener('dm:pagechange',()=>setTimeout(refreshGlobalLayers,0));
   setTimeout(clearLocks,250);
   setTimeout(clearLocks,1200);
   setTimeout(()=>document.dispatchEvent(new CustomEvent('dm:pagechange')),700);
