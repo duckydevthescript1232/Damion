@@ -1,1 +1,0 @@
-export default function handler(req,res){res.setHeader('Cache-Control','no-store');res.status(200).json({ok:true,resend:Boolean((process.env.RESEND_API_KEY||'').trim()),from:Boolean((process.env.DAMION_EMAIL_FROM||'').trim())});}
