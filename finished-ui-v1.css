@@ -12,7 +12,7 @@
   --dm-slow:650ms;
 }
 
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden;overflow-x:clip}
 body.home,body.services{background:#070708}
 body.home main,body.services main{isolation:isolate}
 body.home main::before,body.services main::before{
