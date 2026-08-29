@@ -6,6 +6,8 @@
     { "source": "/index.html", "destination": "/", "permanent": true },
     { "source": "/services.html", "destination": "/services", "permanent": true },
     { "source": "/checkout.html", "destination": "/checkout", "permanent": true },
+    { "source": "/plan-checkout.html", "destination": "/plan-checkout", "permanent": true },
+    { "source": "/member.html", "destination": "/member", "permanent": true },
     { "source": "/order.html", "destination": "/order", "permanent": true },
     { "source": "/portfolio.html", "destination": "/portfolio", "permanent": true },
     { "source": "/how-it-works.html", "destination": "/how-it-works", "permanent": true },
@@ -21,6 +23,8 @@
   "rewrites": [
     { "source": "/services", "destination": "/services.html" },
     { "source": "/checkout", "destination": "/checkout.html" },
+    { "source": "/plan-checkout", "destination": "/plan-checkout.html" },
+    { "source": "/member", "destination": "/member.html" },
     { "source": "/order", "destination": "/order.html" },
     { "source": "/portfolio", "destination": "/portfolio.html" },
     { "source": "/how-it-works", "destination": "/how-it-works.html" },
@@ -40,7 +44,7 @@
         { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" },
         { "key": "Pragma", "value": "no-cache" },
         { "key": "Expires", "value": "0" },
-        { "key": "X-Damion-Deploy", "value": "2026-08-29-support" }
+        { "key": "X-Damion-Deploy", "value": "2026-08-29-plans-v1" }
       ]
     }
   ],
