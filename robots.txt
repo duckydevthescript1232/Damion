@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /checkout
+Disallow: /order
+Disallow: /admin-orders
+Disallow: /stats
+
+Sitemap: https://damionmusic.nl/sitemap.xml
