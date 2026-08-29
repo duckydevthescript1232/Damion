@@ -13,6 +13,7 @@
     { "source": "/about.html", "destination": "/about", "permanent": true },
     { "source": "/faq.html", "destination": "/faq", "permanent": true },
     { "source": "/contact.html", "destination": "/contact", "permanent": true },
+    { "source": "/support.html", "destination": "/support", "permanent": true },
     { "source": "/terms.html", "destination": "/terms", "permanent": true },
     { "source": "/privacy.html", "destination": "/privacy", "permanent": true },
     { "source": "/refund.html", "destination": "/refund", "permanent": true }
@@ -27,6 +28,7 @@
     { "source": "/about", "destination": "/about.html" },
     { "source": "/faq", "destination": "/faq.html" },
     { "source": "/contact", "destination": "/contact.html" },
+    { "source": "/support", "destination": "/support.html" },
     { "source": "/terms", "destination": "/terms.html" },
     { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/refund", "destination": "/refund.html" }
@@ -38,7 +40,7 @@
         { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" },
         { "key": "Pragma", "value": "no-cache" },
         { "key": "Expires", "value": "0" },
-        { "key": "X-Damion-Deploy", "value": "2026-08-28-damionmusic-order-room" }
+        { "key": "X-Damion-Deploy", "value": "2026-08-29-support" }
       ]
     }
   ],
