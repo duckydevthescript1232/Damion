@@ -1,46 +1,28 @@
 (()=>{
-  if(window.__dmAuthGate)return;window.__dmAuthGate=true;
-  const API='https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damion-site-auth';
-  const OWNER_SESSION_KEY='damion_site_session';
-  const USER_SESSION_KEY='damion_user_session';
-  const EMAIL_KEY='damion_site_email';
-  const OWNER_FLAG_KEY='damion_site_owner';
-  const path=location.pathname;
-  if(/^\/admin-orders(?:\.html)?$/.test(path))return;
+  /* Public website stays open. Private owner tools are protected separately. */
+  document.documentElement.classList.remove('dm-auth-locking');
+  const gate=document.getElementById('dmAuthGate');
+  if(gate)gate.remove();
 
-  document.documentElement.classList.add('dm-auth-locking');
-  const style=document.createElement('style');style.textContent=`
-    html.dm-auth-locking,html.dm-auth-locking body{overflow:hidden!important}html.dm-auth-locking body>*:not(#dmAuthGate){filter:blur(8px);pointer-events:none!important;user-select:none!important}
-    #dmAuthGate{position:fixed;inset:0;z-index:5000;display:grid;place-items:center;padding:18px;background:radial-gradient(circle at 50% 0,rgba(226,48,72,.12),transparent 34%),rgba(7,8,10,.985);color:#fff;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    .dm-auth-card{width:min(450px,100%);border:1px solid rgba(255,255,255,.10);border-radius:24px;background:linear-gradient(180deg,#141519,#0c0d10);box-shadow:0 30px 90px rgba(0,0,0,.62);padding:26px}.dm-auth-brand{display:flex;align-items:center;gap:11px;margin-bottom:22px}.dm-auth-brand img{width:38px;height:38px}.dm-auth-brand b{display:block;font-size:15px}.dm-auth-brand small{display:block;margin-top:3px;color:#7f848c;font-size:10px;text-transform:uppercase;letter-spacing:.09em}
-    .dm-auth-card h1{margin:0;font-size:34px;letter-spacing:-.045em;line-height:1.02}.dm-auth-card>p{margin:10px 0 18px;color:#969aa1;font-size:13px;line-height:1.55}.dm-auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:#0d0f12;margin-bottom:16px}.dm-auth-tab{min-height:38px;border:0;border-radius:8px;background:transparent;color:#858a92;font-weight:850;cursor:pointer}.dm-auth-tab.active{background:#1a1c20;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.2)}
-    .dm-auth-form{display:grid;gap:10px}.dm-auth-form label{display:grid;gap:6px;color:#d8d9dc;font-size:11px;font-weight:800}.dm-auth-form input{width:100%;min-height:48px;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:#17191d;color:#fff;padding:0 13px;font:inherit;outline:none}.dm-auth-form input:focus{border-color:rgba(232,63,88,.5);box-shadow:0 0 0 3px rgba(232,63,88,.08)}.dm-auth-submit{min-height:48px;border:1px solid rgba(255,100,122,.25);border-radius:12px;background:linear-gradient(180deg,#e44359,#c92f45);color:#fff;font-weight:900;cursor:pointer}.dm-auth-submit:hover{background:linear-gradient(180deg,#eb4d62,#d6384d)}.dm-auth-submit:disabled{opacity:.55;cursor:wait}.dm-auth-status{min-height:18px;color:#90949b;font-size:11px;line-height:1.45}.dm-auth-status.error{color:#ff8ea0}.dm-auth-status.success{color:#7edda5}.dm-auth-help{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.07)}.dm-auth-link{border:0;background:transparent;color:#777c84;font:800 10px/1.2 inherit;cursor:pointer;padding:5px 0}.dm-auth-link:hover{color:#fff}.dm-auth-owner-toggle{opacity:.34}.dm-auth-owner-toggle:hover{opacity:.85}.dm-auth-owner-box{display:none;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07)}.dm-auth-owner-box.open{display:block}.dm-auth-note{margin-top:12px;color:#60656d;font-size:10px;line-height:1.5}.dm-auth-rule{color:#777b83;font-size:10px;margin:-2px 0 2px}.dm-site-account{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);display:grid;gap:8px}.dm-site-account small{color:#747981;font-size:9px;text-transform:uppercase;letter-spacing:.08em}.dm-site-account b{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dm-site-signout{width:100%;min-height:40px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:#131518;color:#c7cbd1;font-weight:800;cursor:pointer}@media(max-width:520px){.dm-auth-card{padding:21px;border-radius:20px}.dm-auth-card h1{font-size:30px}}
-  `;document.head.appendChild(style);
-
-  const root=document.createElement('div');root.id='dmAuthGate';
-  const readStore=k=>{try{return localStorage.getItem(k)||''}catch(_){return''}};
-  const getSaved=()=>{const owner=readStore(OWNER_SESSION_KEY);if(owner)return{token:owner,isOwner:true};const user=readStore(USER_SESSION_KEY);if(user)return{token:user,isOwner:false};return{token:'',isOwner:false}};
-  const setSession=(token,email,isOwner)=>{try{if(isOwner){localStorage.setItem(OWNER_SESSION_KEY,token);localStorage.removeItem(USER_SESSION_KEY);localStorage.removeItem(EMAIL_KEY)}else{localStorage.setItem(USER_SESSION_KEY,token);localStorage.removeItem(OWNER_SESSION_KEY);localStorage.setItem(EMAIL_KEY,email||'')}localStorage.setItem(OWNER_FLAG_KEY,isOwner?'1':'0')}catch(_){}};
-  const clearSession=()=>{try{localStorage.removeItem(OWNER_SESSION_KEY);localStorage.removeItem(USER_SESSION_KEY);localStorage.removeItem(EMAIL_KEY);localStorage.removeItem(OWNER_FLAG_KEY)}catch(_){}};
-  const readEmail=()=>readStore(EMAIL_KEY);
-  async function call(action,extra={}){const r=await fetch(API,{method:'POST',cache:'no-store',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...extra})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Login failed');return d}
-  const escapeHtml=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
-  function unlock(session){document.documentElement.classList.remove('dm-auth-locking');root.remove();window.__dmSiteSession=session||null;window.dispatchEvent(new CustomEvent('dm-site-auth-ready',{detail:session||null}));addAccountMenu(session)}
-  function shell(inner){root.innerHTML=`<section class="dm-auth-card"><div class="dm-auth-brand"><img src="/assets/logo.svg" alt=""><div><b>Damiønmusic</b><small>Member access</small></div></div>${inner}</section>`}
-
-  function showCustomer(mode='login',message=''){
-    const isRegister=mode==='register';
-    shell(`<h1>${isRegister?'Create your account.':'Welcome back.'}</h1><p>${isRegister?'Register with your email and a password to use Damiønmusic.':'Log in with your email and password to continue.'}</p><div class="dm-auth-tabs"><button class="dm-auth-tab ${!isRegister?'active':''}" data-mode="login" type="button">Log in</button><button class="dm-auth-tab ${isRegister?'active':''}" data-mode="register" type="button">Register</button></div><form class="dm-auth-form" id="dmCustomerAuth"><label>Email address<input name="email" type="email" autocomplete="email" required placeholder="you@example.com" value="${escapeHtml(readEmail())}"></label><label>Password<input name="password" type="password" minlength="8" maxlength="128" autocomplete="${isRegister?'new-password':'current-password'}" required placeholder="${isRegister?'Create a password':'Your password'}"></label>${isRegister?'<div class="dm-auth-rule">Use at least 8 characters.</div>':''}<button class="dm-auth-submit" type="submit">${isRegister?'Create account':'Log in'}</button><div class="dm-auth-status${message?' success':''}" aria-live="polite">${escapeHtml(message)}</div></form><div class="dm-auth-help"><span class="dm-auth-link" style="cursor:default">Customer account</span><button class="dm-auth-link dm-auth-owner-toggle" id="dmOwnerReveal" type="button">Owner</button></div><div class="dm-auth-owner-box" id="dmOwnerBox"><form class="dm-auth-form" id="dmOwnerForm"><label>Private owner key<input name="key" type="password" autocomplete="off" required></label><button class="dm-auth-submit" type="submit">Open owner access</button><div class="dm-auth-status" aria-live="polite"></div></form></div><div class="dm-auth-note">Customer accounts never receive admin permissions. Owner tools use a separate private login.</div>`);
-    root.querySelectorAll('.dm-auth-tab').forEach(btn=>btn.addEventListener('click',()=>showCustomer(btn.dataset.mode)));
-    const form=root.querySelector('#dmCustomerAuth'),status=form.querySelector('.dm-auth-status');
-    form.addEventListener('submit',async e=>{e.preventDefault();if(!form.reportValidity())return;const email=String(form.elements.email.value||'').trim().toLowerCase(),password=String(form.elements.password.value||''),btn=form.querySelector('.dm-auth-submit');btn.disabled=true;status.className='dm-auth-status';status.textContent=isRegister?'Creating account…':'Logging in…';try{const out=await call(isRegister?'register':'login',{email,password});setSession(out.session_token,email,false);unlock({authenticated:true,is_owner:false,user:{email},expires_at:out.expires_at})}catch(err){status.className='dm-auth-status error';status.textContent=err.message||'Could not continue'}finally{btn.disabled=false}});
-    root.querySelector('#dmOwnerReveal').addEventListener('click',()=>root.querySelector('#dmOwnerBox').classList.toggle('open'));
-    const ownerForm=root.querySelector('#dmOwnerForm'),ownerStatus=ownerForm.querySelector('.dm-auth-status');ownerForm.addEventListener('submit',async e=>{e.preventDefault();const key=String(ownerForm.elements.key.value||'').trim(),btn=ownerForm.querySelector('.dm-auth-submit');btn.disabled=true;ownerStatus.className='dm-auth-status';ownerStatus.textContent='Checking owner access…';try{const out=await call('owner_login',{key});setSession(out.session_token,'',true);try{localStorage.setItem('dm_admin_key_saved',key);sessionStorage.setItem('dm_admin_key',key)}catch(_){}unlock({authenticated:true,is_owner:true,user:null,expires_at:out.expires_at})}catch(err){ownerStatus.className='dm-auth-status error';ownerStatus.textContent=err.message||'Owner key is incorrect'}finally{btn.disabled=false}});
+  if(!document.querySelector('script[data-dm-presence]')){
+    const s=document.createElement('script');
+    s.src='/presence.js?v=20260829-8';
+    s.defer=true;
+    s.dataset.dmPresence='1';
+    document.head.appendChild(s);
   }
-
-  function addAccountMenu(session){const add=()=>{const body=document.querySelector('.dm-side-body');if(!body||body.querySelector('.dm-site-account'))return false;const who=session?.is_owner?'Owner':session?.user?.email||readEmail()||'Signed in';const box=document.createElement('div');box.className='dm-site-account';box.innerHTML=`<small>${session?.is_owner?'Owner session':'Signed in as'}</small><b>${escapeHtml(who)}</b><button class="dm-site-signout" type="button">Sign out</button>`;box.querySelector('button').addEventListener('click',async()=>{const saved=getSaved();clearSession();if(session?.is_owner){try{localStorage.removeItem('dm_admin_key_saved');sessionStorage.removeItem('dm_admin_key')}catch(_){}}try{await call('logout',{session_token:saved.token})}catch(_){}location.reload()});body.appendChild(box);return true};if(!add())setTimeout(add,450)}
-
-  async function start(){document.body.appendChild(root);const saved=getSaved();if(!saved.token){showCustomer('login');return}shell(`<h1>Signing you in…</h1><p>Checking your saved session.</p><div class="dm-auth-status">Please wait.</div>`);try{const session=await call('session',{session_token:saved.token});if(session.authenticated&&Boolean(session.is_owner)===saved.isOwner){try{localStorage.setItem(OWNER_FLAG_KEY,session.is_owner?'1':'0');if(session.user?.email)localStorage.setItem(EMAIL_KEY,session.user.email)}catch(_){}unlock(session);return}}catch(_){}clearSession();showCustomer('login')}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+  if(!document.querySelector('script[data-dm-admin-toolbox]')){
+    const s=document.createElement('script');
+    s.src='/admin-toolbox.js?v=20260829-2';
+    s.defer=true;
+    s.dataset.dmAdminToolbox='1';
+    document.head.appendChild(s);
+  }
+  if(!document.querySelector('script[data-dm-admin-abuse-v2]')){
+    const s=document.createElement('script');
+    s.src='/admin-abuse-v2.js?v=20260829-1';
+    s.defer=true;
+    s.dataset.dmAdminAbuseV2='1';
+    document.head.appendChild(s);
+  }
 })();
