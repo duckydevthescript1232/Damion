@@ -45,10 +45,7 @@
     backdrop.className='dm-side-backdrop';
 
     const icon=(path)=>`<span class="dm-side-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="${path}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
-    let ownerShortcut='';
-    try{
-      if(localStorage.getItem('damion_site_session'))ownerShortcut=`<div class="dm-side-section-label">Owner tools</div><div class="dm-side-links"><a class="dm-side-link dm-side-primary" href="/admin-orders.html#mini-panel">${icon('M7 10V7.5a5 5 0 0 1 10 0V10 M5.5 10h13v9h-13z M12 13.5v2')}<span class="dm-side-link-copy"><b>Open mini admin</b><small>Orders, support and owner controls</small></span><span class="dm-side-link-arrow">›</span></a></div>`;
-    }catch(_error){}
+    const ownerShortcut=`<div class="dm-side-section-label">Owner access</div><div class="dm-side-links"><a class="dm-side-link" href="/admin-orders.html#mini-panel">${icon('M7 10V7.5a5 5 0 0 1 10 0V10 M5.5 10h13v9h-13z M12 13.5v2')}<span class="dm-side-link-copy"><b>Open mini admin</b><small>Secure owner login required</small></span><span class="dm-side-link-arrow">›</span></a></div>`;
     const panel=document.createElement('aside');
     panel.className='dm-sidepanel';
     panel.setAttribute('aria-label','Customer menu');
