@@ -1,22 +1,39 @@
-/* Damiønmusic motion v5 — lightweight, smooth, no cursor tracking */
+/* Damiønmusic motion v5 — lightweight transitions, no cursor tracking */
 html{scroll-behavior:smooth}
 
-/* Page enter/exit: slower settling, tiny travel, no hard swipe. */
-html.dm-motion-ready main{
-  animation:dmPageEnter .54s cubic-bezier(.16,.82,.24,1) both;
+/* Modern same-origin page transitions. Browsers that support this crossfade and glide
+   the real page snapshot instead of faking a heavy swipe. */
+@view-transition{navigation:auto}
+::view-transition-old(root){
+  animation:dmViewOld .24s cubic-bezier(.4,0,.6,1) both;
+}
+::view-transition-new(root){
+  animation:dmViewNew .46s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes dmViewOld{
+  to{opacity:0;transform:translate3d(-10px,0,0) scale(.996);filter:brightness(.92)}
+}
+@keyframes dmViewNew{
+  from{opacity:0;transform:translate3d(14px,0,0) scale(.996);filter:brightness(.94)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1);filter:brightness(1)}
+}
+
+/* Fallback for browsers without cross-document View Transitions. */
+html.dm-motion-ready:not(.dm-native-view) main{
+  animation:dmPageEnter .50s cubic-bezier(.16,1,.3,1) both;
   transform-origin:50% 42%;
 }
-html.dm-page-leaving main{
+html.dm-page-leaving:not(.dm-native-view) main{
   opacity:0!important;
-  transform:translate3d(-9px,0,0) scale(.997)!important;
-  transition:opacity .22s ease,transform .24s cubic-bezier(.4,0,.55,1)!important;
+  transform:translate3d(-10px,0,0) scale(.997)!important;
+  transition:opacity .24s ease,transform .28s cubic-bezier(.4,0,.55,1)!important;
 }
 @keyframes dmPageEnter{
-  from{opacity:0;transform:translate3d(10px,0,0) scale(.997)}
+  from{opacity:0;transform:translate3d(12px,0,0) scale(.997)}
   to{opacity:1;transform:translate3d(0,0,0) scale(1)}
 }
 
-/* IMPORTANT: default state is the slow return. Hover overrides it with a faster zoom-in. */
+/* Default state = slow, soft return after hover. */
 .dm-hoverfx{
   transform:translateZ(0)!important;
   backface-visibility:hidden;
@@ -28,8 +45,6 @@ html.dm-page-leaving main{
     background-color .46s ease,
     filter .48s ease!important;
 }
-
-/* Buttons also return more slowly after the pointer leaves. */
 .dm-btnfx{
   transition:
     transform .52s cubic-bezier(.16,.78,.22,1),
@@ -41,7 +56,6 @@ html.dm-page-leaving main{
 }
 
 @media(hover:hover) and (pointer:fine){
-  /* Fast zoom-in, slow zoom-back from the default rules above. */
   .service-row.dm-hoverfx:hover,
   .starter-card.dm-hoverfx:hover,
   .price-card.dm-hoverfx:hover,
@@ -86,29 +100,23 @@ html.dm-page-leaving main{
   }
 }
 
-/* Press feedback stays immediate. */
 .dm-btnfx:active,.dm-btnfx.dm-fx-down{
   transform:translate3d(0,0,0) scale(.975)!important;
   transition-duration:.075s!important;
 }
 
-/* Drawer/modal transitions stay smooth without affecting the whole page. */
-.drawer{transition:transform .34s cubic-bezier(.16,.82,.24,1)!important}
-.drawer-bg{transition:opacity .26s ease!important}
+/* Generic modal motion remains local to the component. */
 .modal-bg{animation:none!important}
-.modal-bg.open .modal{animation:dmModalIn .30s cubic-bezier(.16,.82,.24,1) both}
-@keyframes dmModalIn{from{opacity:0;transform:translateY(9px) scale(.988)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-bg.open .modal{animation:dmModalIn .32s cubic-bezier(.16,1,.3,1) both}
+@keyframes dmModalIn{from{opacity:0;transform:translateY(12px) scale(.986)}to{opacity:1;transform:translateY(0) scale(1)}}
 
 @media(prefers-reduced-motion:reduce){
-  html.dm-motion-ready main,
-  html.dm-page-leaving main,
-  .dm-hoverfx,
-  .dm-btnfx,
-  .drawer,
-  .drawer-bg,
-  .modal-bg.open .modal{
+  ::view-transition-old(root),::view-transition-new(root),
+  html.dm-motion-ready main,html.dm-page-leaving main,
+  .dm-hoverfx,.dm-btnfx,.modal-bg.open .modal{
     animation:none!important;
     transition:none!important;
     transform:none!important;
+    filter:none!important;
   }
 }
