@@ -1,13 +1,14 @@
-/* Cart drawer reliability layer — keeps panel above its backdrop on all browsers */
+/* Cart drawer v2 — normal page scrolling + reliable close controls */
 #drawerBg.drawer-bg{
   position:fixed!important;
   inset:0!important;
   z-index:2147483000!important;
-  background:rgba(2,3,5,.72)!important;
+  background:rgba(2,3,5,.58)!important;
   opacity:0!important;
   visibility:hidden!important;
   pointer-events:none!important;
-  transition:opacity .18s ease,visibility 0s linear .18s!important;
+  touch-action:pan-y!important;
+  transition:opacity .16s ease,visibility 0s linear .16s!important;
   -webkit-backdrop-filter:none!important;
   backdrop-filter:none!important;
 }
@@ -15,40 +16,83 @@
   opacity:1!important;
   visibility:visible!important;
   pointer-events:auto!important;
-  transition:opacity .18s ease!important;
+  transition:opacity .16s ease!important;
 }
+
 #cartDrawer.drawer{
   position:fixed!important;
   top:0!important;
   right:0!important;
   bottom:0!important;
   left:auto!important;
-  width:min(430px,100vw)!important;
+  width:min(430px,94vw)!important;
   height:100dvh!important;
-  min-height:100vh!important;
+  max-height:100dvh!important;
   z-index:2147483001!important;
   display:flex!important;
   flex-direction:column!important;
+  overflow:hidden!important;
   opacity:1!important;
   visibility:visible!important;
   pointer-events:none!important;
-  transform:translate3d(105%,0,0)!important;
-  -webkit-transform:translate3d(105%,0,0)!important;
-  transition:transform .28s cubic-bezier(.22,1,.36,1)!important;
-  will-change:transform!important;
+  transform:translate3d(104%,0,0)!important;
+  -webkit-transform:translate3d(104%,0,0)!important;
+  transition:transform .24s cubic-bezier(.22,1,.36,1)!important;
   background:#0b0d10!important;
   border-left:1px solid rgba(255,255,255,.12)!important;
-  box-shadow:-30px 0 70px rgba(0,0,0,.5)!important;
+  box-shadow:-24px 0 58px rgba(0,0,0,.44)!important;
   isolation:isolate!important;
+  overscroll-behavior:contain!important;
 }
 #cartDrawer.drawer.open{
   pointer-events:auto!important;
   transform:translate3d(0,0,0)!important;
   -webkit-transform:translate3d(0,0,0)!important;
 }
-body.cart-open{overflow:hidden!important;touch-action:none}
-#cartDrawer .drawer-body{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
-@supports not (height:100dvh){#cartDrawer.drawer{height:100vh!important}}
+
+/* Never freeze the website just because the cart is open. */
+html:has(#cartDrawer.open),
+body.cart-open{
+  overflow:auto!important;
+  position:static!important;
+  touch-action:pan-y!important;
+}
+
+#cartDrawer .drawer-head,
+#cartDrawer .drawer-foot{
+  flex:0 0 auto!important;
+  position:relative!important;
+  z-index:2!important;
+  background:#0b0d10!important;
+}
+#cartDrawer .drawer-head{
+  border-bottom:1px solid rgba(255,255,255,.08)!important;
+}
+#cartDrawer .drawer-foot{
+  border-top:1px solid rgba(255,255,255,.08)!important;
+}
+#cartDrawer .drawer-body{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  scrollbar-gutter:stable;
+}
+
+/* Close button must always stay clickable above cart contents. */
+#cartDrawer .drawer-head .btn.icon,
+#cartDrawer [data-close-cart]{
+  position:relative!important;
+  z-index:5!important;
+  pointer-events:auto!important;
+  cursor:pointer!important;
+}
+
+@supports not (height:100dvh){
+  #cartDrawer.drawer{height:100vh!important;max-height:100vh!important}
+}
 @media(max-width:520px){
   #cartDrawer.drawer{width:min(92vw,430px)!important}
 }
