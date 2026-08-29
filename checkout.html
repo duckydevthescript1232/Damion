@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="/brandfx.css?v=20260828-1">
   <link rel="stylesheet" href="/motion-v5.css?v=20260829-5">
   <link rel="stylesheet" href="/checkout-motion-v7.css?v=20260829-1">
+  <link rel="stylesheet" href="/language-v1.css?v=20260829-2" data-dm-language="1">
 </head>
 <body class="checkout-page">
   <header class="checkout-header"><div class="checkout-shell checkout-topbar"><a class="brand" href="/"><img src="/assets/logo.svg" alt="Damiønmusic logo"><span class="brand-name">Damiønmusic</span></a><a class="checkout-back" href="/services">← Back to services</a></div></header>
@@ -41,13 +42,15 @@
         </form>
       </section>
 
-      <aside class="checkout-card checkout-summary-card"><div class="checkout-summary-title"><div><span class="checkout-eyebrow">Your order</span><h2>Order summary</h2></div><a href="/services" aria-label="Edit order">Edit</a></div><div id="checkoutItems" class="checkout-items"></div><div class="checkout-total-row"><span>Quoted total</span><strong id="checkoutPageTotal">€0.00</strong></div><div class="checkout-summary-note"><span>✓</span><p><b>Private order room</b><br>Your project details and messages stay together.</p></div><div class="checkout-summary-note"><span>✓</span><p><b>No PayPal</b><br>No payment provider is loaded on this page.</p></div></aside>
+      <aside class="checkout-card checkout-summary-card"><div class="checkout-summary-title"><div><span class="checkout-eyebrow">Your order</span><h2>Order summary</h2></div><a href="/services" aria-label="Edit order">Edit</a></div><div id="checkoutItems" class="checkout-items"></div><div class="checkout-total-row"><span>Quoted total</span><strong id="checkoutPageTotal">€0.00</strong></div><div class="checkout-summary-note"><span>✓</span><p><b>Private order room</b><br>Your project details and messages stay together.</p></div><div class="checkout-summary-note"><span>✓</span><p><b>iDEAL</b><br>No payment provider is loaded on this page.</p></div></aside>
     </div>
 
-    <section id="checkoutSuccess" class="checkout-success" hidden><div class="checkout-success-mark">✓</div><span class="checkout-eyebrow">Order request saved</span><h1>Your project is in the system.</h1><p id="successText">Your order request was saved. No payment was taken.</p><div class="checkout-success-order"><span>Damiønmusic order</span><strong id="successOrderId">Saved</strong></div><div class="checkout-success-actions"><a id="successTrackOrder" class="btn primary" href="/order">Open your order room</a><a class="btn" href="/support">Get support</a></div><p class="checkout-privacy" style="margin-top:18px">Status stays <b>Pending payment</b> until a payment method is connected and payment is confirmed.</p></section>
+    <section id="checkoutSuccess" class="checkout-success" hidden><div class="checkout-success-mark">✓</div><span class="checkout-eyebrow">Order request saved</span><h1>Your project is in the system.</h1><p id="successText">Your order request was saved. No payment was taken.</p><div class="checkout-success-order"><span>Damiønmusic order</span><strong id="successOrderId">Saved</strong></div><div class="checkout-success-actions"><a id="successTrackOrder" class="btn primary" href="/order">Open your order room</a><a class="btn" href="/support">Get support</a></div><p class="checkout-privacy" style="margin-top:18px">Status stays <b>Pending payment</b> until iDEAL is connected and payment is confirmed.</p></section>
   </main>
 
   <footer class="checkout-footer"><div class="checkout-shell"><span>© Damiønmusic</span><div><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/refund">Refund policy</a></div></div></footer>
+  <script src="/language-v1.js?v=20260829-2" defer data-dm-language="1"></script>
+  <script src="/language-extra-v2.js?v=20260829-1" defer data-dm-language-extra="1"></script>
   <script src="/motion-v5.js?v=20260829-5"></script>
   <script src="/checkout.js?v=20260829-3"></script>
 </body>
