@@ -1,78 +1,88 @@
 (()=>{
-  const API='https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damion-orders';
+  const ORDER_API='https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damion-orders';
+  const SUPPORT_API='https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damion-support';
   const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1dGxoY2Vxa2lvc2hlcGZieWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMDAxMDUsImV4cCI6MjEwMTU3NjEwNX0.Ad9wROEhZ2uKxKx9H5AHqCCmFa0nTezrBHkAn-Zwyws';
   const SESSION_KEY='dm_admin_key';
   const SAVED_KEY='dm_admin_key_saved';
   const $=id=>document.getElementById(id);
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const eur=v=>new Intl.NumberFormat('nl-NL',{style:'currency',currency:'EUR'}).format(Number(v||0));
-  let adminKey='';let timer=null;let known=new Set();
+  let adminKey='';let timer=null;let knownOrders=new Set();let supportChats=[];let activeTicket='';let knownSupport=new Map();
 
-  async function call(action,extra={}){
-    const res=await fetch(API,{method:'POST',cache:'no-store',headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':`Bearer ${ANON}`},body:JSON.stringify({action,adminKey,...extra})});
+  async function api(url,action,extra={}){
+    const res=await fetch(url,{method:'POST',cache:'no-store',headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':`Bearer ${ANON}`},body:JSON.stringify({action,adminKey,...extra})});
     const data=await res.json().catch(()=>({}));
     if(!res.ok)throw new Error(data.error||'Request failed');
     return data;
   }
+  const callOrders=(action,extra={})=>api(ORDER_API,action,extra);
+  const callSupport=(action,extra={})=>api(SUPPORT_API,action,extra);
 
   function renderOrders(orders){
     const host=$('orders');if(!host)return;
     if(!orders.length){host.innerHTML='<div class="empty">No orders yet.</div>';return}
     host.innerHTML=orders.map(o=>`<article class="order-row" data-ref="${esc(o.order_number)}"><div><span class="order-id">${esc(o.order_number)}</span><small>${new Date(o.created_at).toLocaleString()}</small></div><div><span class="order-project">${esc(o.project_name)}</span><small>${esc(o.customer_name)} · ${esc(o.customer_email)}</small></div><div><b>${esc(o.service_name)}</b><small>${esc(o.package_name||'')}</small></div><div class="order-total">${eur(o.amount_eur)}</div><div class="order-status">${esc(o.status||'Paid')}</div></article>`).join('');
   }
+  function stats(orders){$('statTotal').textContent=orders.length;$('statActive').textContent=orders.filter(o=>!['Completed','Cancelled','Refunded'].includes(o.status)).length;$('statDone').textContent=orders.filter(o=>o.status==='Completed').length;$('statRevenue').textContent=eur(orders.reduce((s,o)=>s+Number(o.amount_eur||0),0))}
+  function notifyNewOrders(orders){const fresh=orders.filter(o=>!knownOrders.has(o.order_number));if(knownOrders.size&&fresh.length&&'Notification'in window&&Notification.permission==='granted')new Notification('New Damiønmusic order',{body:`${fresh[0].order_number} · ${fresh[0].project_name}`});knownOrders=new Set(orders.map(o=>o.order_number))}
 
-  function stats(orders){
-    $('statTotal').textContent=orders.length;
-    $('statActive').textContent=orders.filter(o=>!['Completed','Cancelled','Refunded'].includes(o.status)).length;
-    $('statDone').textContent=orders.filter(o=>o.status==='Completed').length;
-    $('statRevenue').textContent=eur(orders.reduce((s,o)=>s+Number(o.amount_eur||0),0));
-  }
+  function rememberOwnerKey(key){try{sessionStorage.setItem(SESSION_KEY,key)}catch(_){}try{localStorage.setItem(SAVED_KEY,key)}catch(_){}}
+  function forgetOwnerKey(){try{sessionStorage.removeItem(SESSION_KEY)}catch(_){}try{localStorage.removeItem(SAVED_KEY)}catch(_){}}
 
-  function notifyNew(orders){
-    const fresh=orders.filter(o=>!known.has(o.order_number));
-    if(known.size&&fresh.length&&'Notification'in window&&Notification.permission==='granted')new Notification('New Damiønmusic order',{body:`${fresh[0].order_number} · ${fresh[0].project_name}`});
-    known=new Set(orders.map(o=>o.order_number));
-  }
-
-  function rememberOwnerKey(key){
-    try{sessionStorage.setItem(SESSION_KEY,key)}catch(_){}
-    try{localStorage.setItem(SAVED_KEY,key)}catch(_){}
-  }
-
-  function forgetOwnerKey(){
-    try{sessionStorage.removeItem(SESSION_KEY)}catch(_){}
-    try{localStorage.removeItem(SAVED_KEY)}catch(_){}
-  }
-
-  async function refresh(){
+  async function refreshOrders(){
     if(!adminKey)return;
-    $('dashStatus').textContent='Refreshing…';$('dashStatus').classList.remove('error');
-    try{
-      const data=await call('admin_list');const orders=data.orders||[];
-      notifyNew(orders);stats(orders);renderOrders(orders);
-      $('dashStatus').textContent='';$('lastCheck').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});$('liveText').textContent='Private dashboard + live visitor view active';
-    }catch(err){$('dashStatus').textContent=err.message||'Could not load orders';$('dashStatus').classList.add('error')}
+    try{const data=await callOrders('admin_list');const orders=data.orders||[];notifyNewOrders(orders);stats(orders);renderOrders(orders);$('dashStatus').textContent='';$('lastCheck').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
+    catch(err){$('dashStatus').textContent=err.message||'Could not load orders';$('dashStatus').classList.add('error')}
   }
+
+  function supportPreview(chat){const m=chat.last_message;return m?.message||'No message preview'}
+  function supportTime(chat){const iso=chat.last_message?.created_at||chat.updated_at||chat.created_at;try{return new Date(iso).toLocaleString([],{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(_){return''}}
+  function renderSupportThreads(){
+    const host=$('supportThreads');if(!host)return;
+    $('supportCount').textContent=String(supportChats.filter(c=>c.status==='open').length);
+    if(!supportChats.length){host.innerHTML='<div class="support-empty">No support chats yet.</div>';return}
+    host.innerHTML=supportChats.map(c=>`<button type="button" class="support-thread${activeTicket===c.ticket_number?' active':''}" data-ticket="${esc(c.ticket_number)}"><div class="support-thread-top"><span class="support-thread-name">${esc(c.name)}</span><span class="support-thread-status ${esc(c.status||'open')}">${esc(c.status||'open')}</span></div><div class="support-thread-preview">${c.last_message?.sender==='staff'?'You: ':''}${esc(supportPreview(c))}</div><div class="support-thread-meta">${esc(c.ticket_number)} · ${esc(supportTime(c))}</div></button>`).join('');
+    host.querySelectorAll('.support-thread').forEach(btn=>btn.addEventListener('click',()=>openSupport(btn.dataset.ticket)));
+  }
+  function notifySupport(chats){
+    const changed=[];
+    for(const c of chats){const stamp=c.last_message?.created_at||c.updated_at||'';const prev=knownSupport.get(c.ticket_number);if(knownSupport.size&&stamp&&prev&&stamp!==prev&&c.last_message?.sender==='customer')changed.push(c);knownSupport.set(c.ticket_number,stamp)}
+    if(changed.length&&'Notification'in window&&Notification.permission==='granted')new Notification('New support message',{body:`${changed[0].name}: ${supportPreview(changed[0]).slice(0,90)}`});
+  }
+  async function refreshSupport(openActive=false){
+    if(!adminKey)return;
+    try{const data=await callSupport('admin_list');supportChats=data.chats||[];notifySupport(supportChats);renderSupportThreads();$('supportAdminStatus').textContent='';$('supportAdminStatus').classList.remove('error');$('supportLastCheck').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});if(openActive&&activeTicket)await openSupport(activeTicket,true)}
+    catch(err){$('supportAdminStatus').textContent=err.message||'Could not load support chats';$('supportAdminStatus').classList.add('error')}
+  }
+
+  function renderConversation(data){
+    const box=$('supportConversation');if(!box)return;const c=data.chat||{};const messages=data.messages||[];
+    box.innerHTML=`<div class="support-convo-head"><div><b>${esc(c.name||'Customer')}</b><small>${esc(c.email||'')} · ${esc(c.ticket_number||'')}</small></div><button id="closeSupportChat" type="button">${c.status==='closed'?'Closed':'Close chat'}</button></div><div class="support-convo-messages" id="supportMessages">${messages.map(m=>`<div class="support-message ${m.sender==='staff'?'staff':'customer'}"><span>${m.sender==='staff'?'You':'Customer'}</span><p>${esc(m.message)}</p><small>${new Date(m.created_at).toLocaleString([],{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</small></div>`).join('')||'<div class="support-empty">No messages.</div>'}</div><form id="supportReplyForm" class="support-reply"><textarea name="message" maxlength="4000" required placeholder="Write your reply..."></textarea><button class="btn primary" type="submit">Reply</button><div class="status-line" aria-live="polite"></div></form>`;
+    const list=$('supportMessages');if(list)list.scrollTop=list.scrollHeight;
+    const closeBtn=$('closeSupportChat');if(c.status==='closed')closeBtn.disabled=true;else closeBtn.addEventListener('click',async()=>{closeBtn.disabled=true;try{const out=await callSupport('admin_close',{ticket:c.ticket_number});renderConversation(out);await refreshSupport()}catch(err){$('supportAdminStatus').textContent=err.message||'Could not close chat';closeBtn.disabled=false}});
+    const form=$('supportReplyForm');form.addEventListener('submit',async e=>{e.preventDefault();if(!form.reportValidity())return;const btn=form.querySelector('button'),status=form.querySelector('.status-line'),message=form.elements.message.value;btn.disabled=true;status.textContent='Sending reply…';status.classList.remove('error');try{const out=await callSupport('admin_reply',{ticket:c.ticket_number,message});form.elements.message.value='';renderConversation(out);await refreshSupport()}catch(err){status.textContent=err.message||'Could not send reply';status.classList.add('error')}finally{btn.disabled=false}});
+  }
+  async function openSupport(ticket,silent=false){
+    activeTicket=String(ticket||'');renderSupportThreads();if(!activeTicket)return;
+    if(!silent)$('supportConversation').innerHTML='<div class="support-empty">Loading conversation…</div>';
+    try{const data=await callSupport('admin_get',{ticket:activeTicket});renderConversation(data)}catch(err){$('supportConversation').innerHTML=`<div class="support-empty">${esc(err.message||'Could not open conversation')}</div>`}
+  }
+
+  async function refreshAll(){if(!adminKey)return;$('dashStatus').textContent='Refreshing…';$('dashStatus').classList.remove('error');await Promise.all([refreshOrders(),refreshSupport(Boolean(activeTicket))]);$('dashStatus').textContent=''}
 
   async function login(key){
     adminKey=String(key||'').trim();if(!adminKey)return;
     $('loginStatus').textContent='Checking…';$('loginStatus').classList.remove('error');
-    try{
-      await call('admin_list');
-      rememberOwnerKey(adminKey);
-      $('loginCard').classList.add('hidden');$('dashboard').classList.remove('hidden');$('viewSiteBtn')?.classList.remove('hidden');$('logoutBtn')?.classList.remove('hidden');$('loginStatus').textContent='';
-      await refresh();if(timer)clearInterval(timer);timer=setInterval(refresh,20000);
-    }catch(err){adminKey='';forgetOwnerKey();$('loginStatus').textContent=err.message||'Admin key is incorrect';$('loginStatus').classList.add('error')}
+    try{await callOrders('admin_list');rememberOwnerKey(adminKey);$('loginCard').classList.add('hidden');$('dashboard').classList.remove('hidden');$('viewSiteBtn')?.classList.remove('hidden');$('logoutBtn')?.classList.remove('hidden');$('loginStatus').textContent='';$('liveText').textContent='Private dashboard + live visitor view active';await refreshAll();if(timer)clearInterval(timer);timer=setInterval(()=>{if(document.visibilityState==='visible')refreshAll()},12000)}
+    catch(err){adminKey='';forgetOwnerKey();$('loginStatus').textContent=err.message||'Admin key is incorrect';$('loginStatus').classList.add('error')}
   }
 
   $('loginForm')?.addEventListener('submit',e=>{e.preventDefault();login($('adminKey').value)});
-  $('refreshBtn')?.addEventListener('click',refresh);
+  $('refreshBtn')?.addEventListener('click',refreshAll);
   $('notifyBtn')?.addEventListener('click',async()=>{if(!('Notification'in window))return alert('Browser notifications are not supported here.');const p=await Notification.requestPermission();$('notifyBtn').textContent=p==='granted'?'Notifications enabled':'Notifications blocked'});
   $('logoutBtn')?.addEventListener('click',()=>{forgetOwnerKey();location.reload()});
   window.addEventListener('pagehide',()=>{if(timer)clearInterval(timer)},{once:true});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&adminKey)refreshAll()});
 
-  let saved='';
-  try{saved=sessionStorage.getItem(SESSION_KEY)||''}catch(_){}
-  if(!saved){try{saved=localStorage.getItem(SAVED_KEY)||''}catch(_){}}
-  if(saved){$('adminKey').value=saved;login(saved)}
+  let saved='';try{saved=sessionStorage.getItem(SESSION_KEY)||''}catch(_){}if(!saved){try{saved=localStorage.getItem(SAVED_KEY)||''}catch(_){}}if(saved){$('adminKey').value=saved;login(saved)}
 })();
