@@ -12,7 +12,7 @@
 
   const BRAND='Damiønmusic';
   const AUDIO='https://wutlhceqkioshepfbykf.supabase.co/storage/v1/object/public/service-media/site/damianmusic-preview-full.mp3?v=20260828-full-1';
-  const fixBrandText=v=>String(v||'').replaceAll('Damiønmusicmusic',BRAND).replaceAll('DamianMusic',BRAND).replaceAll('DamionMusic',BRAND).replaceAll('Damiøn',BRAND).replaceAll('DAMIANMUSIC','DAMIØNMUSIC').replaceAll('DAMIØN','DAMIØNMUSIC');
+  const fixBrandText=v=>String(v||'').replaceAll('Damiønmusicmusic',BRAND).replaceAll('DamianMusic',BRAND).replaceAll('DamionMusic',BRAND).replace(/\bDamiøn\b/g,BRAND).replaceAll('DAMIANMUSIC','DAMIØNMUSIC').replace(/\bDAMIØN\b/g,'DAMIØNMUSIC');
 
   document.querySelectorAll('.brand-name').forEach(el=>el.textContent=BRAND);
   document.querySelectorAll('.footer-brand b').forEach(el=>el.textContent=BRAND);
