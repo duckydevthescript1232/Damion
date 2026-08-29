@@ -37,11 +37,13 @@
   };
 
   ensureSafariCompat();
-  ensureLanguageFinal();
+  setTimeout(ensureLanguageFinal,300);
   clearLocks();
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{clearLocks();ensureServiceControls()},{once:true});
   else ensureServiceControls();
   document.addEventListener('dm:pagechange',()=>setTimeout(ensureServiceControls,0));
   setTimeout(clearLocks,250);
   setTimeout(clearLocks,1200);
+  setTimeout(()=>document.dispatchEvent(new CustomEvent('dm:pagechange')),700);
+  setTimeout(()=>document.dispatchEvent(new CustomEvent('dm:pagechange')),1500);
 })();
