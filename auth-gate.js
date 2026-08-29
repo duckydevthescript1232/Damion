@@ -25,6 +25,10 @@
     document.getElementById('dmAuthGate')?.remove();
   };
 
+  const removeBuggyNav=()=>{
+    document.querySelectorAll('.navlinks').forEach(el=>el.remove());
+  };
+
   const ensureUnifiedTheme=()=>{
     if(document.querySelector('link[data-dm-unified-theme]'))return;
     const l=document.createElement('link');
@@ -36,7 +40,6 @@
 
   const ensureFastMotion=()=>{
     if(window.__dmMotionV5)return;
-    /* Claim the old motion flag before any cached legacy script can install soft navigation. */
     window.__dmMotionV5=true;
     const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const selector='.service-row,.starter-card,.price-card,.card,.browse-card,.dm-preview-shell,.hero-studio-shot,.brand';
@@ -48,12 +51,34 @@
       main.animate([{opacity:.985,transform:'translate3d(0,2px,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],{duration:90,easing:'cubic-bezier(.2,.8,.2,1)',fill:'both'});
     };
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
-    new MutationObserver(records=>{
-      if(records.some(r=>r.addedNodes.length))requestAnimationFrame(mark);
-    }).observe(document.documentElement,{childList:true,subtree:true});
+    new MutationObserver(records=>{if(records.some(r=>r.addedNodes.length))requestAnimationFrame(mark)}).observe(document.documentElement,{childList:true,subtree:true});
     document.addEventListener('dm:pagechange',()=>requestAnimationFrame(mark));
     history.scrollRestoration='auto';
     document.documentElement.classList.remove('dm-page-leaving','dm-motion-ready','dm-native-view','dm-soft-nav-active');
+  };
+
+  const ensureInteraction=()=>{
+    if(!document.querySelector('link[data-dm-interaction-v2]')){
+      const l=document.createElement('link');
+      l.rel='stylesheet';
+      l.href='/interaction-v2.css?v=20260829-1';
+      l.dataset.dmInteractionV2='1';
+      document.head.appendChild(l);
+    }
+    if(!document.querySelector('link[data-dm-buttonfx]')){
+      const l=document.createElement('link');
+      l.rel='stylesheet';
+      l.href='/button-fx.css?v=20260829-2';
+      l.dataset.dmButtonfx='1';
+      document.head.appendChild(l);
+    }
+    if(!window.__dmButtonFxReady&&!document.querySelector('script[data-dm-buttonfx]')){
+      const s=document.createElement('script');
+      s.src='/button-fx.js?v=20260829-2';
+      s.defer=true;
+      s.dataset.dmButtonfx='1';
+      document.head.appendChild(s);
+    }
   };
 
   const ensureSafariCompat=()=>{
@@ -83,11 +108,11 @@
   };
 
   const ensureUISounds=()=>{
-    if(window.__dmUISoundsV2||document.querySelector('script[data-dm-ui-sounds]'))return;
+    if(window.__dmUISoundsV3||document.querySelector('script[data-dm-ui-sounds-v3]'))return;
     const s=document.createElement('script');
-    s.src='/ui-sounds-v1.js?v=20260829-2';
+    s.src='/ui-sounds-v1.js?v=20260829-3';
     s.defer=true;
-    s.dataset.dmUiSounds='1';
+    s.dataset.dmUiSoundsV3='1';
     document.head.appendChild(s);
   };
 
@@ -168,29 +193,33 @@
   ensureLanguageBase();
   ensureSafariCompat();
   ensureCartDrawerFix();
-  ensureUISounds();
   ensurePresence();
   ensureMaxUI();
+  ensureInteraction();
+  ensureUISounds();
   ensureNavCleanup();
   setTimeout(ensureLanguageFinal,350);
   clearLocks();
 
   const refreshGlobalLayers=()=>{
     clearLocks();
+    removeBuggyNav();
     ensureUnifiedTheme();
     ensureFastMotion();
     ensureLanguageBase();
     ensureServiceControls();
     ensureNavCleanup();
     ensureCartDrawerFix();
-    ensureUISounds();
     ensurePresence();
     ensureMaxUI();
+    ensureInteraction();
+    ensureUISounds();
   };
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',refreshGlobalLayers,{once:true});
   else refreshGlobalLayers();
   document.addEventListener('dm:pagechange',()=>setTimeout(refreshGlobalLayers,0));
+  setTimeout(removeBuggyNav,50);
   setTimeout(clearLocks,250);
   setTimeout(clearLocks,1200);
   setTimeout(()=>document.dispatchEvent(new CustomEvent('dm:pagechange')),700);
