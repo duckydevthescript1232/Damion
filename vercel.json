@@ -4,10 +4,12 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/browse-services.html", "destination": "/browse-services", "permanent": true },
     { "source": "/services.html", "destination": "/services", "permanent": true },
     { "source": "/checkout.html", "destination": "/checkout", "permanent": true },
     { "source": "/order.html", "destination": "/order", "permanent": true },
-    { "source": "/portfolio.html", "destination": "/portfolio", "permanent": true },
+    { "source": "/portfolio.html", "destination": "/browse-services", "permanent": true },
+    { "source": "/portfolio", "destination": "/browse-services", "permanent": true },
     { "source": "/how-it-works.html", "destination": "/how-it-works", "permanent": true },
     { "source": "/pricing.html", "destination": "/services", "permanent": true },
     { "source": "/pricing", "destination": "/services", "permanent": true },
@@ -20,10 +22,10 @@
     { "source": "/refund.html", "destination": "/refund", "permanent": true }
   ],
   "rewrites": [
+    { "source": "/browse-services", "destination": "/browse-services.html" },
     { "source": "/services", "destination": "/services.html" },
     { "source": "/checkout", "destination": "/checkout.html" },
     { "source": "/order", "destination": "/order.html" },
-    { "source": "/portfolio", "destination": "/portfolio.html" },
     { "source": "/how-it-works", "destination": "/how-it-works.html" },
     { "source": "/about", "destination": "/about.html" },
     { "source": "/faq", "destination": "/faq.html" },
@@ -40,7 +42,7 @@
         { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" },
         { "key": "Pragma", "value": "no-cache" },
         { "key": "Expires", "value": "0" },
-        { "key": "X-Damion-Deploy", "value": "2026-08-29-no-pricing" }
+        { "key": "X-Damion-Deploy", "value": "2026-08-29-browse-services-no-work" }
       ]
     }
   ],
