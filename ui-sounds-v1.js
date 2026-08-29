@@ -1,6 +1,6 @@
 (()=>{
-  if(window.__dmUISoundsV2)return;
-  window.__dmUISoundsV2=true;
+  if(window.__dmUISoundsV3)return;
+  window.__dmUISoundsV3=true;
 
   const AudioCtx=window.AudioContext||window.webkitAudioContext;
   if(!AudioCtx)return;
@@ -8,6 +8,7 @@
   let ctx=null;
   let unlocked=false;
   let lastClick=0;
+  let lastHover=0;
 
   const getCtx=()=>{
     if(!ctx){
@@ -23,31 +24,40 @@
     unlocked=true;
   };
 
-  const noiseTick=(volume=.018,duration=.026,cutoff=1300)=>{
+  const makeNoise=(duration=.045)=>{
     const c=getCtx();
-    if(!c||!unlocked)return;
+    if(!c)return null;
     const frames=Math.max(1,Math.floor(c.sampleRate*duration));
     const buffer=c.createBuffer(1,frames,c.sampleRate);
     const data=buffer.getChannelData(0);
     for(let i=0;i<frames;i++){
-      const env=1-(i/frames);
+      const x=i/frames;
+      const env=Math.pow(1-x,1.8);
       data[i]=(Math.random()*2-1)*env;
     }
     const src=c.createBufferSource();
-    const hp=c.createBiquadFilter();
-    const gain=c.createGain();
-    hp.type='highpass';
-    hp.frequency.value=cutoff;
-    hp.Q.value=.45;
-    const now=c.currentTime;
-    gain.gain.setValueAtTime(volume,now);
-    gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
     src.buffer=buffer;
-    src.connect(hp);hp.connect(gain);gain.connect(c.destination);
+    return src;
+  };
+
+  const swoosh=(volume=.0085,duration=.048,from=850,to=2200)=>{
+    const c=getCtx();
+    if(!c||!unlocked)return;
+    const src=makeNoise(duration);if(!src)return;
+    const bp=c.createBiquadFilter();
+    const gain=c.createGain();
+    const now=c.currentTime;
+    bp.type='bandpass';bp.Q.value=.65;
+    bp.frequency.setValueAtTime(from,now);
+    bp.frequency.exponentialRampToValueAtTime(to,now+duration);
+    gain.gain.setValueAtTime(.0001,now);
+    gain.gain.linearRampToValueAtTime(volume,now+.009);
+    gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
+    src.connect(bp);bp.connect(gain);gain.connect(c.destination);
     src.start(now);
   };
 
-  const lowTap=(freq=180,volume=.0045,duration=.032)=>{
+  const softBody=(freq=150,volume=.0042,duration=.052)=>{
     const c=getCtx();
     if(!c||!unlocked)return;
     const now=c.currentTime;
@@ -55,7 +65,7 @@
     const gain=c.createGain();
     osc.type='sine';
     osc.frequency.setValueAtTime(freq,now);
-    osc.frequency.exponentialRampToValueAtTime(Math.max(70,freq*.72),now+duration);
+    osc.frequency.exponentialRampToValueAtTime(Math.max(72,freq*.63),now+duration);
     gain.gain.setValueAtTime(volume,now);
     gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
     osc.connect(gain);gain.connect(c.destination);
@@ -64,27 +74,29 @@
 
   const clickSound=(kind='normal')=>{
     const now=performance.now();
-    if(now-lastClick<65)return;
+    if(now-lastClick<70)return;
     lastClick=now;
-
     if(kind==='primary'){
-      noiseTick(.016,.028,1150);
-      lowTap(165,.0048,.035);
-      return;
+      swoosh(.012,.055,720,1800);softBody(158,.0052,.058);return;
     }
     if(kind==='close'){
-      noiseTick(.011,.022,950);
-      lowTap(135,.0032,.028);
-      return;
+      swoosh(.0065,.038,1350,700);softBody(118,.0028,.038);return;
     }
     if(kind==='select'){
-      noiseTick(.013,.022,1500);
-      return;
+      swoosh(.0078,.038,1100,1900);return;
     }
-    noiseTick(.0115,.021,1350);
+    swoosh(.0075,.042,900,1700);softBody(142,.0027,.04);
   };
 
-  const soundTarget=target=>target?.closest?.('button, a.btn, .package, .addon, .service-configure, .checkout-continue, .checkout-back');
+  const hoverSound=()=>{
+    if(!unlocked||!window.matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+    const now=performance.now();
+    if(now-lastHover<240)return;
+    lastHover=now;
+    swoosh(.0026,.032,1150,1750);
+  };
+
+  const soundTarget=target=>target?.closest?.('button, a.btn, .package, .addon, .service-configure, .checkout-continue, .checkout-back, .dm-side-link, .service-row, .browse-card');
   const kindFor=el=>{
     if(el.matches('.dm-config-close,[aria-label*="Close" i],.checkout-back'))return 'close';
     if(el.matches('.package,.addon,input[type="checkbox"]'))return 'select';
@@ -99,12 +111,18 @@
     clickSound(kindFor(el));
   },{capture:true,passive:true});
 
+  document.addEventListener('pointerover',e=>{
+    const el=soundTarget(e.target);
+    if(!el||el.matches(':disabled,[aria-disabled="true"]')||el.closest('[data-dm-sound="off"]'))return;
+    if(e.relatedTarget&&el.contains(e.relatedTarget))return;
+    hoverSound();
+  },{capture:true,passive:true});
+
   document.addEventListener('keydown',e=>{
     if(e.key!=='Enter'&&e.key!==' ')return;
     const el=soundTarget(e.target);
     if(!el||el.matches(':disabled,[aria-disabled="true"]')||el.closest('[data-dm-sound="off"]'))return;
-    unlock();
-    clickSound(kindFor(el));
+    unlock();clickSound(kindFor(el));
   },true);
 
   window.dmUISound=(kind='normal')=>{unlock();clickSound(kind);};
