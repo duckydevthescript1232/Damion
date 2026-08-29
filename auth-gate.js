@@ -15,6 +15,15 @@
     document.head.appendChild(s);
   };
 
+  const ensureLanguageFinal=()=>{
+    if(document.querySelector('script[data-dm-language-final]'))return;
+    const s=document.createElement('script');
+    s.src='/language-final-v3.js?v=20260829-1';
+    s.defer=true;
+    s.dataset.dmLanguageFinal='1';
+    document.head.appendChild(s);
+  };
+
   const ensureServiceControls=()=>{
     if(!document.getElementById('serviceList'))return;
     if(window.__dmServicesControlsV2){window.dmEnsureServicesModal?.();return;}
@@ -28,6 +37,7 @@
   };
 
   ensureSafariCompat();
+  ensureLanguageFinal();
   clearLocks();
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{clearLocks();ensureServiceControls()},{once:true});
   else ensureServiceControls();
