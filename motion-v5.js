@@ -4,15 +4,17 @@
 
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const hoverSelector='.service-row,.starter-card,.price-card,.card,.dm-preview-shell,.hero-studio-shot,.brand';
-
   const mark=()=>document.querySelectorAll(hoverSelector).forEach(el=>el.classList.add('dm-hoverfx'));
   mark();
   new MutationObserver(mark).observe(document.body,{childList:true,subtree:true});
 
+  const nativeView=!reduced && ('startViewTransition' in document) && !!window.CSS?.supports?.('view-transition-name: root');
+  if(nativeView)document.documentElement.classList.add('dm-native-view');
   requestAnimationFrame(()=>document.documentElement.classList.add('dm-motion-ready'));
 
-  if(reduced)return;
+  if(reduced||nativeView)return;
 
+  /* Fallback only: tiny fade/glide before normal same-origin navigation. */
   document.addEventListener('click',e=>{
     if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
     const a=e.target.closest?.('a[href]');
@@ -30,7 +32,7 @@
 
     e.preventDefault();
     document.documentElement.classList.add('dm-page-leaving');
-    setTimeout(()=>{location.href=url.href},185);
+    setTimeout(()=>{location.href=url.href},225);
   });
 
   window.addEventListener('pageshow',()=>document.documentElement.classList.remove('dm-page-leaving'));
