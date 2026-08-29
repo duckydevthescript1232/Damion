@@ -1,6 +1,6 @@
 (()=>{
   const API='https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damion-orders';
-  const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6Ind1dGxoY2Vxa2lvc2hlcGZieWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMDAxMDUsImV4cCI6MjEwMTU3NjEwNX0.Ad9wROEhZ2uKxKx9H5AHqCCmFa0nTezrBHkAn-Zwyws';
+  const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1dGxoY2Vxa2lvc2hlcGZieWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMDAxMDUsImV4cCI6MjEwMTU3NjEwNX0.Ad9wROEhZ2uKxKx9H5AHqCCmFa0nTezrBHkAn-Zwyws';
   const SESSION_KEY='dm_admin_key';
   const $=id=>document.getElementById(id);
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -29,16 +29,13 @@
 
   function notifyNew(orders){
     const fresh=orders.filter(o=>!known.has(o.order_number));
-    if(known.size&&fresh.length){
-      try{const audio=new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=');audio.play().catch(()=>{})}catch(_){}
-      if(Notification?.permission==='granted')new Notification('New Damiønmusic order',{body:`${fresh[0].order_number} · ${fresh[0].project_name}`});
-    }
+    if(known.size&&fresh.length&&'Notification'in window&&Notification.permission==='granted')new Notification('New Damiønmusic order',{body:`${fresh[0].order_number} · ${fresh[0].project_name}`});
     known=new Set(orders.map(o=>o.order_number));
   }
 
   async function refresh(){
     if(!adminKey)return;
-    $('dashStatus').textContent='Refreshing…';
+    $('dashStatus').textContent='Refreshing…';$('dashStatus').classList.remove('error');
     try{
       const data=await call('admin_list');const orders=data.orders||[];
       notifyNew(orders);stats(orders);renderOrders(orders);
@@ -48,12 +45,12 @@
 
   async function login(key){
     adminKey=String(key||'').trim();if(!adminKey)return;
-    $('loginStatus').textContent='Checking…';
+    $('loginStatus').textContent='Checking…';$('loginStatus').classList.remove('error');
     try{
       await call('admin_list');
       try{sessionStorage.setItem(SESSION_KEY,adminKey)}catch(_){}
       $('loginCard').classList.add('hidden');$('dashboard').classList.remove('hidden');$('viewSiteBtn')?.classList.remove('hidden');$('logoutBtn')?.classList.remove('hidden');$('loginStatus').textContent='';
-      await refresh();timer=setInterval(refresh,20000);
+      await refresh();if(timer)clearInterval(timer);timer=setInterval(refresh,20000);
     }catch(err){adminKey='';try{sessionStorage.removeItem(SESSION_KEY)}catch(_){}$('loginStatus').textContent=err.message||'Admin key is incorrect';$('loginStatus').classList.add('error')}
   }
 
