@@ -2,6 +2,16 @@
   if(window.__dmMotionV5)return;
   window.__dmMotionV5=true;
 
+  const ensureLanguageAssets=()=>{
+    if(!document.querySelector('link[data-dm-language]')){
+      const l=document.createElement('link');l.rel='stylesheet';l.href='/language-v1.css?v=20260829-1';l.dataset.dmLanguage='1';document.head.appendChild(l);
+    }
+    if(!document.querySelector('script[data-dm-language]')){
+      const s=document.createElement('script');s.src='/language-v1.js?v=20260829-1';s.defer=true;s.dataset.dmLanguage='1';document.head.appendChild(s);
+    }
+  };
+  ensureLanguageAssets();
+
   const hoverSelector='.service-row,.starter-card,.price-card,.card,.dm-preview-shell,.hero-studio-shot,.brand';
   const mark=()=>document.querySelectorAll(hoverSelector).forEach(el=>el.classList.add('dm-hoverfx'));
   mark();
