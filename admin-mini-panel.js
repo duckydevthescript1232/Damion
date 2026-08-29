@@ -2,11 +2,12 @@
   'use strict';
 
   const STORAGE_KEY='dm_admin_mini_live_ui_v1';
+  const BROADCAST_API='https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damian-site-presence';
+  const OWNER_SESSION_KEY='damion_site_session';
   const $=id=>document.getElementById(id);
   const initialState={grants:[],messages:[],extras:[],activity:[]};
   let state=loadState();
   let toastTimer;
-  let screenMessageTimer;
 
   function loadState(){
     try{
@@ -43,16 +44,6 @@
     toastTimer=setTimeout(()=>toast.classList.remove('show'),2200);
   }
 
-  function showScreenMessage(message){
-    const banner=$('dmMiniScreenMessage');
-    const copy=$('dmMiniScreenMessageText');
-    if(!banner||!copy)return;
-    copy.textContent=clean(message,240);
-    banner.classList.add('show');
-    clearTimeout(screenMessageTimer);
-    screenMessageTimer=setTimeout(()=>banner.classList.remove('show'),6500);
-  }
-
   function render(){
     if($('dmMiniGrantCount'))$('dmMiniGrantCount').textContent=state.grants.length;
     if($('dmMiniMessageCount'))$('dmMiniMessageCount').textContent=state.messages.length;
@@ -63,7 +54,7 @@
     if(!state.activity.length){
       const empty=document.createElement('div');
       empty.className='dm-mini-empty';
-      empty.textContent='Your local mock actions will appear here. Nothing is published or sent.';
+      empty.textContent='Your recent owner actions will appear here.';
       activity.append(empty);
       return;
     }
@@ -87,6 +78,10 @@
   function isOwnerDashboardOpen(){
     const dashboard=$('dashboard');
     return dashboard&&!dashboard.classList.contains('hidden');
+  }
+
+  function ownerSession(){
+    try{return localStorage.getItem(OWNER_SESSION_KEY)||''}catch(_error){return''}
   }
 
   function openPanel(){
@@ -128,11 +123,24 @@
     });
   }
 
-  function updateMessagePreview(){
-    const title=clean($('dmMiniMessageTitle')?.value,70)||'Your announcement title';
-    const text=clean($('dmMiniMessageText')?.value,240)||'Write a short message for your visitors.';
-    if($('dmMiniPreviewTitle'))$('dmMiniPreviewTitle').textContent=title;
-    if($('dmMiniPreviewText'))$('dmMiniPreviewText').textContent=text;
+  function simplifyMessagePanel(){
+    const title=$('dmMiniMessageTitle');
+    title?.closest('label')?.remove();
+    document.querySelector('.dm-mini-preview')?.remove();
+    const panel=document.querySelector('[data-dm-mini-panel="message"]');
+    const heading=panel?.querySelector('.dm-mini-heading');
+    if(heading){
+      const badge=heading.querySelector('span');
+      const h2=heading.querySelector('h2');
+      const p=heading.querySelector('p');
+      if(badge)badge.textContent='LIVE MESSAGE';
+      if(h2)h2.textContent='Send a message';
+      if(p)p.textContent='Type one short message. Everyone currently on the site will see only that message.';
+    }
+    const text=$('dmMiniMessageText');
+    if(text){text.maxLength=160;text.placeholder='Type the message everyone should see…'}
+    const button=$('dmMiniMessageForm')?.querySelector('button[type="submit"]');
+    if(button)button.textContent='SEND MESSAGE';
   }
 
   function saveGrant(customer,service,packageName){
@@ -146,15 +154,24 @@
     return true;
   }
 
-  function saveMessage(title,message){
-    const entry={title:clean(title,70),message:clean(message,240)};
-    if(!entry.title||!entry.message)return false;
-    state.messages.unshift(entry);
-    state.messages=state.messages.slice(0,20);
-    addActivity('Mock message saved',entry.title);
-    showScreenMessage(entry.message);
-    showToast('Saved locally — not published live.');
-    return true;
+  async function publishMessage(message){
+    const text=clean(message,160);
+    if(!text)return false;
+    const session=ownerSession();
+    if(!session){showToast('Owner session required.');return false}
+    try{
+      const response=await fetch(BROADCAST_API,{method:'POST',cache:'no-store',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'broadcast_send',ownerSession:session,message:text})});
+      const data=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(data?.error||'Could not send message');
+      state.messages.unshift({title:'Live broadcast',message:text});
+      state.messages=state.messages.slice(0,20);
+      addActivity('Broadcast sent',text);
+      showToast('Sent to everyone online.');
+      return true;
+    }catch(error){
+      showToast(error?.message||'Could not send message.');
+      return false;
+    }
   }
 
   function saveExtra(customer,type,value){
@@ -168,7 +185,7 @@
     return true;
   }
 
-  function runCommand(){
+  async function runCommand(){
     const input=$('dmMiniCommand');
     const command=clean(input?.value,180);
     if(!command)return;
@@ -176,11 +193,9 @@
     const value=parts.join(' ');
     let worked=false;
     if(action.toLowerCase()==='say'&&value){
-      worked=saveMessage(value,value);
+      worked=await publishMessage(value);
       if(worked){
-        if($('dmMiniMessageTitle'))$('dmMiniMessageTitle').value=value;
-        if($('dmMiniMessageText'))$('dmMiniMessageText').value=value;
-        updateMessagePreview();
+        if($('dmMiniMessageText'))$('dmMiniMessageText').value='';
         switchTab('message');
       }
     }else if(action.toLowerCase()==='give'&&parts.length>=2){
@@ -190,7 +205,7 @@
       worked=saveExtra(parts[0],parts[1],parts.slice(2).join(' '));
       if(worked)switchTab('extras');
     }
-    if(!worked)showToast('Try: say ..., give email service, or extra email type value');
+    if(!worked&&action.toLowerCase()!=='say')showToast('Try: say ..., give email service, or extra email type value');
     if(input)input.value='';
   }
 
@@ -220,35 +235,36 @@
   }
 
   function init(){
+    simplifyMessagePanel();
     $('miniAdminBtn')?.addEventListener('click',openPanel);
     window.addEventListener('dm-owner-ready',openRequestedPanel);
     $('dmMiniClose')?.addEventListener('click',closePanel);
-    $('dmMiniScreenMessageClose')?.addEventListener('click',()=>$('dmMiniScreenMessage')?.classList.remove('show'));
+    $('dmMiniScreenMessage')?.remove();
     $('dmMiniMinimize')?.addEventListener('click',()=>$('dmMiniAdmin')?.classList.toggle('is-minimized'));
     $('dmMiniAdminOverlay')?.addEventListener('click',event=>{if(event.target.id==='dmMiniAdminOverlay')closePanel();});
     document.querySelectorAll('[data-dm-mini-tab]').forEach(button=>button.addEventListener('click',()=>switchTab(button.dataset.dmMiniTab)));
-    $('dmMiniMessageTitle')?.addEventListener('input',updateMessagePreview);
-    $('dmMiniMessageText')?.addEventListener('input',updateMessagePreview);
     $('dmMiniGiveForm')?.addEventListener('submit',event=>{
       event.preventDefault();
       if(saveGrant($('dmMiniGiveCustomer')?.value,$('dmMiniGiveService')?.value,$('dmMiniGivePackage')?.value))event.currentTarget.reset();
     });
-    $('dmMiniMessageForm')?.addEventListener('submit',event=>{
+    $('dmMiniMessageForm')?.addEventListener('submit',async event=>{
       event.preventDefault();
-      if(saveMessage($('dmMiniMessageTitle')?.value,$('dmMiniMessageText')?.value))event.currentTarget.reset();
-      updateMessagePreview();
+      const button=event.currentTarget.querySelector('button[type="submit"]');
+      if(button)button.disabled=true;
+      const worked=await publishMessage($('dmMiniMessageText')?.value);
+      if(worked)event.currentTarget.reset();
+      if(button)button.disabled=false;
     });
     $('dmMiniExtraForm')?.addEventListener('submit',event=>{
       event.preventDefault();
       if(saveExtra($('dmMiniExtraCustomer')?.value,$('dmMiniExtraType')?.value,$('dmMiniExtraValue')?.value))event.currentTarget.reset();
     });
     $('dmMiniRun')?.addEventListener('click',runCommand);
-    $('dmMiniCommand')?.addEventListener('keydown',event=>{if(event.key==='Enter')runCommand();});
+    $('dmMiniCommand')?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();runCommand()}});
     document.addEventListener('keydown',event=>{
       if(event.key==='Escape'&&!$('dmMiniAdminOverlay')?.hidden)closePanel();
     });
     enableDrag();
-    updateMessagePreview();
     render();
     setTimeout(openRequestedPanel,0);
   }
@@ -256,4 +272,3 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});
   else init();
 })();
-
