@@ -1,89 +1,109 @@
 /* Damiønmusic motion v5 — lightweight, smooth, no cursor tracking */
 html{scroll-behavior:smooth}
 
-/* Page enter/exit: a soft content slide, not a full-screen swipe. */
+/* Page enter/exit: slower settling, tiny travel, no hard swipe. */
 html.dm-motion-ready main{
-  animation:dmPageEnter .42s cubic-bezier(.16,.82,.24,1) both;
-  transform-origin:50% 40%;
+  animation:dmPageEnter .54s cubic-bezier(.16,.82,.24,1) both;
+  transform-origin:50% 42%;
 }
 html.dm-page-leaving main{
   opacity:0!important;
-  transform:translate3d(-14px,0,0) scale(.995)!important;
-  transition:opacity .18s ease,transform .22s cubic-bezier(.4,0,.7,.2)!important;
+  transform:translate3d(-9px,0,0) scale(.997)!important;
+  transition:opacity .22s ease,transform .24s cubic-bezier(.4,0,.55,1)!important;
 }
 @keyframes dmPageEnter{
-  from{opacity:0;transform:translate3d(14px,0,0) scale(.995)}
+  from{opacity:0;transform:translate3d(10px,0,0) scale(.997)}
   to{opacity:1;transform:translate3d(0,0,0) scale(1)}
 }
 
-/* The "zoom" feel: only transform + shadow, so it stays GPU-friendly. */
+/* IMPORTANT: default state is the slow return. Hover overrides it with a faster zoom-in. */
 .dm-hoverfx{
   transform:translateZ(0)!important;
   backface-visibility:hidden;
   will-change:transform;
   transition:
-    transform .42s cubic-bezier(.16,.82,.24,1),
-    border-color .34s ease,
-    box-shadow .42s ease,
-    background-color .34s ease,
-    filter .34s ease!important;
+    transform .56s cubic-bezier(.16,.78,.22,1),
+    border-color .48s ease,
+    box-shadow .54s ease,
+    background-color .46s ease,
+    filter .48s ease!important;
+}
+
+/* Buttons also return more slowly after the pointer leaves. */
+.dm-btnfx{
+  transition:
+    transform .52s cubic-bezier(.16,.78,.22,1),
+    border-color .42s ease,
+    background-color .42s ease,
+    box-shadow .50s ease,
+    filter .42s ease,
+    color .28s ease!important;
 }
 
 @media(hover:hover) and (pointer:fine){
+  /* Fast zoom-in, slow zoom-back from the default rules above. */
   .service-row.dm-hoverfx:hover,
   .starter-card.dm-hoverfx:hover,
   .price-card.dm-hoverfx:hover,
   .card.dm-hoverfx:hover,
   .dm-preview-shell.dm-hoverfx:hover{
-    transform:translate3d(0,-5px,0) scale(1.018)!important;
-    border-color:rgba(255,84,108,.34)!important;
-    box-shadow:0 18px 44px rgba(0,0,0,.30),0 0 24px rgba(255,54,88,.075)!important;
+    transform:translate3d(0,-6px,0) scale(1.032)!important;
+    border-color:rgba(255,84,108,.40)!important;
+    box-shadow:0 20px 48px rgba(0,0,0,.32),0 0 28px rgba(255,54,88,.09)!important;
+    transition-duration:.18s,.20s,.22s,.20s,.20s!important;
+    transition-timing-function:cubic-bezier(.18,.82,.22,1),ease,ease,ease,ease!important;
   }
 
   .hero-studio-shot.dm-hoverfx:hover{
-    transform:translate3d(0,-6px,0) scale(1.012)!important;
-    border-color:rgba(255,255,255,.18)!important;
-    box-shadow:0 24px 58px rgba(0,0,0,.38),0 0 28px rgba(255,54,88,.07)!important;
+    transform:translate3d(0,-7px,0) scale(1.022)!important;
+    border-color:rgba(255,255,255,.21)!important;
+    box-shadow:0 26px 62px rgba(0,0,0,.40),0 0 30px rgba(255,54,88,.08)!important;
+    transition-duration:.20s,.22s,.24s,.22s,.22s!important;
   }
 
   .brand.dm-hoverfx:hover{
-    transform:translate3d(0,-2px,0) scale(1.025)!important;
+    transform:translate3d(0,-2px,0) scale(1.045)!important;
+    transition-duration:.17s,.20s,.22s,.20s,.20s!important;
   }
 
   .brand.dm-hoverfx:hover img{
-    transform:rotate(-4deg) scale(1.08)!important;
-    filter:drop-shadow(0 0 15px rgba(255,54,88,.34))!important;
+    transform:rotate(-4deg) scale(1.10)!important;
+    filter:drop-shadow(0 0 17px rgba(255,54,88,.38))!important;
+    transition-duration:.18s!important;
   }
 
   .btn.dm-btnfx:hover,
   button.dm-btnfx:hover,
   a.dm-btnfx:hover{
-    transform:translate3d(0,-3px,0) scale(1.035)!important;
+    transform:translate3d(0,-4px,0) scale(1.055)!important;
+    transition-duration:.16s,.20s,.20s,.20s,.20s,.18s!important;
+    transition-timing-function:cubic-bezier(.18,.84,.2,1),ease,ease,ease,ease,ease!important;
   }
 
   .btn.primary.dm-btnfx:hover{
-    transform:translate3d(0,-3px,0) scale(1.04)!important;
-    box-shadow:0 14px 34px rgba(0,0,0,.3),0 0 30px rgba(255,54,88,.25)!important;
+    transform:translate3d(0,-4px,0) scale(1.062)!important;
+    box-shadow:0 15px 36px rgba(0,0,0,.31),0 0 34px rgba(255,54,88,.28)!important;
   }
 }
 
-/* Keep press feedback fast and satisfying. */
+/* Press feedback stays immediate. */
 .dm-btnfx:active,.dm-btnfx.dm-fx-down{
   transform:translate3d(0,0,0) scale(.975)!important;
-  transition-duration:.08s!important;
+  transition-duration:.075s!important;
 }
 
 /* Drawer/modal transitions stay smooth without affecting the whole page. */
 .drawer{transition:transform .34s cubic-bezier(.16,.82,.24,1)!important}
 .drawer-bg{transition:opacity .26s ease!important}
 .modal-bg{animation:none!important}
-.modal-bg.open .modal{animation:dmModalIn .28s cubic-bezier(.16,.82,.24,1) both}
-@keyframes dmModalIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-bg.open .modal{animation:dmModalIn .30s cubic-bezier(.16,.82,.24,1) both}
+@keyframes dmModalIn{from{opacity:0;transform:translateY(9px) scale(.988)}to{opacity:1;transform:translateY(0) scale(1)}}
 
 @media(prefers-reduced-motion:reduce){
   html.dm-motion-ready main,
   html.dm-page-leaving main,
   .dm-hoverfx,
+  .dm-btnfx,
   .drawer,
   .drawer-bg,
   .modal-bg.open .modal{
