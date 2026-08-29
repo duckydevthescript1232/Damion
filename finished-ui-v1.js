@@ -70,8 +70,12 @@
         event.preventDefault();
         event.stopPropagation();
         const panel=document.querySelector('.dm-support-panel');
-        if(panel?.classList.contains('open'))return;
-        document.querySelector('.dm-support-fab')?.click();
+        const fab=document.querySelector('.dm-support-fab');
+        if(!panel||!fab||panel.classList.contains('open'))return;
+        panel.classList.add('open');
+        panel.setAttribute('aria-hidden','false');
+        fab.setAttribute('aria-expanded','true');
+        setTimeout(()=>panel.querySelector('textarea')?.focus({preventScroll:true}),100);
       });
     });
   };
