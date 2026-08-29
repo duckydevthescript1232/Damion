@@ -45,6 +45,10 @@
     backdrop.className='dm-side-backdrop';
 
     const icon=(path)=>`<span class="dm-side-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="${path}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+    let ownerShortcut='';
+    try{
+      if(localStorage.getItem('damion_site_session'))ownerShortcut=`<div class="dm-side-section-label">Owner tools</div><div class="dm-side-links"><a class="dm-side-link dm-side-primary" href="/admin-orders.html#mini-panel">${icon('M7 10V7.5a5 5 0 0 1 10 0V10 M5.5 10h13v9h-13z M12 13.5v2')}<span class="dm-side-link-copy"><b>Open mini admin</b><small>Orders, support and owner controls</small></span><span class="dm-side-link-arrow">›</span></a></div>`;
+    }catch(_error){}
     const panel=document.createElement('aside');
     panel.className='dm-sidepanel';
     panel.setAttribute('aria-label','Customer menu');
@@ -70,6 +74,7 @@
           <button class="dm-side-link" id="dmSettingsOpen" type="button">${icon('M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7 M4.5 12h1.5 M18 12h1.5 M12 4.5V6 M12 18v1.5')}<span class="dm-side-link-copy"><b>Motion settings</b><small>Turn smooth hover effects on or off</small></span><span class="dm-side-link-arrow">+</span></button>
         </div>
         <div class="dm-side-settings" id="dmSettingsBox" hidden><div class="dm-toggle-row"><span>Smooth interface motion</span><button class="dm-switch on" id="dmMotionToggle" type="button" aria-label="Toggle smooth effects"><i></i></button></div></div>
+        ${ownerShortcut}
       </div>
       <div class="dm-side-foot">Secure checkout · Order tracking · Direct studio support</div>`;
 
