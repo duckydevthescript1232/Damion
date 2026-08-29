@@ -3,7 +3,7 @@
   window.__dmMaxUIV1=true;
   document.documentElement.classList.add('dm-max-ui');
 
-  const getLang=()=>{try{return (localStorage.getItem('damion_lang')||window.dmGetLanguage?.()||document.documentElement.lang||'en').toLowerCase().startsWith('nl')?'nl':'en'}catch(_){return' en'.trim()}};
+  const getLang=()=>{try{return (localStorage.getItem('damion_lang')||window.dmGetLanguage?.()||document.documentElement.lang||'en').toLowerCase().startsWith('nl')?'nl':'en'}catch(_){return'en'}};
 
   const ensureLangSwitcher=()=>{
     if(document.querySelector('.dm-lang-switch'))return;
@@ -22,8 +22,30 @@
     document.querySelectorAll('.dm-lang-switch button[data-lang]').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.lang===lang)));
   };
 
-  // Full reload after changing language is intentional: every legacy/dynamic translation layer
-  // starts from the original English HTML, preventing half-English/half-Dutch UI states.
+  const applyInstantLanguage=next=>{
+    if(next!=='en'&&next!=='nl')return;
+    try{localStorage.setItem('damion_lang',next)}catch(_){}
+    document.documentElement.lang=next;
+    document.body?.setAttribute('data-language',next);
+
+    if(typeof window.dmSetLanguage==='function'){
+      window.dmSetLanguage(next);
+    }else{
+      document.dispatchEvent(new CustomEvent('dm:languagechange',{detail:{lang:next}}));
+    }
+
+    updateSwitcher();
+    applyPresenceLanguage();
+
+    // Dynamic UI can be re-rendered by other site layers after the language event.
+    // A second event on the next frame catches content inserted in the same click.
+    requestAnimationFrame(()=>{
+      document.dispatchEvent(new CustomEvent('dm:languagechange',{detail:{lang:next}}));
+      updateSwitcher();
+      applyPresenceLanguage();
+    });
+  };
+
   document.addEventListener('click',e=>{
     const btn=e.target?.closest?.('.dm-lang-switch button[data-lang]');
     if(!btn)return;
@@ -31,11 +53,7 @@
     if(next!=='en'&&next!=='nl')return;
     e.preventDefault();
     e.stopImmediatePropagation();
-    try{localStorage.setItem('damion_lang',next)}catch(_){}
-    document.documentElement.lang=next;
-    document.documentElement.classList.add('dm-lang-changing');
-    updateSwitcher();
-    setTimeout(()=>location.reload(),90);
+    applyInstantLanguage(next);
   },true);
 
   const liveText={
@@ -75,7 +93,6 @@
   document.addEventListener('dm:pagechange',()=>setTimeout(start,0));
   document.addEventListener('dm:languagechange',()=>setTimeout(()=>{updateSwitcher();applyPresenceLanguage()},0));
 
-  // Presence is injected asynchronously; watch only for its root and stop doing extra work otherwise.
   const mo=new MutationObserver(records=>{
     let relevant=false;
     for(const r of records){for(const n of r.addedNodes){if(n.nodeType===1&&(n.id==='dmLiveVisitors'||n.querySelector?.('#dmLiveVisitors')||n.classList?.contains('dm-lang-switch'))){relevant=true;break}}if(relevant)break}
