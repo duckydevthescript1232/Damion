@@ -1,0 +1,94 @@
+/* Damiønmusic motion v5 — lightweight, smooth, no cursor tracking */
+html{scroll-behavior:smooth}
+
+/* Page enter/exit: a soft content slide, not a full-screen swipe. */
+html.dm-motion-ready main{
+  animation:dmPageEnter .42s cubic-bezier(.16,.82,.24,1) both;
+  transform-origin:50% 40%;
+}
+html.dm-page-leaving main{
+  opacity:0!important;
+  transform:translate3d(-14px,0,0) scale(.995)!important;
+  transition:opacity .18s ease,transform .22s cubic-bezier(.4,0,.7,.2)!important;
+}
+@keyframes dmPageEnter{
+  from{opacity:0;transform:translate3d(14px,0,0) scale(.995)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1)}
+}
+
+/* The "zoom" feel: only transform + shadow, so it stays GPU-friendly. */
+.dm-hoverfx{
+  transform:translateZ(0)!important;
+  backface-visibility:hidden;
+  will-change:transform;
+  transition:
+    transform .42s cubic-bezier(.16,.82,.24,1),
+    border-color .34s ease,
+    box-shadow .42s ease,
+    background-color .34s ease,
+    filter .34s ease!important;
+}
+
+@media(hover:hover) and (pointer:fine){
+  .service-row.dm-hoverfx:hover,
+  .starter-card.dm-hoverfx:hover,
+  .price-card.dm-hoverfx:hover,
+  .card.dm-hoverfx:hover,
+  .dm-preview-shell.dm-hoverfx:hover{
+    transform:translate3d(0,-5px,0) scale(1.018)!important;
+    border-color:rgba(255,84,108,.34)!important;
+    box-shadow:0 18px 44px rgba(0,0,0,.30),0 0 24px rgba(255,54,88,.075)!important;
+  }
+
+  .hero-studio-shot.dm-hoverfx:hover{
+    transform:translate3d(0,-6px,0) scale(1.012)!important;
+    border-color:rgba(255,255,255,.18)!important;
+    box-shadow:0 24px 58px rgba(0,0,0,.38),0 0 28px rgba(255,54,88,.07)!important;
+  }
+
+  .brand.dm-hoverfx:hover{
+    transform:translate3d(0,-2px,0) scale(1.025)!important;
+  }
+
+  .brand.dm-hoverfx:hover img{
+    transform:rotate(-4deg) scale(1.08)!important;
+    filter:drop-shadow(0 0 15px rgba(255,54,88,.34))!important;
+  }
+
+  .btn.dm-btnfx:hover,
+  button.dm-btnfx:hover,
+  a.dm-btnfx:hover{
+    transform:translate3d(0,-3px,0) scale(1.035)!important;
+  }
+
+  .btn.primary.dm-btnfx:hover{
+    transform:translate3d(0,-3px,0) scale(1.04)!important;
+    box-shadow:0 14px 34px rgba(0,0,0,.3),0 0 30px rgba(255,54,88,.25)!important;
+  }
+}
+
+/* Keep press feedback fast and satisfying. */
+.dm-btnfx:active,.dm-btnfx.dm-fx-down{
+  transform:translate3d(0,0,0) scale(.975)!important;
+  transition-duration:.08s!important;
+}
+
+/* Drawer/modal transitions stay smooth without affecting the whole page. */
+.drawer{transition:transform .34s cubic-bezier(.16,.82,.24,1)!important}
+.drawer-bg{transition:opacity .26s ease!important}
+.modal-bg{animation:none!important}
+.modal-bg.open .modal{animation:dmModalIn .28s cubic-bezier(.16,.82,.24,1) both}
+@keyframes dmModalIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+@media(prefers-reduced-motion:reduce){
+  html.dm-motion-ready main,
+  html.dm-page-leaving main,
+  .dm-hoverfx,
+  .drawer,
+  .drawer-bg,
+  .modal-bg.open .modal{
+    animation:none!important;
+    transition:none!important;
+    transform:none!important;
+  }
+}
