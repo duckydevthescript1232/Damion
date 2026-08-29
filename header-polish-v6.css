@@ -1,0 +1,108 @@
+/* Damiønmusic header polish v6 — cleaner nav and proper cart icon */
+header{
+  background:rgba(8,9,10,.94)!important;
+  border-bottom:1px solid rgba(255,255,255,.075)!important;
+  box-shadow:0 8px 28px rgba(0,0,0,.16)!important;
+}
+
+.nav{
+  height:76px!important;
+  gap:18px!important;
+}
+
+.navlinks{
+  gap:2px!important;
+  padding:4px!important;
+  border:1px solid rgba(255,255,255,.11)!important;
+  background:linear-gradient(180deg,#0d1014,#0a0c0f)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 8px 24px rgba(0,0,0,.12)!important;
+}
+.navlinks a{
+  padding:9px 14px!important;
+  border:1px solid transparent!important;
+  color:#a9b0ba!important;
+  letter-spacing:.005em!important;
+  transition:background-color .18s ease,color .18s ease,border-color .18s ease,transform .18s ease!important;
+}
+.navlinks a:hover{
+  color:#fff!important;
+  background:#15191e!important;
+  border-color:rgba(255,255,255,.055)!important;
+  transform:translateY(-1px)!important;
+}
+.navlinks a.active{
+  color:#fff!important;
+  background:linear-gradient(180deg,#20252c,#171b20)!important;
+  border-color:#3c4550!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 3px 10px rgba(0,0,0,.2)!important;
+}
+
+.nav-actions{
+  gap:10px!important;
+}
+.nav-actions>.btn.primary{
+  min-height:46px!important;
+  padding-inline:19px!important;
+  border-radius:11px!important;
+  white-space:nowrap!important;
+}
+
+/* Real vector cart icon instead of a platform-dependent emoji. */
+.dm-cart-button{
+  width:48px!important;
+  height:46px!important;
+  min-height:46px!important;
+  border-radius:11px!important;
+  background:linear-gradient(180deg,#12161b,#0e1115)!important;
+  border-color:#343d48!important;
+  overflow:hidden!important;
+  position:relative!important;
+}
+.dm-cart-button .dm-cart-svg{
+  width:19px;
+  height:19px;
+  display:block;
+  color:#d8dde3;
+  transition:transform .18s cubic-bezier(.2,.8,.2,1),color .18s ease;
+}
+.dm-cart-button:hover .dm-cart-svg{
+  transform:scale(1.11) rotate(-2deg);
+  color:#fff;
+}
+.dm-cart-button .count{
+  top:4px!important;
+  right:4px!important;
+  min-width:14px!important;
+  width:auto!important;
+  height:14px!important;
+  padding:0 4px!important;
+  border:1.5px solid #101318!important;
+  font-size:8px!important;
+  line-height:1!important;
+  box-shadow:0 2px 8px rgba(239,63,85,.35)!important;
+  z-index:5!important;
+}
+.dm-cart-button .count:empty{display:none!important}
+
+/* Menu button should visually match the cart, without competing with the CTA. */
+.dm-menu-btn{
+  width:48px!important;
+  min-width:48px!important;
+  height:46px!important;
+  padding:0!important;
+  border-radius:11px!important;
+  font-size:18px!important;
+  background:linear-gradient(180deg,#12161b,#0e1115)!important;
+  border-color:#343d48!important;
+}
+
+@media(max-width:1080px){
+  .nav{gap:12px!important}
+  .navlinks a{padding-inline:11px!important}
+  .nav-actions>.btn.primary{padding-inline:15px!important}
+}
+
+@media(max-width:900px){
+  .navlinks{display:none!important}
+  .nav{height:70px!important}
+}
