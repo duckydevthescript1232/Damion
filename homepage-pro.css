@@ -300,3 +300,40 @@
   .home .process-editorial li { transition: none !important; }
 }
 
+/* Cinematic homepage trailer */
+.home .studio-trailer-frame::after { opacity: .28; }
+
+.home .hero-trailer {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 10px;
+  background: #050506;
+  box-shadow: 0 12px 36px rgba(0,0,0,.38);
+  color-scheme: dark;
+  object-fit: cover;
+  transition: transform .75s cubic-bezier(.22,1,.36,1), filter .5s ease;
+}
+
+.home .hero-trailer:focus-visible {
+  outline: 3px solid #ef4f5f;
+  outline-offset: 4px;
+}
+
+.home .hero-studio-shot:hover .hero-trailer,
+.home .hero-studio-shot:focus-within .hero-trailer {
+  transform: scale(1.008);
+  filter: saturate(1.03) contrast(1.015);
+}
+
+@media (max-width: 640px) {
+  .home .hero-studio-shot:hover .hero-trailer { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home .hero-trailer { transition: none !important; }
+}
