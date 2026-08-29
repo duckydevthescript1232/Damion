@@ -1,40 +1,43 @@
-/* Damiønmusic motion v6 — smoother hover depth + calmer premium motion */
+/* Damiønmusic motion v7 — high-refresh performance pass */
+
+/* Remove repaint-heavy ambient/backdrop effects from the older polish layer. */
+body:before,body:after{display:none!important;animation:none!important;filter:none!important}
+header,.navlinks,.card,.service-starter,.price-card,.compare-box,.soft-card,.service-row,#preview .dm-preview-shell{
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
 
 .dm-hoverfx{
   transform:translateZ(0)!important;
   backface-visibility:hidden;
-  will-change:transform,box-shadow;
+  will-change:transform;
   transition:
-    transform .44s cubic-bezier(.16,1,.3,1),
-    border-color .34s ease,
-    box-shadow .42s ease,
-    background-color .34s ease,
-    filter .38s ease!important;
+    transform .20s cubic-bezier(.2,.8,.2,1),
+    border-color .18s ease,
+    background-color .18s ease!important;
 }
 .dm-btnfx{
   position:relative;
   isolation:isolate;
   overflow:hidden;
+  will-change:transform;
   transition:
-    transform .34s cubic-bezier(.16,1,.3,1),
-    border-color .30s ease,
-    background-color .30s ease,
-    box-shadow .36s ease,
-    filter .32s ease,
-    color .24s ease!important;
+    transform .18s cubic-bezier(.2,.8,.2,1),
+    border-color .18s ease,
+    background-color .18s ease,
+    color .16s ease!important;
 }
 
-/* Soft light sweep instead of a harsh scale-only hover. */
 .dm-btnfx:before{
   content:"";
   position:absolute;
   inset:-40% -25%;
   z-index:-1;
   pointer-events:none;
-  background:linear-gradient(112deg,transparent 36%,rgba(255,255,255,.10) 49%,transparent 62%);
+  background:linear-gradient(112deg,transparent 36%,rgba(255,255,255,.09) 49%,transparent 62%);
   transform:translate3d(-70%,0,0) rotate(5deg);
   opacity:0;
-  transition:transform .62s cubic-bezier(.16,1,.3,1),opacity .28s ease;
+  transition:transform .34s cubic-bezier(.2,.8,.2,1),opacity .16s ease;
 }
 
 @media(hover:hover) and (pointer:fine){
@@ -42,37 +45,26 @@
   .starter-card.dm-hoverfx:hover,
   .price-card.dm-hoverfx:hover,
   .card.dm-hoverfx:hover,
+  .browse-card.dm-hoverfx:hover,
   .dm-preview-shell.dm-hoverfx:hover{
-    transform:translate3d(0,-7px,0) scale(1.018)!important;
-    border-color:rgba(255,102,126,.46)!important;
+    transform:translate3d(0,-4px,0) scale(1.01)!important;
+    border-color:rgba(255,102,126,.42)!important;
     background-color:rgba(20,23,29,.98)!important;
-    box-shadow:0 24px 58px rgba(0,0,0,.40),0 0 0 1px rgba(255,255,255,.025),0 0 34px rgba(255,54,88,.10)!important;
-    filter:saturate(1.04) brightness(1.025)!important;
   }
 
   .hero-studio-shot.dm-hoverfx:hover{
-    transform:translate3d(0,-8px,0) scale(1.014)!important;
-    border-color:rgba(255,255,255,.24)!important;
-    box-shadow:0 30px 72px rgba(0,0,0,.48),0 0 38px rgba(255,54,88,.10)!important;
-    filter:brightness(1.025)!important;
+    transform:translate3d(0,-4px,0) scale(1.008)!important;
+    border-color:rgba(255,255,255,.22)!important;
   }
 
-  .brand.dm-hoverfx:hover{
-    transform:translate3d(0,-2px,0) scale(1.022)!important;
-  }
-
-  .brand.dm-hoverfx:hover img{
-    transform:rotate(-2deg) scale(1.065)!important;
-    filter:drop-shadow(0 0 14px rgba(255,54,88,.30))!important;
-  }
+  .brand.dm-hoverfx:hover{transform:translate3d(0,-1px,0) scale(1.014)!important}
+  .brand.dm-hoverfx:hover img{transform:rotate(-1deg) scale(1.04)!important}
 
   .btn.dm-btnfx:hover,
   button.dm-btnfx:hover,
   a.dm-btnfx:hover{
-    transform:translate3d(0,-3px,0) scale(1.025)!important;
-    border-color:rgba(255,255,255,.22)!important;
-    box-shadow:0 14px 34px rgba(0,0,0,.30),0 0 22px rgba(255,54,88,.08)!important;
-    filter:brightness(1.055)!important;
+    transform:translate3d(0,-2px,0) scale(1.015)!important;
+    border-color:rgba(255,255,255,.20)!important;
   }
 
   .dm-btnfx:hover:before{
@@ -80,39 +72,32 @@
     transform:translate3d(72%,0,0) rotate(5deg);
   }
 
-  .btn.primary.dm-btnfx:hover{
-    transform:translate3d(0,-4px,0) scale(1.035)!important;
-    box-shadow:0 18px 40px rgba(0,0,0,.34),0 0 38px rgba(255,54,88,.25)!important;
-    filter:brightness(1.07) saturate(1.06)!important;
-  }
+  .btn.primary.dm-btnfx:hover{transform:translate3d(0,-2px,0) scale(1.02)!important}
 
   .navlinks a{
-    transition:transform .30s cubic-bezier(.16,1,.3,1),background-color .28s ease,color .24s ease,box-shadow .32s ease!important;
+    transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .16s ease,color .16s ease!important;
   }
   .navlinks a:hover{
-    transform:translateY(-2px)!important;
+    transform:translateY(-1px)!important;
     background:rgba(255,255,255,.045)!important;
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.055),0 8px 20px rgba(0,0,0,.18)!important;
   }
 
   .footer-links a,.mobilebar a{
-    transition:transform .28s cubic-bezier(.16,1,.3,1),color .24s ease,opacity .24s ease!important;
+    transition:transform .18s cubic-bezier(.2,.8,.2,1),color .16s ease,opacity .16s ease!important;
   }
-  .footer-links a:hover,.mobilebar a:hover{
-    transform:translate3d(3px,-1px,0)!important;
-  }
+  .footer-links a:hover,.mobilebar a:hover{transform:translate3d(2px,0,0)!important}
 }
 
 .dm-btnfx:active,.dm-btnfx.dm-fx-down{
-  transform:translate3d(0,1px,0) scale(.974)!important;
-  transition-duration:.08s!important;
+  transform:translate3d(0,1px,0) scale(.98)!important;
+  transition-duration:.06s!important;
 }
 
 .modal-bg{animation:none!important}
-.modal-bg.open .modal{animation:dmModalIn .44s cubic-bezier(.16,1,.3,1) both}
+.modal-bg.open .modal{animation:dmModalIn .20s cubic-bezier(.2,.8,.2,1) both}
 @keyframes dmModalIn{
-  from{opacity:0;transform:translateY(20px) scale(.976);filter:blur(4px)}
-  to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+  from{opacity:0;transform:translate3d(0,8px,0) scale(.992)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1)}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -120,7 +105,6 @@
     animation:none!important;
     transition:none!important;
     transform:none!important;
-    filter:none!important;
   }
   .dm-btnfx:before{display:none!important}
 }
