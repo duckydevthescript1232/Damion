@@ -24,6 +24,15 @@
     document.head.appendChild(s);
   };
 
+  const ensureNavCleanup=()=>{
+    if(window.__dmNavCleanupV1||document.querySelector('script[data-dm-nav-cleanup]'))return;
+    const s=document.createElement('script');
+    s.src='/nav-cleanup-v1.js?v=20260829-1';
+    s.defer=true;
+    s.dataset.dmNavCleanup='1';
+    document.head.appendChild(s);
+  };
+
   const ensureServiceControls=()=>{
     if(!document.getElementById('serviceList'))return;
     if(window.__dmServicesControlsV2){window.dmEnsureServicesModal?.();return;}
@@ -37,11 +46,12 @@
   };
 
   ensureSafariCompat();
+  ensureNavCleanup();
   setTimeout(ensureLanguageFinal,300);
   clearLocks();
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{clearLocks();ensureServiceControls()},{once:true});
-  else ensureServiceControls();
-  document.addEventListener('dm:pagechange',()=>setTimeout(ensureServiceControls,0));
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{clearLocks();ensureServiceControls();ensureNavCleanup()},{once:true});
+  else {ensureServiceControls();ensureNavCleanup();}
+  document.addEventListener('dm:pagechange',()=>setTimeout(()=>{ensureServiceControls();ensureNavCleanup()},0));
   setTimeout(clearLocks,250);
   setTimeout(clearLocks,1200);
   setTimeout(()=>document.dispatchEvent(new CustomEvent('dm:pagechange')),700);
