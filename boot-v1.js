@@ -1,16 +1,18 @@
 (()=>{
-  const boot=document.querySelector('.dm-boot');
-  if(!boot)return;
-  let internal=false;
-  try{internal=!!document.referrer&&new URL(document.referrer).origin===location.origin}catch(_){}
-  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const delay=internal?60:(reduced?220:1550);
-  const finish=()=>{
-    if(!boot.isConnected||boot.classList.contains('is-out'))return;
-    boot.classList.add('is-out');
-    setTimeout(()=>boot.remove(),760);
+  const start=()=>{
+    const boot=document.querySelector('.dm-boot');
+    if(!boot)return;
+    let finished=false;
+    const finish=()=>{
+      if(finished)return;
+      finished=true;
+      boot.classList.add('is-out');
+      setTimeout(()=>boot.remove(),260);
+    };
+    /* Never wait for video/audio/network resources. */
+    setTimeout(finish,1050);
+    window.addEventListener('pageshow',()=>setTimeout(finish,80),{once:true});
   };
-  if(document.readyState==='complete')setTimeout(finish,delay);
-  else window.addEventListener('load',()=>setTimeout(finish,delay),{once:true});
-  setTimeout(finish,3400);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
+  else start();
 })();
