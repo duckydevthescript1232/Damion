@@ -1,0 +1,57 @@
+/* Cart drawer reliability layer — keeps panel above its backdrop on all browsers */
+#drawerBg.drawer-bg{
+  position:fixed!important;
+  inset:0!important;
+  z-index:2147483000!important;
+  background:rgba(2,3,5,.72)!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+  transition:opacity .18s ease,visibility 0s linear .18s!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+#drawerBg.drawer-bg.open{
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
+  transition:opacity .18s ease!important;
+}
+#cartDrawer.drawer{
+  position:fixed!important;
+  top:0!important;
+  right:0!important;
+  bottom:0!important;
+  left:auto!important;
+  width:min(430px,100vw)!important;
+  height:100dvh!important;
+  min-height:100vh!important;
+  z-index:2147483001!important;
+  display:flex!important;
+  flex-direction:column!important;
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:none!important;
+  transform:translate3d(105%,0,0)!important;
+  -webkit-transform:translate3d(105%,0,0)!important;
+  transition:transform .28s cubic-bezier(.22,1,.36,1)!important;
+  will-change:transform!important;
+  background:#0b0d10!important;
+  border-left:1px solid rgba(255,255,255,.12)!important;
+  box-shadow:-30px 0 70px rgba(0,0,0,.5)!important;
+  isolation:isolate!important;
+}
+#cartDrawer.drawer.open{
+  pointer-events:auto!important;
+  transform:translate3d(0,0,0)!important;
+  -webkit-transform:translate3d(0,0,0)!important;
+}
+body.cart-open{overflow:hidden!important;touch-action:none}
+#cartDrawer .drawer-body{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+@supports not (height:100dvh){#cartDrawer.drawer{height:100vh!important}}
+@media(max-width:520px){
+  #cartDrawer.drawer{width:min(92vw,430px)!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #drawerBg.drawer-bg,#cartDrawer.drawer{transition:none!important}
+}
