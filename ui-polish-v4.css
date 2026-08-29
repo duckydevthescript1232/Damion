@@ -1,0 +1,61 @@
+/* Damiønmusic UI polish — cleaner spacing, stronger borders, no generated-logo text duplication */
+:root{--dm4-panel:#0d0f12;--dm4-panel-2:#12151a;--dm4-line:#313844;--dm4-line-hover:#4a5563;--dm4-red:#ff3658;--dm4-text:#f7f8fa;--dm4-muted:#9ca4ae}
+
+/* Header / brand */
+header{border-bottom:1px solid #252b33!important;box-shadow:0 10px 30px rgba(0,0,0,.18)!important}
+.brand{gap:9px!important;padding:6px 11px 6px 6px!important;border:1px solid #303741!important;border-radius:14px!important;background:#0c0e11!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;transform:none!important}
+.brand:hover{border-color:#49535f!important;background:#111419!important;transform:none!important}
+.brand img{width:34px!important;height:34px!important;border:1px solid #4a5360!important;border-radius:50%!important;padding:3px!important;background:#080a0d!important;filter:none!important;transform:none!important}
+.brand-name{font-size:19px!important;line-height:1!important;font-weight:900!important;letter-spacing:-.045em!important;color:#f7f8fa!important;white-space:nowrap!important}
+.brand-name:after{content:none!important;display:none!important}
+.navlinks{border:1px solid #2c333c!important;background:#0b0d10!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.02)!important}
+.navlinks a.active{background:#1a1e24!important;box-shadow:inset 0 0 0 1px #343c47!important}
+
+/* Hero: more breathing room and a less template-like rhythm */
+.hero-home.hero-studio-layout{padding:84px 0 72px!important}
+.hero-home.hero-studio-layout .hero-copy{max-width:620px!important}
+.hero-home.hero-studio-layout .hero-copy .kicker{margin:0 0 20px!important;line-height:1.3!important}
+.hero-home.hero-studio-layout .hero-copy h1{margin:0 0 28px!important;font-size:clamp(58px,6.4vw,92px)!important;line-height:.96!important;letter-spacing:-.065em!important;max-width:610px!important}
+.hero-home.hero-studio-layout .hero-copy h1 span{display:block!important;margin-top:.13em!important;line-height:1.02!important}
+.hero-home.hero-studio-layout .hero-copy p{margin:0 0 30px!important;max-width:570px!important;font-size:16px!important;line-height:1.72!important;color:#a9b0b9!important}
+.hero-home.hero-studio-layout .hero-cta{margin-top:0!important;gap:10px!important}
+.hero-studio-shot{border:1px solid #363e49!important;border-radius:16px!important;background:#0b0d10!important;padding:8px!important;box-shadow:0 22px 55px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.025)!important;overflow:hidden!important;transform:none!important}
+.hero-studio-shot img{border-radius:10px!important}
+
+/* Sections and cards */
+.section{border-top:1px solid #1c2127!important}
+.section-head{margin-bottom:30px!important}
+.section-head h2{line-height:1.04!important}
+.card,.service-starter,.price-card,.compare-box,.soft-card{border:1px solid #303741!important;background:#0e1013!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.02)!important;backdrop-filter:none!important}
+.card:hover,.price-card:hover,.starter-card:hover{border-color:#4a5562!important;background:#13161b!important}
+.service-row{border:1px solid #303741!important;background:#0d0f12!important;border-radius:13px!important;padding:18px 17px!important;margin:0!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.015)!important}
+.service-row:hover{border-color:#4a5562!important;background:#13161b!important;transform:translateY(-1px)!important;padding-left:17px!important}
+.service-list{gap:10px!important}
+.editorial-strip{border:1px solid #303741!important;background:#0c0e11!important;border-radius:14px!important;overflow:hidden!important}
+.editorial-strip .item{border-color:#2a3038!important}
+
+/* Preview player */
+#preview .dm-preview-shell{border:1px solid #353d47!important;background:#0c0e11!important;border-radius:15px!important;box-shadow:0 18px 45px rgba(0,0,0,.28)!important}
+#preview .dm-play{border:1px solid #ff5d70!important;box-shadow:0 8px 24px rgba(255,54,88,.18)!important}
+#preview .dm-range,#preview .dm-volume{accent-color:var(--dm4-red)!important}
+
+/* Buttons and form controls */
+.btn{border-color:#343c46!important;border-radius:10px!important;background:#12151a!important}
+.btn:hover{border-color:#505b68!important;background:#191d23!important}
+.btn.primary{background:#ef3f55!important;border-color:#ff6577!important;box-shadow:0 8px 22px rgba(239,63,85,.16)!important}
+.field input,.field textarea,.field select,input,textarea,select{border-color:#303741!important;background:#0b0d10!important;border-radius:10px!important}
+
+/* Keep the brand compact on smaller screens */
+@media(max-width:980px){
+  .brand{padding-right:9px!important}
+  .brand-name{font-size:18px!important}
+}
+@media(max-width:640px){
+  .hero-home.hero-studio-layout{padding:56px 0 46px!important}
+  .hero-home.hero-studio-layout .hero-copy .kicker{margin-bottom:16px!important}
+  .hero-home.hero-studio-layout .hero-copy h1{font-size:clamp(48px,14.5vw,68px)!important;line-height:.98!important;margin-bottom:24px!important}
+  .hero-home.hero-studio-layout .hero-copy h1 span{margin-top:.16em!important}
+  .hero-home.hero-studio-layout .hero-copy p{font-size:15px!important;line-height:1.65!important}
+  .brand{max-width:calc(100vw - 92px)!important;overflow:hidden!important}
+  .brand-name{font-size:17px!important;overflow:hidden!important;text-overflow:ellipsis!important}
+}
