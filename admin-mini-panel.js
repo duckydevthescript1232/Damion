@@ -121,6 +121,26 @@
     document.querySelectorAll('.dm-mini-panel').forEach(panel=>{
       panel.hidden=panel.dataset.dmMiniPanel!==name;
     });
+    const admin=$('dmMiniAdmin');
+    admin?.classList.toggle('dm-mini-message-mode',name==='message');
+    const stateEl=document.querySelector('.dm-mini-state');
+    if(stateEl){
+      stateEl.innerHTML='<i></i>'+(name==='message'?' LIVE':' MOCK');
+      stateEl.classList.toggle('is-live',name==='message');
+    }
+    if(name==='message')requestAnimationFrame(()=>$('dmMiniMessageText')?.focus({preventScroll:true}));
+  }
+
+  function updateMessagePreview(){
+    const input=$('dmMiniMessageText');
+    const preview=$('dmMiniAbuseText');
+    const count=$('dmMiniAbuseCount');
+    if(preview){
+      const value=String(input?.value||'').trim();
+      preview.textContent=value||'Type your announcement…';
+      preview.classList.toggle('is-empty',!value);
+    }
+    if(count)count.textContent=`${String(input?.value||'').length} / 160`;
   }
 
   function simplifyMessagePanel(){
@@ -133,14 +153,39 @@
       const badge=heading.querySelector('span');
       const h2=heading.querySelector('h2');
       const p=heading.querySelector('p');
-      if(badge)badge.textContent='LIVE MESSAGE';
-      if(h2)h2.textContent='Send a message';
-      if(p)p.textContent='Type one short message. Everyone currently on the site will see only that message.';
+      if(badge)badge.textContent='ADMIN ABUSE';
+      if(h2)h2.textContent='Screen message';
+      if(p)p.textContent='Type it live. Everyone on the site sees the same big announcement.';
     }
+
+    const oldPreview=$('dmMiniAbusePreview');
+    oldPreview?.remove();
+    if(panel&&heading){
+      const preview=document.createElement('div');
+      preview.id='dmMiniAbusePreview';
+      preview.className='dm-mini-abuse-preview';
+      preview.innerHTML='<div class="dm-mini-abuse-line"><span class="dm-mini-abuse-name">Damiøn <i>✓</i><em>:</em></span><span id="dmMiniAbuseText" class="dm-mini-abuse-text is-empty">Type your announcement…</span></div>';
+      heading.insertAdjacentElement('afterend',preview);
+    }
+
     const text=$('dmMiniMessageText');
-    if(text){text.maxLength=160;text.placeholder='Type the message everyone should see…'}
-    const button=$('dmMiniMessageForm')?.querySelector('button[type="submit"]');
-    if(button)button.textContent='SEND MESSAGE';
+    if(text){
+      text.maxLength=160;
+      text.rows=3;
+      text.placeholder='Type the message everyone should see…';
+      text.setAttribute('aria-label','Admin abuse screen message');
+    }
+    const form=$('dmMiniMessageForm');
+    const button=form?.querySelector('button[type="submit"]');
+    if(button)button.textContent='SEND TO EVERYONE';
+    if(form&&!$('dmMiniAbuseMeta')){
+      const meta=document.createElement('div');
+      meta.id='dmMiniAbuseMeta';
+      meta.className='dm-mini-abuse-meta';
+      meta.innerHTML='<span>LIVE BROADCAST</span><span id="dmMiniAbuseCount">0 / 160</span><small>Ctrl + Enter to send</small>';
+      if(button)form.insertBefore(meta,button);else form.appendChild(meta);
+    }
+    updateMessagePreview();
   }
 
   function saveGrant(customer,service,packageName){
@@ -196,6 +241,7 @@
       worked=await publishMessage(value);
       if(worked){
         if($('dmMiniMessageText'))$('dmMiniMessageText').value='';
+        updateMessagePreview();
         switchTab('message');
       }
     }else if(action.toLowerCase()==='give'&&parts.length>=2){
@@ -247,12 +293,20 @@
       event.preventDefault();
       if(saveGrant($('dmMiniGiveCustomer')?.value,$('dmMiniGiveService')?.value,$('dmMiniGivePackage')?.value))event.currentTarget.reset();
     });
+    const messageInput=$('dmMiniMessageText');
+    messageInput?.addEventListener('input',updateMessagePreview);
+    messageInput?.addEventListener('keydown',event=>{
+      if((event.ctrlKey||event.metaKey)&&event.key==='Enter'){
+        event.preventDefault();
+        $('dmMiniMessageForm')?.requestSubmit();
+      }
+    });
     $('dmMiniMessageForm')?.addEventListener('submit',async event=>{
       event.preventDefault();
       const button=event.currentTarget.querySelector('button[type="submit"]');
       if(button)button.disabled=true;
       const worked=await publishMessage($('dmMiniMessageText')?.value);
-      if(worked)event.currentTarget.reset();
+      if(worked){event.currentTarget.reset();updateMessagePreview();$('dmMiniMessageText')?.focus({preventScroll:true})}
       if(button)button.disabled=false;
     });
     $('dmMiniExtraForm')?.addEventListener('submit',event=>{
@@ -266,6 +320,7 @@
     });
     enableDrag();
     render();
+    updateMessagePreview();
     setTimeout(openRequestedPanel,0);
   }
 
