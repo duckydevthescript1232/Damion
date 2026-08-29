@@ -34,6 +34,15 @@
     document.head.appendChild(s);
   };
 
+  const ensureUISounds=()=>{
+    if(window.__dmUISoundsV1||document.querySelector('script[data-dm-ui-sounds]'))return;
+    const s=document.createElement('script');
+    s.src='/ui-sounds-v1.js?v=20260829-1';
+    s.defer=true;
+    s.dataset.dmUiSounds='1';
+    document.head.appendChild(s);
+  };
+
   const ensureLanguageFinal=()=>{
     if(document.querySelector('script[data-dm-language-final]'))return;
     const s=document.createElement('script');
@@ -66,12 +75,13 @@
 
   ensureOrderProxy();
   ensureSafariCompat();
+  ensureUISounds();
   ensureNavCleanup();
   setTimeout(ensureLanguageFinal,300);
   clearLocks();
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{clearLocks();ensureServiceControls();ensureNavCleanup()},{once:true});
-  else {ensureServiceControls();ensureNavCleanup();}
-  document.addEventListener('dm:pagechange',()=>setTimeout(()=>{ensureServiceControls();ensureNavCleanup()},0));
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{clearLocks();ensureServiceControls();ensureNavCleanup();ensureUISounds()},{once:true});
+  else {ensureServiceControls();ensureNavCleanup();ensureUISounds();}
+  document.addEventListener('dm:pagechange',()=>setTimeout(()=>{ensureServiceControls();ensureNavCleanup();ensureUISounds()},0));
   setTimeout(clearLocks,250);
   setTimeout(clearLocks,1200);
   setTimeout(()=>document.dispatchEvent(new CustomEvent('dm:pagechange')),700);
