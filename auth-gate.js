@@ -1,6 +1,8 @@
 (()=>{
   window.__dmAuthGate=true;
 
+  const isAdminPage=()=>/^\/admin-orders(?:\.html)?\/?$/.test(location.pathname);
+
   const ensureOrderProxy=()=>{
     if(!/^\/order(?:\.html)?\/?$/.test(location.pathname))return;
     if(window.__dmOrderFetchProxy)return;
@@ -36,6 +38,36 @@
     l.href='/theme-unify-v2.css?v=20260829-1';
     l.dataset.dmUnifiedTheme='1';
     document.head.appendChild(l);
+  };
+
+  const ensureSiteShell=()=>{
+    if(isAdminPage())return;
+    if(document.querySelector('.dm-sidepanel'))return;
+    if(!document.querySelector('.nav-actions'))return;
+    if([...document.scripts].some(s=>String(s.src||'').includes('/site-v3.js')))return;
+    const s=document.createElement('script');
+    s.src='/site-v3.js?v=20260829-2';
+    s.defer=true;
+    s.dataset.dmSiteShell='1';
+    s.onload=()=>document.dispatchEvent(new CustomEvent('dm:pagechange'));
+    document.head.appendChild(s);
+  };
+
+  const ensureAccountUI=()=>{
+    if(isAdminPage())return;
+    if(!document.querySelector('link[data-dm-account-ui]')){
+      const l=document.createElement('link');
+      l.rel='stylesheet';
+      l.href='/account-v1.css?v=20260829-1';
+      l.dataset.dmAccountUi='1';
+      document.head.appendChild(l);
+    }
+    if(window.__dmAccountV1||document.querySelector('script[data-dm-account-ui]'))return;
+    const s=document.createElement('script');
+    s.src='/account-v1.js?v=20260829-1';
+    s.defer=true;
+    s.dataset.dmAccountUi='1';
+    document.head.appendChild(s);
   };
 
   const ensureFastMotion=()=>{
@@ -215,6 +247,8 @@
   ensureInteraction();
   ensureUISounds();
   ensureNavCleanup();
+  ensureSiteShell();
+  ensureAccountUI();
   setTimeout(ensureLanguageFinal,350);
   clearLocks();
 
@@ -232,6 +266,8 @@
     ensureMaxUI();
     ensureInteraction();
     ensureUISounds();
+    ensureSiteShell();
+    ensureAccountUI();
   };
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',refreshGlobalLayers,{once:true});
