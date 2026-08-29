@@ -66,15 +66,6 @@
     const btn=document.querySelector('#configModal .dm-config-add');
     if(btn){btn.disabled=true;btn.setAttribute('aria-busy','true');}
     try{originalAdd();}
-    finally{
-      setTimeout(()=>{addBusy=false;if(btn){btn.disabled=false;btn.removeAttribute('aria-busy');}},700);
-    }
+    finally{setTimeout(()=>{addBusy=false;if(btn){btn.disabled=false;btn.removeAttribute('aria-busy');}},700);}
   };
-
-  document.addEventListener('click',e=>{
-    const pack=e.target.closest?.('#configModal .package[data-package-index]');
-    if(!pack)return;
-    const i=Number(pack.dataset.packageIndex);
-    if(Number.isInteger(i)&&current&&current.packages[i]){pkg=i;renderConfig();}
-  },true);
 })();
