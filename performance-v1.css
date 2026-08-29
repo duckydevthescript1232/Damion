@@ -1,0 +1,13 @@
+/* Damiønmusic performance layer — prioritize responsiveness over decorative motion */
+html{scroll-behavior:auto!important}
+html.dm-ui-motion [data-reveal],html.dm-ui-motion [data-stagger]>*{opacity:1!important;transform:none!important;transition:none!important}
+html,body,main,section,header,footer,.card,.service-row,.starter-card,.price-card,.browse-card,.dm-preview-shell,.hero-studio-shot,.studio-trailer-frame,.btn,button,a,.drawer,.modal,.dm-sidepanel,.dm-side-backdrop,.dm-support-panel,.dm-broadcast-toast{animation:none!important}
+body:before,body:after,body.home main:before,body.services main:before{display:none!important;animation:none!important;filter:none!important}
+header,.navlinks,.card,.service-starter,.price-card,.compare-box,.soft-card,.service-row,#preview .dm-preview-shell,.dm-sidepanel,.dm-side-backdrop,.drawer-bg,.modal-bg,.dm-support-panel{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.dm-hoverfx,.dm-btnfx,.hero-studio-shot,.studio-trailer-frame{will-change:auto!important;backface-visibility:visible!important}
+.dm-hoverfx,.hero-studio-shot,.studio-trailer-frame{transform:none!important;transition:none!important}
+.dm-btnfx:before,.dm-btn-ripple{display:none!important}
+.dm-btnfx{transition:background-color .08s linear,border-color .08s linear,color .08s linear!important}
+.dm-btnfx:hover,.dm-btnfx:active,.dm-btnfx.dm-fx-down,.btn:hover,.btn:active,.service-row:hover,.browse-card:hover,.starter-card:hover,.price-card:hover{transform:none!important}
+#dmSettingsOpen,#dmSettingsBox{display:none!important}
+@media(max-width:900px){header,.dm-sidepanel,.drawer,.modal,.dm-support-panel{box-shadow:none!important}}
