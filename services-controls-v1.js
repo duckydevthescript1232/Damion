@@ -40,12 +40,7 @@
 
   document.addEventListener('click',e=>{
     const choose=e.target.closest?.('.service-configure');
-    if(choose){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      openService(serviceIdForButton(choose));
-      return;
-    }
+    if(choose){e.preventDefault();e.stopImmediatePropagation();openService(serviceIdForButton(choose));return;}
 
     const modal=e.target.closest?.('#configModal');
     if(modal&&e.target===modal){e.preventDefault();modal.classList.remove('open');return;}
@@ -54,19 +49,21 @@
 
     const pack=e.target.closest?.('#configModal .package');
     if(pack){
-      e.preventDefault();
-      e.stopImmediatePropagation();
+      e.preventDefault();e.stopImmediatePropagation();
+      const explicit=Number(pack.dataset.packageIndex);
       const all=[...pack.parentElement.querySelectorAll('.package')];
-      const index=all.indexOf(pack);
+      const index=Number.isInteger(explicit)&&explicit>=0?explicit:all.indexOf(pack);
       if(index>=0&&typeof renderConfig==='function'){pkg=index;renderConfig();}
       return;
     }
 
     const add=e.target.closest?.('#configModal .dm-config-add, #configModal button[onclick*="addConfigured"]');
     if(add){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      if(typeof addConfigured==='function')addConfigured();
+      e.preventDefault();e.stopImmediatePropagation();
+      if(add.disabled||add.getAttribute('aria-busy')==='true')return;
+      add.disabled=true;add.setAttribute('aria-busy','true');
+      try{if(typeof addConfigured==='function')addConfigured();}
+      finally{setTimeout(()=>{add.disabled=false;add.removeAttribute('aria-busy');},750);}
     }
   },true);
 
@@ -74,14 +71,12 @@
     const input=e.target.closest?.('#addons input[type="checkbox"]');
     if(!input)return;
     e.stopImmediatePropagation();
+    const explicit=Number(input.dataset.addonIndex);
     const inputs=[...document.querySelectorAll('#addons input[type="checkbox"]')];
-    const index=inputs.indexOf(input);
+    const index=Number.isInteger(explicit)&&explicit>=0?explicit:inputs.indexOf(input);
     if(index>=0&&typeof toggleExtra==='function')toggleExtra(index);
   },true);
 
-  document.addEventListener('dm:pagechange',()=>{
-    if(document.getElementById('serviceList'))ensureModal();
-  });
-
+  document.addEventListener('dm:pagechange',()=>{if(document.getElementById('serviceList'))ensureModal();});
   if(document.getElementById('serviceList'))ensureModal();
 })();
