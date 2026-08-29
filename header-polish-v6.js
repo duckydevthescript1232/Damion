@@ -14,13 +14,9 @@
       else if(contacts[0]){contacts[0].href='/support';contacts[0].textContent='Support';contacts.slice(1).forEach(a=>a.remove())}
     }
 
-    if(location.pathname!=='/'&&location.pathname!=='/index.html'){
-      document.querySelectorAll('.nav-actions a[href]').forEach(a=>{
-        const text=a.textContent.trim().toLowerCase();
-        const path=new URL(a.href,location.href).pathname;
-        if(/^(contact|support|start a project|start my project|book a service)$/.test(text)||/\/contact(?:\.html)?$/.test(path)||/\/support(?:\.html)?$/.test(path))a.remove();
-      });
-    }
+    /* Keep the header focused: navigation, cart, language and menu only.
+       Booking/support CTAs already exist in the page content. */
+    document.querySelectorAll('.nav-actions > a.btn').forEach(a=>a.remove());
   };
 
   const apply=()=>{
