@@ -1,0 +1,100 @@
+/* Damiønmusic interaction v2 — clean header + lively GPU-light motion */
+
+/* Remove the buggy desktop navigation capsule completely. */
+.navlinks{display:none!important}
+.nav{justify-content:space-between!important}
+.nav-actions{margin-left:auto!important}
+
+/* Springy controls without blur/filter repaint cost. */
+.dm-btnfx,
+.btn,
+.checkout-continue,
+.package,
+.addon,
+.service-row,
+.browse-card,
+.starter-card,
+.dm-side-link{
+  transform:translate3d(0,0,0);
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  transform-origin:center;
+  transition:
+    transform 260ms cubic-bezier(.16,1,.3,1),
+    box-shadow 260ms cubic-bezier(.16,1,.3,1),
+    border-color 220ms ease,
+    background-color 220ms ease,
+    color 180ms ease!important;
+}
+
+@media (hover:hover) and (pointer:fine){
+  .dm-btnfx:hover,
+  .btn:hover,
+  .checkout-continue:hover,
+  .package:hover,
+  .addon:hover,
+  .dm-side-link:hover{
+    transform:translate3d(0,-3px,0) scale(1.035)!important;
+  }
+
+  .service-row:hover,
+  .browse-card:hover,
+  .starter-card:hover,
+  .card:hover,
+  .price-card:hover{
+    transform:translate3d(0,-5px,0) scale(1.012)!important;
+    border-color:rgba(255,91,114,.34)!important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.055),
+      0 24px 50px rgba(0,0,0,.28),
+      0 0 28px rgba(242,56,85,.075)!important;
+  }
+
+  .btn.primary:hover,
+  .checkout-continue:hover{
+    transform:translate3d(0,-3px,0) scale(1.045)!important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.24),
+      inset 0 -2px 0 rgba(112,7,24,.32),
+      0 16px 34px rgba(242,56,85,.27)!important;
+  }
+}
+
+.dm-btnfx:active,
+.dm-btnfx.dm-fx-down,
+.btn:active,
+.checkout-continue:active,
+.package:active,
+.addon:active,
+.dm-side-link:active{
+  transform:translate3d(0,1px,0) scale(.955)!important;
+  transition-duration:75ms!important;
+}
+
+/* Quicker, softer light sweep. */
+.dm-btnfx::before{
+  transition:transform 460ms cubic-bezier(.16,1,.3,1),opacity 180ms ease!important;
+}
+
+/* Keep icon controls a bit tighter so they don't jump too far. */
+.btn.icon.dm-btnfx:hover,
+.dm-cart-button:hover,
+.dm-menu-btn:hover,
+.dm-side-close:hover{
+  transform:translate3d(0,-2px,0) scale(1.075)!important;
+}
+
+/* Responsive/touch: press motion only, no fake hover state. */
+@media (hover:none),(pointer:coarse){
+  .dm-btnfx:hover,.btn:hover,.checkout-continue:hover,.package:hover,.addon:hover,
+  .service-row:hover,.browse-card:hover,.starter-card:hover,.card:hover,.price-card:hover,.dm-side-link:hover{
+    transform:translate3d(0,0,0)!important;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .dm-btnfx,.btn,.checkout-continue,.package,.addon,.service-row,.browse-card,.starter-card,.card,.price-card,.dm-side-link{
+    transition:none!important;
+    transform:none!important;
+  }
+}
