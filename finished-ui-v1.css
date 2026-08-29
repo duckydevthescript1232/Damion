@@ -170,8 +170,8 @@ html.dm-ui-motion [data-reveal].is-visible,html.dm-ui-motion [data-stagger]>.is-
   .mobile-project-cta a,.mobile-project-cta button{display:grid;min-height:46px;place-items:center;border:0;border-radius:10px;background:var(--dm-red);color:#fff;font:800 13px/1 system-ui;text-decoration:none}
   .mobile-project-cta button{background:#1a1b1e;font-size:18px}
   body{padding-bottom:136px!important}
-  .drawer{top:auto!important;right:8px!important;bottom:8px!important;left:8px!important;width:auto!important;max-height:min(78svh,700px);border:1px solid var(--dm-line);border-radius:20px;transform:translateY(calc(100% + 24px))!important}
-  .drawer.open{transform:translateY(0)!important}
+  body.home .drawer,body.services .drawer{top:auto!important;right:8px!important;bottom:8px!important;left:8px!important;width:auto!important;max-height:min(78svh,700px);border:1px solid var(--dm-line);border-radius:20px;transform:translateY(calc(100% + 24px))!important}
+  body.home .drawer.open,body.services .drawer.open{top:auto!important;bottom:8px!important;transform:translateY(0)!important}
 }
 
 @media(pointer:coarse){.btn:hover,.services #start .service-row:hover{transform:none}}
