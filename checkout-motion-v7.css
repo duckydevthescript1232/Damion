@@ -1,0 +1,53 @@
+/* Checkout motion v7 — local, smooth and lightweight */
+.checkout-payment-section:not([hidden]){
+  animation:dmCheckoutSectionIn .50s cubic-bezier(.16,1,.3,1) both;
+  transform-origin:50% 0;
+}
+@keyframes dmCheckoutSectionIn{
+  from{opacity:0;transform:translate3d(0,18px,0) scale(.992)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1)}
+}
+.checkout-payment-loading:not([hidden]){
+  animation:dmCheckoutLoaderIn .34s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes dmCheckoutLoaderIn{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.checkout-ideal:not([hidden]),
+.checkout-paypal-buttons:not([hidden]),
+.checkout-payment-separator:not([hidden]){
+  animation:dmCheckoutMethodIn .42s cubic-bezier(.16,1,.3,1) both;
+}
+.checkout-paypal-buttons:not([hidden]){animation-delay:.04s}
+@keyframes dmCheckoutMethodIn{
+  from{opacity:0;transform:translateY(10px) scale(.994)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.checkout-success:not([hidden]){
+  animation:dmCheckoutSuccessIn .56s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes dmCheckoutSuccessIn{
+  from{opacity:0;transform:translateY(18px) scale(.985)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.checkout-continue{
+  position:relative;
+  overflow:hidden;
+  transform:translateZ(0);
+  transition:transform .18s cubic-bezier(.18,.84,.2,1),box-shadow .24s ease,filter .22s ease!important;
+}
+.checkout-continue:before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,.18) 45%,transparent 68%);
+  transform:translateX(-125%);transition:transform .58s cubic-bezier(.16,.78,.2,1)
+}
+.checkout-continue:hover{transform:translateY(-2px) scale(1.012);box-shadow:0 14px 32px rgba(255,48,76,.20);filter:brightness(1.035)}
+.checkout-continue:hover:before{transform:translateX(125%)}
+.checkout-continue:active{transform:translateY(0) scale(.985);transition-duration:.08s!important}
+.checkout-card{transition:border-color .34s ease,box-shadow .40s ease,transform .50s cubic-bezier(.16,.78,.22,1)!important}
+.checkout-summary-card:hover{border-color:#33343c;box-shadow:0 28px 68px rgba(0,0,0,.28)}
+
+@media(prefers-reduced-motion:reduce){
+  .checkout-payment-section:not([hidden]),.checkout-payment-loading:not([hidden]),.checkout-ideal:not([hidden]),.checkout-paypal-buttons:not([hidden]),.checkout-payment-separator:not([hidden]),.checkout-success:not([hidden]),.checkout-continue,.checkout-card{animation:none!important;transition:none!important;transform:none!important}
+}
