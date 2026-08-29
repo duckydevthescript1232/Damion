@@ -1,7 +1,8 @@
 (()=>{
   const API='https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damion-orders';
-  const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1dGxoY2Vxa2lvc2hlcGZieWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMDAxMDUsImV4cCI6MjEwMTU3NjEwNX0.Ad9wROEhZ2uKxKx9H5AHqCCmFa0nTezrBHkAn-Zwyws';
+  const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6Ind1dGxoY2Vxa2lvc2hlcGZieWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMDAxMDUsImV4cCI6MjEwMTU3NjEwNX0.Ad9wROEhZ2uKxKx9H5AHqCCmFa0nTezrBHkAn-Zwyws';
   const SESSION_KEY='dm_admin_key';
+  const SAVED_KEY='dm_admin_key_saved';
   const $=id=>document.getElementById(id);
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const eur=v=>new Intl.NumberFormat('nl-NL',{style:'currency',currency:'EUR'}).format(Number(v||0));
@@ -33,13 +34,23 @@
     known=new Set(orders.map(o=>o.order_number));
   }
 
+  function rememberOwnerKey(key){
+    try{sessionStorage.setItem(SESSION_KEY,key)}catch(_){}
+    try{localStorage.setItem(SAVED_KEY,key)}catch(_){}
+  }
+
+  function forgetOwnerKey(){
+    try{sessionStorage.removeItem(SESSION_KEY)}catch(_){}
+    try{localStorage.removeItem(SAVED_KEY)}catch(_){}
+  }
+
   async function refresh(){
     if(!adminKey)return;
     $('dashStatus').textContent='Refreshing…';$('dashStatus').classList.remove('error');
     try{
       const data=await call('admin_list');const orders=data.orders||[];
       notifyNew(orders);stats(orders);renderOrders(orders);
-      $('dashStatus').textContent='';$('lastCheck').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});$('liveText').textContent='Private dashboard active';
+      $('dashStatus').textContent='';$('lastCheck').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});$('liveText').textContent='Private dashboard + live visitor view active';
     }catch(err){$('dashStatus').textContent=err.message||'Could not load orders';$('dashStatus').classList.add('error')}
   }
 
@@ -48,18 +59,20 @@
     $('loginStatus').textContent='Checking…';$('loginStatus').classList.remove('error');
     try{
       await call('admin_list');
-      try{sessionStorage.setItem(SESSION_KEY,adminKey)}catch(_){}
+      rememberOwnerKey(adminKey);
       $('loginCard').classList.add('hidden');$('dashboard').classList.remove('hidden');$('viewSiteBtn')?.classList.remove('hidden');$('logoutBtn')?.classList.remove('hidden');$('loginStatus').textContent='';
       await refresh();if(timer)clearInterval(timer);timer=setInterval(refresh,20000);
-    }catch(err){adminKey='';try{sessionStorage.removeItem(SESSION_KEY)}catch(_){}$('loginStatus').textContent=err.message||'Admin key is incorrect';$('loginStatus').classList.add('error')}
+    }catch(err){adminKey='';forgetOwnerKey();$('loginStatus').textContent=err.message||'Admin key is incorrect';$('loginStatus').classList.add('error')}
   }
 
   $('loginForm')?.addEventListener('submit',e=>{e.preventDefault();login($('adminKey').value)});
   $('refreshBtn')?.addEventListener('click',refresh);
   $('notifyBtn')?.addEventListener('click',async()=>{if(!('Notification'in window))return alert('Browser notifications are not supported here.');const p=await Notification.requestPermission();$('notifyBtn').textContent=p==='granted'?'Notifications enabled':'Notifications blocked'});
-  $('logoutBtn')?.addEventListener('click',()=>{try{sessionStorage.removeItem(SESSION_KEY)}catch(_){}location.reload()});
+  $('logoutBtn')?.addEventListener('click',()=>{forgetOwnerKey();location.reload()});
   window.addEventListener('pagehide',()=>{if(timer)clearInterval(timer)},{once:true});
 
-  let saved='';try{saved=sessionStorage.getItem(SESSION_KEY)||''}catch(_){}
+  let saved='';
+  try{saved=sessionStorage.getItem(SESSION_KEY)||''}catch(_){}
+  if(!saved){try{saved=localStorage.getItem(SAVED_KEY)||''}catch(_){}}
   if(saved){$('adminKey').value=saved;login(saved)}
 })();
