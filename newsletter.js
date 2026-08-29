@@ -1,3 +1,4 @@
+// Deployment refresh after Mailchimp environment configuration.
 (()=>{
   const form=document.getElementById('newsletterForm');
   if(!form)return;
