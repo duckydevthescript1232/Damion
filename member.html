@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#09090b">
+<title>Damiønmusic — Member Hub</title>
+<meta name="description" content="Damiønmusic member tools and plan access.">
+<link rel="stylesheet" href="/styles.css?v=20260829-4">
+<link rel="stylesheet" href="/theme-v3.css?v=20260828-6">
+<link rel="stylesheet" href="/member.css?v=20260829-1">
+</head>
+<body class="member-page">
+<header><div class="wrap nav"><a class="brand" href="/"><img src="/assets/logo.svg" alt="Damiønmusic logo"><span class="brand-name">Damiønmusic</span></a><nav class="navlinks"><a href="/">Home</a><a href="/pricing">Plans</a><a class="active" href="/member">Member Hub</a><a href="/support">Support</a></nav></div></header>
+<main><section class="member-hero"><div class="wrap"><div class="kicker">Member Hub</div><h1>Your producer workspace.</h1><p id="memberIntro">Checking your plan access…</p></div></section>
+<section class="section"><div class="wrap">
+<div id="memberLoading" class="member-state">Verifying plan access…</div>
+<div id="memberLocked" class="member-state locked" hidden><h2>No active plan found.</h2><p>Choose a plan first. After PayPal verifies the payment, this page unlocks automatically in this browser.</p><a class="btn primary" href="/pricing">View plans</a></div>
+<div id="memberActive" hidden>
+<div class="member-top"><div><span id="memberPlanBadge" class="member-badge">Active</span><h2 id="memberPlanName">Member Plan</h2><p id="memberExpiry"></p></div><a id="memberSupport" class="btn" href="/support">Member support</a></div>
+<div class="member-grid"><article class="member-card"><div class="kicker">Included</div><h3>Your unlocked features</h3><ul id="memberFeatures" class="feature-list"></ul></article><article class="member-card"><div class="kicker">Production</div><h3>Project checklist</h3><label><input type="checkbox" data-check="reference"> References ready</label><label><input type="checkbox" data-check="bpm"> BPM / key confirmed</label><label><input type="checkbox" data-check="stems"> Files and stems organised</label><label><input type="checkbox" data-check="notes"> Notes / goals written down</label><label><input type="checkbox" data-check="backup"> Project backed up</label></article></div>
+<div class="brief-section"><div class="section-head"><div><div class="kicker">Member tool</div><h2>Project briefs</h2></div><p id="briefLimitText"></p></div><div class="brief-editor"><input id="briefTitle" type="text" maxlength="80" placeholder="Project name"><textarea id="briefBody" rows="7" maxlength="5000" placeholder="BPM, key, references, sound direction, mix notes, deadlines…"></textarea><div class="brief-actions"><button id="saveBrief" class="btn primary" type="button">Save brief</button><button id="exportBrief" class="btn" type="button">Export current brief</button></div><p id="briefMessage" class="brief-message"></p></div><div id="briefList" class="brief-list"></div></div>
+</div>
+</div></section></main>
+<footer><div class="wrap"><p class="member-foot">Plan access is checked against the Damiønmusic server. The current first version uses a secure access token stored in this browser.</p></div></footer>
+<script src="/member.js?v=20260829-1"></script>
+</body>
+</html>
