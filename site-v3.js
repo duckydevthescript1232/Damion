@@ -5,18 +5,26 @@
   if(!document.querySelector('link[data-dm-headerv6]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/header-polish-v6.css?v=20260829-1';l.dataset.dmHeaderv6='1';document.head.appendChild(l)}
   if(!document.querySelector('link[data-dm-sidebarv7]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/sidebar-v7.css?v=20260829-1';l.dataset.dmSidebarv7='1';document.head.appendChild(l)}
   if(!document.querySelector('script[data-dm-buttonfx]')){const s=document.createElement('script');s.src='/button-fx.js?v=20260829-1';s.defer=true;s.dataset.dmButtonfx='1';document.head.appendChild(s)}
-  if(!document.querySelector('script[data-dm-motionv5]')){const s=document.createElement('script');s.src='/motion-v5.js?v=20260829-2';s.defer=true;s.dataset.dmMotionv5='1';document.head.appendChild(s)}
+  if(!document.querySelector('script[data-dm-motionv5]')){const s=document.createElement('script');s.src='/motion-v5.js?v=20260829-5';s.defer=true;s.dataset.dmMotionv5='1';document.head.appendChild(s)}
   if(!document.querySelector('script[data-dm-headerv6]')){const s=document.createElement('script');s.src='/header-polish-v6.js?v=20260829-1';s.defer=true;s.dataset.dmHeaderv6='1';document.head.appendChild(s)}
   if(!document.querySelector('script[data-dm-presence]')){const s=document.createElement('script');s.src='/presence.js?v=20260829-2';s.defer=true;s.dataset.dmPresence='1';document.head.appendChild(s)}
-  const BRAND='DamianMusic';
+  if(!document.querySelector('script[data-dm-support]')){const s=document.createElement('script');s.src='/support.js?v=20260829-1';s.defer=true;s.dataset.dmSupport='1';document.head.appendChild(s)}
+
+  const BRAND='Damiønmusic';
   const AUDIO='https://wutlhceqkioshepfbykf.supabase.co/storage/v1/object/public/service-media/site/damianmusic-preview-full.mp3?v=20260828-full-1';
-  const fixBrandText=v=>String(v||'').replaceAll('Damiønmusicmusic',BRAND).replaceAll('Damiønmusic',BRAND).replaceAll('DAMIØNMUSIC','DAMIANMUSIC').replaceAll('Damiøn',BRAND).replaceAll('DAMIØN','DAMIANMUSIC');
+  const fixBrandText=v=>String(v||'').replaceAll('Damiønmusicmusic',BRAND).replaceAll('DamianMusic',BRAND).replaceAll('DamionMusic',BRAND).replaceAll('Damiøn',BRAND).replaceAll('DAMIANMUSIC','DAMIØNMUSIC').replaceAll('DAMIØN','DAMIØNMUSIC');
 
   document.querySelectorAll('.brand-name').forEach(el=>el.textContent=BRAND);
   document.querySelectorAll('.footer-brand b').forEach(el=>el.textContent=BRAND);
-  document.querySelectorAll('img[src*="/assets/logo.svg"],img[alt*="Damiøn"],img[alt*="Damian"]').forEach(el=>el.alt='DamianMusic logo');
+  document.querySelectorAll('img[src*="/assets/logo.svg"],img[alt*="Damiøn"],img[alt*="Damian"]').forEach(el=>el.alt='Damiønmusic logo');
   document.title=fixBrandText(document.title);
-  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);for(const n of nodes){if(n.nodeValue&&(n.nodeValue.includes('Damiøn')||n.nodeValue.includes('DAMIØN')))n.nodeValue=fixBrandText(n.nodeValue)}
+  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);for(const n of nodes){if(n.nodeValue&&(n.nodeValue.includes('Damiøn')||n.nodeValue.includes('DamianMusic')||n.nodeValue.includes('DamionMusic')))n.nodeValue=fixBrandText(n.nodeValue)}
+
+  const navLinks=document.querySelector('.navlinks');
+  if(navLinks&&!navLinks.querySelector('a[href="/support"],a[href="support.html"]')){
+    const contact=[...navLinks.querySelectorAll('a[href]')].find(a=>/\/contact(?:\.html)?$/.test(new URL(a.href,location.href).pathname));
+    if(contact){contact.href='/support';contact.textContent='Support'}
+  }
 
   document.querySelectorAll('.nav-actions a[href="/order"], [data-orders-link]').forEach(el=>el.remove());
 
@@ -50,7 +58,7 @@
         <div class="dm-side-links">
           <a class="dm-side-link" href="/order">${icon('M5 5.5h14v13H5z M8 9h8 M8 12h5')}<span class="dm-side-link-copy"><b>Track your order</b><small>Progress, delivery and downloads</small></span><span class="dm-side-link-arrow">›</span></a>
           <a class="dm-side-link" href="/order#messages">${icon('M4.5 5.5h15v10h-8l-4.5 3v-3H4.5z')}<span class="dm-side-link-copy"><b>Messages</b><small>Keep support connected to your project</small></span><span class="dm-side-link-arrow">›</span></a>
-          <a class="dm-side-link" href="/contact">${icon('M12 4.5a7.5 7.5 0 1 0 0 15 M8.5 10.5h7 M8.5 13.5h4')}<span class="dm-side-link-copy"><b>Contact support</b><small>Ask a question before or after booking</small></span><span class="dm-side-link-arrow">›</span></a>
+          <a class="dm-side-link" href="/support">${icon('M12 4.5a7.5 7.5 0 1 0 0 15 M8.5 10.5h7 M8.5 13.5h4')}<span class="dm-side-link-copy"><b>Contact support</b><small>Ask a question before or after booking</small></span><span class="dm-side-link-arrow">›</span></a>
         </div>
 
         <div class="dm-side-section-label">Booking</div>
@@ -105,7 +113,7 @@
   const previewHost=document.getElementById('trackList');
   if(previewHost){
     previewHost.innerHTML=`<div class="dm-preview-shell">
-      <div class="dm-preview-copy"><span class="dm-preview-label">DamianMusic / preview</span><div class="dm-preview-title">Official audio preview</div><div class="dm-preview-sub">Full supplied track.</div></div>
+      <div class="dm-preview-copy"><span class="dm-preview-label">Damiønmusic / preview</span><div class="dm-preview-title">Official audio preview</div><div class="dm-preview-sub">Full supplied track.</div></div>
       <div class="dm-player-controls"><button class="dm-play" type="button" aria-label="Play audio" disabled>▶</button><div class="dm-seek-wrap"><input class="dm-range" type="range" min="0" max="100" value="0" aria-label="Track position" disabled><div class="dm-time">Loading audio…</div></div><label class="dm-volume-wrap"><span>VOL</span><input class="dm-volume" type="range" min="0" max="1" step="0.05" value="0.85" aria-label="Volume"></label></div>
     </div>`;
     const audio=new Audio(AUDIO);const play=previewHost.querySelector('.dm-play'),seek=previewHost.querySelector('.dm-range'),vol=previewHost.querySelector('.dm-volume'),time=previewHost.querySelector('.dm-time');audio.preload='metadata';audio.volume=.85;
