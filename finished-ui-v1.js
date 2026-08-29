@@ -27,6 +27,20 @@
     },{rootMargin:'0px 0px -9% 0px',threshold:.08});
   };
 
+  window.addEventListener('click',event=>{
+    const trigger=event.target.closest?.('[data-open-support]');
+    if(!trigger)return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const panel=document.querySelector('.dm-support-panel');
+    const fab=document.querySelector('.dm-support-fab');
+    if(!panel||!fab)return;
+    panel.classList.add('open');
+    panel.setAttribute('aria-hidden','false');
+    fab.setAttribute('aria-expanded','true');
+    setTimeout(()=>panel.querySelector('textarea')?.focus({preventScroll:true}),100);
+  },true);
+
   document.addEventListener('click',event=>{
     const trigger=event.target.closest('[data-open-support]');
     if(!trigger)return;
