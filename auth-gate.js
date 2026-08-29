@@ -1,0 +1,71 @@
+(()=>{
+  if(window.__dmAuthGate)return;window.__dmAuthGate=true;
+  const API='https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damion-site-auth';
+  const SESSION_KEY='damion_site_session';
+  const EMAIL_KEY='damion_site_email';
+  const path=location.pathname;
+  if(/^\/admin-orders(?:\.html)?$/.test(path))return;
+
+  document.documentElement.classList.add('dm-auth-locking');
+  const style=document.createElement('style');style.textContent=`
+    html.dm-auth-locking,html.dm-auth-locking body{overflow:hidden!important}
+    html.dm-auth-locking body>*:not(#dmAuthGate){filter:blur(8px);pointer-events:none!important;user-select:none!important}
+    #dmAuthGate{position:fixed;inset:0;z-index:5000;display:grid;place-items:center;padding:18px;background:radial-gradient(circle at 50% 0,rgba(226,48,72,.12),transparent 34%),rgba(7,8,10,.985);color:#fff;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .dm-auth-card{width:min(440px,100%);border:1px solid rgba(255,255,255,.10);border-radius:24px;background:linear-gradient(180deg,#141519,#0c0d10);box-shadow:0 30px 90px rgba(0,0,0,.62);padding:26px}.dm-auth-brand{display:flex;align-items:center;gap:11px;margin-bottom:26px}.dm-auth-brand img{width:38px;height:38px}.dm-auth-brand b{display:block;font-size:15px}.dm-auth-brand small{display:block;margin-top:3px;color:#7f848c;font-size:10px;text-transform:uppercase;letter-spacing:.09em}
+    .dm-auth-card h1{margin:0;font-size:34px;letter-spacing:-.045em;line-height:1.02}.dm-auth-card>p{margin:10px 0 20px;color:#969aa1;font-size:13px;line-height:1.55}.dm-auth-form{display:grid;gap:10px}.dm-auth-form label{display:grid;gap:6px;color:#d8d9dc;font-size:11px;font-weight:800}.dm-auth-form input{width:100%;min-height:48px;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:#17191d;color:#fff;padding:0 13px;font:inherit;outline:none}.dm-auth-form input:focus{border-color:rgba(232,63,88,.5);box-shadow:0 0 0 3px rgba(232,63,88,.08)}.dm-auth-code{font-size:22px!important;font-weight:900!important;letter-spacing:.28em;text-align:center;padding-left:calc(13px + .28em)!important}.dm-auth-submit{min-height:48px;border:1px solid rgba(255,100,122,.25);border-radius:12px;background:linear-gradient(180deg,#e44359,#c92f45);color:#fff;font-weight:900;cursor:pointer}.dm-auth-submit:hover{background:linear-gradient(180deg,#eb4d62,#d6384d)}.dm-auth-submit:disabled{opacity:.55;cursor:wait}.dm-auth-status{min-height:18px;color:#90949b;font-size:11px;line-height:1.45}.dm-auth-status.error{color:#ff8ea0}.dm-auth-status.success{color:#7edda5}.dm-auth-help{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:15px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07)}.dm-auth-link{border:0;background:transparent;color:#7f848b;font:800 10px/1.2 inherit;cursor:pointer;padding:5px 0}.dm-auth-link:hover{color:#fff}.dm-auth-private{opacity:.55}.dm-auth-private:hover{opacity:1}.dm-auth-note{margin-top:15px;color:#656a72;font-size:10px;line-height:1.5}.dm-auth-email-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 9px;border-radius:999px;background:#181a1e;border:1px solid rgba(255,255,255,.08);color:#aaaeb5;font-size:10px;margin-bottom:14px}.dm-auth-email-pill i{width:6px;height:6px;border-radius:50%;background:#5edc8f}
+    .dm-auth-owner-box{display:none;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07)}.dm-auth-owner-box.open{display:block}
+    .dm-site-account{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);display:grid;gap:8px}.dm-site-account small{color:#747981;font-size:9px;text-transform:uppercase;letter-spacing:.08em}.dm-site-account b{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dm-site-signout{width:100%;min-height:40px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:#131518;color:#c7cbd1;font-weight:800;cursor:pointer}
+    @media(max-width:520px){.dm-auth-card{padding:21px;border-radius:20px}.dm-auth-card h1{font-size:30px}}
+  `;document.head.appendChild(style);
+
+  const root=document.createElement('div');root.id='dmAuthGate';
+  const getToken=()=>{try{return localStorage.getItem(SESSION_KEY)||''}catch(_){return''}};
+  const setToken=t=>{try{localStorage.setItem(SESSION_KEY,t)}catch(_){}};
+  const clearToken=()=>{try{localStorage.removeItem(SESSION_KEY);localStorage.removeItem(EMAIL_KEY)}catch(_){}};
+  const saveEmail=e=>{try{localStorage.setItem(EMAIL_KEY,e)}catch(_){}};
+  const readEmail=()=>{try{return localStorage.getItem(EMAIL_KEY)||''}catch(_){return''}};
+  async function call(action,extra={}){const r=await fetch(API,{method:'POST',cache:'no-store',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...extra})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Login failed');return d}
+
+  function unlock(session){
+    document.documentElement.classList.remove('dm-auth-locking');root.remove();
+    window.__dmSiteSession=session||null;
+    addAccountMenu(session);
+  }
+
+  function shell(inner){root.innerHTML=`<section class="dm-auth-card"><div class="dm-auth-brand"><img src="/assets/logo.svg" alt=""><div><b>Damiønmusic</b><small>Member access</small></div></div>${inner}</section>`}
+
+  function showEmail(){
+    shell(`<h1>Sign in to continue.</h1><p>Enter your email. I’ll send you a 6-digit code. If you are new, your account is created automatically after verification.</p><form class="dm-auth-form" id="dmEmailForm"><label>Email address<input name="email" type="email" autocomplete="email" required placeholder="you@example.com" value="${escapeHtml(readEmail())}"></label><button class="dm-auth-submit" type="submit">Send 6-digit code</button><div class="dm-auth-status" aria-live="polite"></div></form><div class="dm-auth-help"><span class="dm-auth-link" style="cursor:default">No password needed</span><button class="dm-auth-link dm-auth-private" id="dmOwnerReveal" type="button">Owner access</button></div><div class="dm-auth-owner-box" id="dmOwnerBox"><form class="dm-auth-form" id="dmOwnerForm"><label>Private owner key<input name="key" type="password" autocomplete="off" required></label><button class="dm-auth-submit" type="submit">Continue as owner</button><div class="dm-auth-status" aria-live="polite"></div></form></div><div class="dm-auth-note">Your email is only used for your account, login and site communication.</div>`);
+    const form=root.querySelector('#dmEmailForm'),status=form.querySelector('.dm-auth-status');
+    form.addEventListener('submit',async e=>{e.preventDefault();if(!form.reportValidity())return;const email=String(form.elements.email.value||'').trim().toLowerCase(),btn=form.querySelector('button');btn.disabled=true;status.className='dm-auth-status';status.textContent='Sending code…';try{await call('request_code',{email});saveEmail(email);showCode(email)}catch(err){status.className='dm-auth-status error';status.textContent=err.message||'Could not send code'}finally{btn.disabled=false}});
+    root.querySelector('#dmOwnerReveal').addEventListener('click',()=>root.querySelector('#dmOwnerBox').classList.toggle('open'));
+    const ownerForm=root.querySelector('#dmOwnerForm'),ownerStatus=ownerForm.querySelector('.dm-auth-status');ownerForm.addEventListener('submit',async e=>{e.preventDefault();const key=String(ownerForm.elements.key.value||'').trim(),btn=ownerForm.querySelector('button');btn.disabled=true;ownerStatus.className='dm-auth-status';ownerStatus.textContent='Checking…';try{const out=await call('owner_login',{key});setToken(out.session_token);try{localStorage.setItem('dm_admin_key_saved',key);sessionStorage.setItem('dm_admin_key',key)}catch(_){}unlock({authenticated:true,is_owner:true,user:null,expires_at:out.expires_at})}catch(err){ownerStatus.className='dm-auth-status error';ownerStatus.textContent=err.message||'Owner key is incorrect'}finally{btn.disabled=false}});
+  }
+
+  function showCode(email){
+    shell(`<div class="dm-auth-email-pill"><i></i>${escapeHtml(email)}</div><h1>Check your email.</h1><p>Enter the 6-digit code we just sent. The code expires after 10 minutes.</p><form class="dm-auth-form" id="dmCodeForm"><label>6-digit code<input class="dm-auth-code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required placeholder="000000"></label><button class="dm-auth-submit" type="submit">Verify & continue</button><div class="dm-auth-status" aria-live="polite"></div></form><div class="dm-auth-help"><button class="dm-auth-link" id="dmChangeEmail" type="button">Use another email</button><button class="dm-auth-link" id="dmResend" type="button">Resend code</button></div>`);
+    const form=root.querySelector('#dmCodeForm'),status=form.querySelector('.dm-auth-status');
+    form.addEventListener('submit',async e=>{e.preventDefault();if(!form.reportValidity())return;const code=String(form.elements.code.value||'').replace(/\D/g,'').slice(0,6),btn=form.querySelector('button');btn.disabled=true;status.className='dm-auth-status';status.textContent='Verifying…';try{const out=await call('verify_code',{email,code});setToken(out.session_token);saveEmail(email);unlock({authenticated:true,is_owner:false,user:out.user,expires_at:out.expires_at})}catch(err){status.className='dm-auth-status error';status.textContent=err.message||'Code not accepted'}finally{btn.disabled=false}});
+    form.elements.code.addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,6)});
+    root.querySelector('#dmChangeEmail').addEventListener('click',showEmail);
+    root.querySelector('#dmResend').addEventListener('click',async e=>{const btn=e.currentTarget;btn.disabled=true;status.className='dm-auth-status';status.textContent='Sending another code…';try{await call('request_code',{email});status.className='dm-auth-status success';status.textContent='A new code was sent.'}catch(err){status.className='dm-auth-status error';status.textContent=err.message||'Could not resend yet'}finally{btn.disabled=false}});
+    setTimeout(()=>form.elements.code?.focus({preventScroll:true}),80);
+  }
+
+  function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+  function addAccountMenu(session){
+    const add=()=>{const body=document.querySelector('.dm-side-body');if(!body||body.querySelector('.dm-site-account'))return false;const who=session?.is_owner?'Owner':session?.user?.email||readEmail()||'Signed in';const box=document.createElement('div');box.className='dm-site-account';box.innerHTML=`<small>${session?.is_owner?'Owner session':'Signed in as'}</small><b>${escapeHtml(who)}</b><button class="dm-site-signout" type="button">Sign out</button>`;box.querySelector('button').addEventListener('click',async()=>{const t=getToken();clearToken();try{await call('logout',{session_token:t})}catch(_){}location.reload()});body.appendChild(box);return true};if(!add())setTimeout(add,400)
+  }
+
+  async function start(){
+    document.body.appendChild(root);
+    const token=getToken();
+    if(!token){showEmail();return}
+    shell(`<h1>Signing you in…</h1><p>Checking your saved session.</p><div class="dm-auth-status">Please wait.</div>`);
+    try{const session=await call('session',{session_token:token});if(session.authenticated){unlock(session);return}}catch(_){}
+    clearToken();showEmail();
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
