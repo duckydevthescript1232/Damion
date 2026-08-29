@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/styles.css?v=20260829-4">
   <link rel="stylesheet" href="/navigation-v8.css?v=20260829-1">
   <link rel="stylesheet" href="/checkout.css?v=20260829-1">
+  <link rel="stylesheet" href="/checkout-safari-v1.css?v=20260829-1">
   <link rel="stylesheet" href="/theme-v3.css?v=20260828-5">
   <link rel="stylesheet" href="/brandfx.css?v=20260828-1">
   <link rel="stylesheet" href="/motion-v5.css?v=20260829-5">
@@ -29,7 +30,7 @@
           <div class="checkout-fields">
             <label class="checkout-field"><span>First name</span><input id="coFirst" required autocomplete="given-name" placeholder="First name"></label>
             <label class="checkout-field"><span>Last name</span><input id="coLast" required autocomplete="family-name" placeholder="Last name"></label>
-            <label class="checkout-field checkout-field-wide"><span>Email address</span><input id="coEmail" type="email" required autocomplete="email" placeholder="you@example.com"></label>
+            <label class="checkout-field checkout-field-wide"><span>Email address</span><input id="coEmail" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com"></label>
             <label class="checkout-field"><span>Artist name <em>Optional</em></span><input id="coArtist" autocomplete="organization" placeholder="Artist / producer name"></label>
             <label class="checkout-field"><span>Country</span><select id="coCountry" required autocomplete="country-name"><option value="">Select your country</option></select></label>
             <label class="checkout-field checkout-field-wide"><span>Project name</span><input id="coProject" required placeholder="Track or project title"></label>
@@ -37,12 +38,13 @@
             <label class="checkout-field checkout-field-wide"><span>Project notes <em>Optional</em></span><textarea id="coNotes" rows="5" placeholder="What sound are you going for? Add references, deadlines or anything important."></textarea></label>
           </div>
           <div class="checkout-summary-note" style="margin:18px 0"><span>✓</span><p><b>Secure payment</b><br>You will be redirected to Mollie to complete the payment with iDEAL.</p></div>
-          <button id="continuePayment" class="checkout-continue" type="submit"><span>Pay with iDEAL</span><span>→</span></button>
+          <div class="checkout-summary-note" style="margin:0 0 18px"><span>✉</span><p><b>Email receipt after payment</b><br>When Mollie confirms the payment, we email the address above with your receipt, order number and private order-room link.</p></div>
+          <button id="continuePayment" class="checkout-continue" type="submit"><span>Pay securely with iDEAL</span><span>→</span></button>
           <div id="checkoutMessage" class="checkout-message" aria-live="polite"></div>
         </form>
       </section>
 
-      <aside class="checkout-card checkout-summary-card"><div class="checkout-summary-title"><div><span class="checkout-eyebrow">Your order</span><h2>Order summary</h2></div><a href="/services" aria-label="Edit order">Edit</a></div><div id="checkoutItems" class="checkout-items"></div><div class="checkout-total-row"><span>Total</span><strong id="checkoutPageTotal">€0.00</strong></div><div class="checkout-summary-note"><span>✓</span><p><b>Private order room</b><br>Track progress and message support after payment.</p></div><div class="checkout-summary-note"><span>✓</span><p><b>iDEAL via Mollie</b><br>Your payment is confirmed server-side before the order becomes Paid.</p></div></aside>
+      <aside class="checkout-card checkout-summary-card"><div class="checkout-summary-title"><div><span class="checkout-eyebrow">Your order</span><h2>Order summary</h2></div><a href="/services" aria-label="Edit order">Edit</a></div><div id="checkoutItems" class="checkout-items"></div><div class="checkout-total-row"><span>Total</span><strong id="checkoutPageTotal">€0.00</strong></div><div class="checkout-summary-note"><span>✓</span><p><b>Private order room</b><br>Track progress and message support after payment.</p></div><div class="checkout-summary-note"><span>✉</span><p><b>Confirmation + receipt</b><br>The email used at checkout receives the paid receipt and order number automatically.</p></div><div class="checkout-summary-note"><span>✓</span><p><b>iDEAL via Mollie</b><br>Your payment is confirmed server-side before the order becomes Paid.</p></div></aside>
     </div>
   </main>
 
@@ -51,6 +53,7 @@
   <script src="/language-extra-v2.js?v=20260829-1" defer data-dm-language-extra="1"></script>
   <script src="/language-final-v3.js?v=20260829-1" defer data-dm-language-final="1"></script>
   <script src="/safari-compat-v1.js?v=20260829-1" defer></script>
-  <script src="/checkout.js?v=20260829-11"></script>
+  <script src="/checkout.js?v=20260829-12"></script>
+  <script src="/checkout-hardening-v1.js?v=20260829-1"></script>
 </body>
 </html>
