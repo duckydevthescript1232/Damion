@@ -9,7 +9,8 @@
     { "source": "/order.html", "destination": "/order", "permanent": true },
     { "source": "/portfolio.html", "destination": "/portfolio", "permanent": true },
     { "source": "/how-it-works.html", "destination": "/how-it-works", "permanent": true },
-    { "source": "/pricing.html", "destination": "/pricing", "permanent": true },
+    { "source": "/pricing.html", "destination": "/services", "permanent": true },
+    { "source": "/pricing", "destination": "/services", "permanent": true },
     { "source": "/about.html", "destination": "/about", "permanent": true },
     { "source": "/faq.html", "destination": "/faq", "permanent": true },
     { "source": "/contact.html", "destination": "/contact", "permanent": true },
@@ -24,7 +25,6 @@
     { "source": "/order", "destination": "/order.html" },
     { "source": "/portfolio", "destination": "/portfolio.html" },
     { "source": "/how-it-works", "destination": "/how-it-works.html" },
-    { "source": "/pricing", "destination": "/pricing.html" },
     { "source": "/about", "destination": "/about.html" },
     { "source": "/faq", "destination": "/faq.html" },
     { "source": "/contact", "destination": "/contact.html" },
@@ -40,7 +40,7 @@
         { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" },
         { "key": "Pragma", "value": "no-cache" },
         { "key": "Expires", "value": "0" },
-        { "key": "X-Damion-Deploy", "value": "2026-08-29-support" }
+        { "key": "X-Damion-Deploy", "value": "2026-08-29-no-pricing" }
       ]
     }
   ],
