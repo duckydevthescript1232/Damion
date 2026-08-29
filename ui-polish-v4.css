@@ -1,12 +1,15 @@
-/* Damiønmusic UI polish — cleaner spacing, stronger borders, no generated-logo text duplication */
+/* Damiønmusic UI polish — cleaner spacing, stronger borders, simple borderless brand */
 :root{--dm4-panel:#0d0f12;--dm4-panel-2:#12151a;--dm4-line:#313844;--dm4-line-hover:#4a5563;--dm4-red:#ff3658;--dm4-text:#f7f8fa;--dm4-muted:#9ca4ae}
 
 /* Header / brand */
 header{border-bottom:1px solid #252b33!important;box-shadow:0 10px 30px rgba(0,0,0,.18)!important}
-.brand{gap:9px!important;padding:6px 11px 6px 6px!important;border:1px solid #303741!important;border-radius:14px!important;background:#0c0e11!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;transform:none!important}
-.brand:hover{border-color:#49535f!important;background:#111419!important;transform:none!important}
-.brand img{width:34px!important;height:34px!important;border:1px solid #4a5360!important;border-radius:50%!important;padding:3px!important;background:#080a0d!important;filter:none!important;transform:none!important}
-.brand-name{font-size:19px!important;line-height:1!important;font-weight:900!important;letter-spacing:-.045em!important;color:#f7f8fa!important;white-space:nowrap!important}
+.brand{gap:10px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;transform:none!important;overflow:visible!important}
+.brand:hover{border:0!important;background:transparent!important;box-shadow:none!important}
+.brand:before,.brand:after{display:none!important;content:none!important}
+.brand img{width:34px!important;height:34px!important;border:0!important;border-radius:0!important;padding:0!important;background:transparent!important;box-shadow:none!important;filter:none!important;transform:none!important}
+.brand:hover img{transform:scale(1.035)!important;filter:drop-shadow(0 0 9px rgba(255,54,88,.28))!important}
+.brand-name{font-size:19px!important;line-height:1!important;font-weight:900!important;letter-spacing:-.045em!important;color:#f7f8fa!important;white-space:nowrap!important;transform:none!important;text-shadow:none!important}
+.brand:hover .brand-name{transform:none!important;letter-spacing:-.045em!important;text-shadow:none!important}
 .brand-name:after{content:none!important;display:none!important}
 .navlinks{border:1px solid #2c333c!important;background:#0b0d10!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.02)!important}
 .navlinks a.active{background:#1a1e24!important;box-shadow:inset 0 0 0 1px #343c47!important}
@@ -45,9 +48,16 @@ header{border-bottom:1px solid #252b33!important;box-shadow:0 10px 30px rgba(0,0
 .btn.primary{background:#ef3f55!important;border-color:#ff6577!important;box-shadow:0 8px 22px rgba(239,63,85,.16)!important}
 .field input,.field textarea,.field select,input,textarea,select{border-color:#303741!important;background:#0b0d10!important;border-radius:10px!important}
 
+/* Cart drawer must never trap the page when closed. */
+.drawer-bg{visibility:hidden!important;pointer-events:none!important;opacity:0!important}
+.drawer-bg.open{visibility:visible!important;pointer-events:auto!important;opacity:1!important}
+.drawer{pointer-events:none!important;visibility:hidden!important;transform:translateX(102%)!important}
+.drawer.open{pointer-events:auto!important;visibility:visible!important;transform:translateX(0)!important}
+.drawer-head .btn.icon{position:relative!important;z-index:3!important}
+
 /* Keep the brand compact on smaller screens */
 @media(max-width:980px){
-  .brand{padding-right:9px!important}
+  .brand{padding:0!important}
   .brand-name{font-size:18px!important}
 }
 @media(max-width:640px){
