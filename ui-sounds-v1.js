@@ -1,13 +1,12 @@
 (()=>{
-  if(window.__dmUISoundsV1)return;
-  window.__dmUISoundsV1=true;
+  if(window.__dmUISoundsV2)return;
+  window.__dmUISoundsV2=true;
 
   const AudioCtx=window.AudioContext||window.webkitAudioContext;
   if(!AudioCtx)return;
 
   let ctx=null;
   let unlocked=false;
-  let lastHover=0;
   let lastClick=0;
 
   const getCtx=()=>{
@@ -24,42 +23,65 @@
     unlocked=true;
   };
 
-  const tone=(freq=520,duration=.055,volume=.018,type='sine',endFreq=null)=>{
+  const noiseTick=(volume=.018,duration=.026,cutoff=1300)=>{
+    const c=getCtx();
+    if(!c||!unlocked)return;
+    const frames=Math.max(1,Math.floor(c.sampleRate*duration));
+    const buffer=c.createBuffer(1,frames,c.sampleRate);
+    const data=buffer.getChannelData(0);
+    for(let i=0;i<frames;i++){
+      const env=1-(i/frames);
+      data[i]=(Math.random()*2-1)*env;
+    }
+    const src=c.createBufferSource();
+    const hp=c.createBiquadFilter();
+    const gain=c.createGain();
+    hp.type='highpass';
+    hp.frequency.value=cutoff;
+    hp.Q.value=.45;
+    const now=c.currentTime;
+    gain.gain.setValueAtTime(volume,now);
+    gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
+    src.buffer=buffer;
+    src.connect(hp);hp.connect(gain);gain.connect(c.destination);
+    src.start(now);
+  };
+
+  const lowTap=(freq=180,volume=.0045,duration=.032)=>{
     const c=getCtx();
     if(!c||!unlocked)return;
     const now=c.currentTime;
     const osc=c.createOscillator();
     const gain=c.createGain();
-    osc.type=type;
+    osc.type='sine';
     osc.frequency.setValueAtTime(freq,now);
-    if(endFreq)osc.frequency.exponentialRampToValueAtTime(Math.max(40,endFreq),now+duration);
-    gain.gain.setValueAtTime(.0001,now);
-    gain.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),now+.008);
+    osc.frequency.exponentialRampToValueAtTime(Math.max(70,freq*.72),now+duration);
+    gain.gain.setValueAtTime(volume,now);
     gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
-    osc.connect(gain);
-    gain.connect(c.destination);
-    osc.start(now);
-    osc.stop(now+duration+.012);
+    osc.connect(gain);gain.connect(c.destination);
+    osc.start(now);osc.stop(now+duration+.01);
   };
 
   const clickSound=(kind='normal')=>{
     const now=performance.now();
-    if(now-lastClick<45)return;
+    if(now-lastClick<65)return;
     lastClick=now;
+
     if(kind==='primary'){
-      tone(470,.07,.020,'sine',650);
-      setTimeout(()=>tone(720,.045,.010,'sine',790),28);
+      noiseTick(.016,.028,1150);
+      lowTap(165,.0048,.035);
       return;
     }
     if(kind==='close'){
-      tone(390,.06,.015,'triangle',280);
+      noiseTick(.011,.022,950);
+      lowTap(135,.0032,.028);
       return;
     }
     if(kind==='select'){
-      tone(560,.05,.014,'sine',640);
+      noiseTick(.013,.022,1500);
       return;
     }
-    tone(430,.05,.013,'sine',500);
+    noiseTick(.0115,.021,1350);
   };
 
   const soundTarget=target=>target?.closest?.('button, a.btn, .package, .addon, .service-configure, .checkout-continue, .checkout-back');
@@ -84,18 +106,6 @@
     unlock();
     clickSound(kindFor(el));
   },true);
-
-  if(matchMedia('(hover:hover) and (pointer:fine)').matches){
-    document.addEventListener('pointerover',e=>{
-      if(!unlocked)return;
-      const el=soundTarget(e.target);
-      if(!el||el.contains(e.relatedTarget)||el.matches(':disabled,[aria-disabled="true"]')||el.closest('[data-dm-sound="off"]'))return;
-      const now=performance.now();
-      if(now-lastHover<85)return;
-      lastHover=now;
-      tone(680,.032,.0045,'sine',735);
-    },{passive:true});
-  }
 
   window.dmUISound=(kind='normal')=>{unlock();clickSound(kind);};
 })();
