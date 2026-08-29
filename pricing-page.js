@@ -27,7 +27,7 @@
       if(oldAction)oldAction.remove();
       if(!card.querySelector('.price-actions')){
         const actions=document.createElement('div');actions.className='price-actions';
-        actions.innerHTML=`<a class="btn" href="/services?service=${encodeURIComponent(id)}">Choose options</a><button class="btn ${i===1?'primary':''}" type="button" data-buy-base="${id}">Buy base package with PayPal</button>`;
+        actions.innerHTML=`<a class="btn" href="/services?service=${encodeURIComponent(id)}">Choose options</a><button class="btn ${i===1?'primary':''}" type="button" data-buy-base="${id}">Order base package</button>`;
         card.appendChild(actions);
       }
     });
@@ -52,7 +52,7 @@
     activePlan=plan;
     const title=document.getElementById('planModalTitle'),summary=document.getElementById('planModalSummary'),select=document.getElementById('planService');
     if(title)title.textContent=plan.name;
-    if(summary)summary.innerHTML=`<b>€${plan.price.toFixed(2)} one-time</b><span>Choose one included service before payment. ${plan.bonus}. This is not a recurring subscription.</span>`;
+    if(summary)summary.innerHTML=`<b>€${plan.price.toFixed(2)} one-time</b><span>Choose one included service before placing your order. ${plan.bonus}. This is not a recurring subscription.</span>`;
     if(select){
       const options=plan.services.map(id=>getService(id)).filter(Boolean).filter(s=>Number(s.from)<=plan.limit+0.001);
       select.innerHTML=options.map(s=>`<option value="${s.id}">${s.name} — base value €${Number(s.from).toFixed(2)}</option>`).join('');
