@@ -1,28 +1,5 @@
-/* Damiønmusic motion v5 — one consistent lightweight motion system */
-html{scroll-behavior:smooth}
+/* Damiønmusic motion v5 — component motion only; page navigation lives in navigation-v8.css */
 
-/*
-  Page navigation uses one system only:
-  - old page: quick 8px glide left + fade
-  - new page: soft 10px glide in + fade
-  Header stays stable because only <main> moves.
-*/
-html.dm-motion-ready main{
-  animation:dmPageEnter .34s cubic-bezier(.16,1,.3,1) both;
-  transform-origin:50% 50%;
-}
-html.dm-page-leaving main{
-  opacity:0!important;
-  transform:translate3d(-8px,0,0)!important;
-  transition:opacity .15s ease,transform .16s cubic-bezier(.4,0,.6,1)!important;
-  pointer-events:none;
-}
-@keyframes dmPageEnter{
-  from{opacity:0;transform:translate3d(10px,0,0)}
-  to{opacity:1;transform:translate3d(0,0,0)}
-}
-
-/* Default state = slower, soft return after hover. */
 .dm-hoverfx{
   transform:translateZ(0)!important;
   backface-visibility:hidden;
@@ -94,13 +71,11 @@ html.dm-page-leaving main{
   transition-duration:.075s!important;
 }
 
-/* Generic modal motion stays local to the component. */
 .modal-bg{animation:none!important}
 .modal-bg.open .modal{animation:dmModalIn .32s cubic-bezier(.16,1,.3,1) both}
 @keyframes dmModalIn{from{opacity:0;transform:translateY(12px) scale(.986)}to{opacity:1;transform:translateY(0) scale(1)}}
 
 @media(prefers-reduced-motion:reduce){
-  html.dm-motion-ready main,html.dm-page-leaving main,
   .dm-hoverfx,.dm-btnfx,.modal-bg.open .modal{
     animation:none!important;
     transition:none!important;
