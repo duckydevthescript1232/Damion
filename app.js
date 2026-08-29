@@ -66,7 +66,9 @@ function renderCart(){
 
 function renderServiceRows(targetId){
   const el=byId(targetId);if(!el)return;
-  el.innerHTML=SERVICES.map((s,i)=>`<article class="service-row"><div class="no">${String(i+1).padStart(2,"0")}</div><div class="title"><b>${escapeHtml(s.name)}</b><span>${escapeHtml(s.desc)}</span></div><div class="service-included"><small>Includes</small><span>${s.included.map(escapeHtml).join(" · ")}</span></div><div class="service-turn"><small>Turnaround</small><b>${escapeHtml(s.turnaround)}</b></div><div class="price"><small>from</small><b>${eur(s.from)}</b></div><button class="btn service-configure" type="button" onclick="configure('${s.id}')">Order</button></article>`).join("");
+  const requested=(el.dataset.serviceIds||"").split(",").map(id=>id.trim()).filter(Boolean);
+  const source=requested.length?requested.map(id=>SERVICES.find(service=>service.id===id)).filter(Boolean):SERVICES;
+  el.innerHTML=source.map((s,i)=>`<article class="service-row"><div class="no">${String(i+1).padStart(2,"0")}</div><div class="title"><b>${escapeHtml(s.name)}</b><span>${escapeHtml(s.desc)}</span></div><div class="service-included"><small>Includes</small><span>${s.included.map(escapeHtml).join(" · ")}</span></div><div class="service-turn"><small>Turnaround</small><b>${escapeHtml(s.turnaround)}</b></div><div class="price"><small>from</small><b>${eur(s.from)}</b></div><button class="btn service-configure" type="button" aria-label="Choose ${escapeHtml(s.name)}" onclick="configure('${s.id}')">Choose</button></article>`).join("");
 }
 
 function renderPricing(){
@@ -123,3 +125,4 @@ function setupCartSafety(){
 }
 
 window.addEventListener("DOMContentLoaded",()=>{setupCartSafety();renderCart();renderServiceRows("serviceList");renderPricing();buildBars();setupHeroPlayer();setupContact()});
+
