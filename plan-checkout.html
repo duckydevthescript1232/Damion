@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#09090b">
+<title>Damiønmusic — Plan Checkout</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/styles.css?v=20260829-4">
+<link rel="stylesheet" href="/theme-v3.css?v=20260828-6">
+<link rel="stylesheet" href="/plan-checkout.css?v=20260829-1">
+</head>
+<body class="plan-checkout-page">
+<header><div class="wrap nav"><a class="brand" href="/"><img src="/assets/logo.svg" alt="Damiønmusic logo"><span class="brand-name">Damiønmusic</span></a><div class="nav-actions"><a class="btn" href="/pricing">Back to plans</a></div></div></header>
+<main class="plan-checkout-main"><div class="wrap plan-checkout-wrap">
+<section class="plan-checkout-copy"><div class="kicker">Secure plan checkout</div><h1>Activate your Damiønmusic plan.</h1><p>This checkout is separate from the normal music-service cart. PayPal handles the payment and Damiønmusic activates access only after the server verifies that payment completed.</p><div class="checkout-trust"><span>✓ Exact plan price</span><span>✓ PayPal login</span><span>✓ 30-day access</span><span>✓ No auto-renewal</span></div></section>
+<section class="plan-payment-card" aria-live="polite">
+<div id="planLoading" class="plan-loading">Loading selected plan…</div>
+<div id="planCheckout" hidden>
+<div class="selected-plan"><span id="planBadge">Plan</span><h2 id="planName">Plan</h2><div class="selected-price"><strong id="planPrice">€0.00</strong><small>30 days · one-time</small></div><p id="planCopy"></p><ul id="planFeatures"></ul></div>
+<div class="paypal-zone"><div class="paypal-title"><b>Continue with PayPal</b><span>You can log in to PayPal in the secure payment window.</span></div><div id="paypalButtons"></div><div id="paymentStatus" class="payment-status" role="status"></div></div>
+</div>
+<div id="planError" class="plan-result error" hidden><h2>Checkout unavailable</h2><p id="planErrorText">Something went wrong.</p><a class="btn" href="/pricing">Choose another plan</a></div>
+<div id="planSuccess" class="plan-result success" hidden><div class="success-mark">✓</div><h2>Plan activated.</h2><p id="successText">Your Member Hub access is ready.</p><a class="btn primary" href="/member">Open Member Hub</a><a class="btn" href="/">Back to Damiønmusic</a></div>
+</section>
+</div></main>
+<footer><div class="wrap"><p class="checkout-foot">Payment is processed by PayPal. Damiønmusic never receives your PayPal password.</p></div></footer>
+<script src="/plan-checkout.js?v=20260829-1"></script>
+</body>
+</html>
