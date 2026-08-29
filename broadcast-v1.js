@@ -1,6 +1,6 @@
 (()=>{
-  if(window.__dmBroadcastV3)return;
-  window.__dmBroadcastV3=true;
+  if(window.__dmBroadcastV4)return;
+  window.__dmBroadcastV4=true;
 
   const ENDPOINT='https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damian-site-presence';
   const OWNER_KEY='damion_site_session';
@@ -20,105 +20,172 @@
 
   const ensureLayer=()=>{
     let layer=document.getElementById('dmBroadcastLayer');
-    if(!layer){layer=document.createElement('div');layer.id='dmBroadcastLayer';layer.setAttribute('aria-live','polite');layer.setAttribute('aria-atomic','true');document.body.appendChild(layer)}
+    if(!layer){
+      layer=document.createElement('div');
+      layer.id='dmBroadcastLayer';
+      layer.setAttribute('aria-live','polite');
+      layer.setAttribute('aria-atomic','true');
+      document.body.appendChild(layer);
+    }
     return layer;
   };
 
   const showBroadcast=b=>{
     if(!b?.id||!b?.message)return;
-    const id=String(b.id);if(id===seenId)return;
-    seenId=id;try{sessionStorage.setItem(SEEN_KEY,id)}catch(_){}
+    const id=String(b.id);
+    if(id===seenId)return;
+    seenId=id;
+    try{sessionStorage.setItem(SEEN_KEY,id)}catch(_){}
+
     const expires=new Date(b.expires_at||0).getTime();
     const remaining=Number.isFinite(expires)?Math.max(1800,Math.min(9000,expires-Date.now())):7000;
-    const layer=ensureLayer();layer.replaceChildren();
-    const toast=document.createElement('div');toast.className='dm-broadcast-toast';toast.style.setProperty('--dm-broadcast-life',`${remaining}ms`);
+    const layer=ensureLayer();
+    layer.replaceChildren();
+    const toast=document.createElement('div');
+    toast.className='dm-broadcast-toast';
+    toast.style.setProperty('--dm-broadcast-life',`${remaining}ms`);
     toast.innerHTML='<div class="dm-broadcast-head"><i class="dm-broadcast-dot"></i><span class="dm-broadcast-name"></span><span class="dm-broadcast-live">Studio broadcast</span></div><div class="dm-broadcast-message"></div><div class="dm-broadcast-progress"><i></i></div>';
     toast.querySelector('.dm-broadcast-name').textContent=b.sender_name||'Damiøn';
     toast.querySelector('.dm-broadcast-message').textContent=String(b.message).slice(0,160);
-    layer.appendChild(toast);requestAnimationFrame(()=>toast.classList.add('show'));
+    layer.appendChild(toast);
+    requestAnimationFrame(()=>toast.classList.add('show'));
     try{window.dmUISound?.('primary')}catch(_){}
-    clearTimeout(hideTimer);hideTimer=setTimeout(()=>{toast.classList.remove('show');setTimeout(()=>toast.remove(),420)},remaining);
+    clearTimeout(hideTimer);
+    hideTimer=setTimeout(()=>{
+      toast.classList.remove('show');
+      setTimeout(()=>toast.remove(),420);
+    },remaining);
   };
 
-  const removeOldSidebarComposer=()=>document.querySelectorAll('.dm-owner-broadcast').forEach(el=>el.remove());
+  const removeLegacyUI=()=>{
+    document.querySelectorAll('.dm-owner-broadcast').forEach(el=>el.remove());
+    const old=document.getElementById('dmBroadcastAdminButton');
+    if(old&&old.dataset.broadcastVersion!=='4')old.remove();
+    const oldComposer=document.getElementById('dmBroadcastComposer');
+    if(oldComposer&&oldComposer.tagName!=='DIALOG')oldComposer.remove();
+  };
 
-  const ensureOwnerButton=()=>{
-    removeOldSidebarComposer();
+  const closeComposer=()=>{
+    const dialog=document.getElementById('dmBroadcastComposer');
+    if(!dialog)return;
+    try{
+      if(typeof dialog.close==='function'&&dialog.open)dialog.close();
+      else dialog.removeAttribute('open');
+    }catch(_){dialog.removeAttribute('open')}
+  };
+
+  const openComposer=()=>{
+    if(!ownerSession())return;
+    ensureOwnerUI();
+    const dialog=document.getElementById('dmBroadcastComposer');
+    if(!dialog)return;
+    try{
+      if(typeof dialog.showModal==='function'){
+        if(!dialog.open)dialog.showModal();
+      }else{
+        dialog.setAttribute('open','');
+      }
+    }catch(_){dialog.setAttribute('open','')}
+    requestAnimationFrame(()=>dialog.querySelector('textarea')?.focus?.({preventScroll:true}));
+  };
+
+  const ensureOwnerUI=()=>{
+    removeLegacyUI();
     if(!ownerSession()){
       document.getElementById('dmBroadcastAdminButton')?.remove();
       document.getElementById('dmBroadcastComposer')?.remove();
       return;
     }
-    if(document.getElementById('dmBroadcastAdminButton'))return;
 
-    const button=document.createElement('button');
-    button.id='dmBroadcastAdminButton';button.type='button';button.textContent='A';button.title='Broadcast message';button.setAttribute('aria-label','Open broadcast message');
-    document.body.appendChild(button);
+    let button=document.getElementById('dmBroadcastAdminButton');
+    if(!button){
+      button=document.createElement('button');
+      button.id='dmBroadcastAdminButton';
+      button.type='button';
+      button.dataset.broadcastVersion='4';
+      button.textContent='MSG';
+      button.title='Broadcast message · Alt + M';
+      button.setAttribute('aria-label','Open broadcast message');
+      document.body.appendChild(button);
+      button.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openComposer()});
+    }
 
-    const modal=document.createElement('div');
-    modal.id='dmBroadcastComposer';modal.setAttribute('aria-hidden','true');
-    modal.innerHTML='<div class="dm-broadcast-composer-card" role="dialog" aria-modal="true" aria-label="Broadcast message"><div class="dm-broadcast-composer-head"><div><small>OWNER ONLY</small><b>Broadcast</b></div><button class="dm-broadcast-close" type="button" aria-label="Close">×</button></div><p>Send a short message to everyone who currently has the site open.</p><textarea maxlength="160" placeholder="Type your message…" aria-label="Broadcast message"></textarea><div class="dm-broadcast-composer-foot"><span class="dm-broadcast-count">0 / 160</span><button class="dm-broadcast-send" type="button">Send</button></div><div class="dm-broadcast-status" aria-live="polite"></div></div>';
-    document.body.appendChild(modal);
+    if(document.getElementById('dmBroadcastComposer'))return;
 
-    const input=modal.querySelector('textarea'),count=modal.querySelector('.dm-broadcast-count'),send=modal.querySelector('.dm-broadcast-send'),status=modal.querySelector('.dm-broadcast-status');
+    const dialog=document.createElement('dialog');
+    dialog.id='dmBroadcastComposer';
+    dialog.innerHTML='<div class="dm-broadcast-composer-card"><div class="dm-broadcast-composer-head"><div><small>OWNER ONLY</small><b>Broadcast</b></div><button class="dm-broadcast-close" type="button" aria-label="Close">×</button></div><p>Send one short message to everyone who currently has the site open.</p><textarea maxlength="160" placeholder="Type your message…" aria-label="Broadcast message"></textarea><div class="dm-broadcast-composer-foot"><span class="dm-broadcast-count">0 / 160</span><span class="dm-broadcast-shortcut">Alt + M</span><button class="dm-broadcast-send" type="button">Send</button></div><div class="dm-broadcast-status" aria-live="polite"></div></div>';
+    document.body.appendChild(dialog);
 
-    /* Critical inline fallback: popup still works even if an old cached stylesheet is present. */
-    Object.assign(modal.style,{position:'fixed',inset:'0',zIndex:'2147482450',display:'grid',placeItems:'center',padding:'18px',background:'rgba(0,0,0,.52)',opacity:'0',visibility:'hidden',pointerEvents:'none'});
+    const input=dialog.querySelector('textarea');
+    const count=dialog.querySelector('.dm-broadcast-count');
+    const send=dialog.querySelector('.dm-broadcast-send');
+    const status=dialog.querySelector('.dm-broadcast-status');
 
-    const close=()=>{
-      modal.classList.remove('open');
-      modal.setAttribute('aria-hidden','true');
-      modal.style.opacity='0';
-      modal.style.visibility='hidden';
-      modal.style.pointerEvents='none';
-    };
-    const open=e=>{
-      if(e){e.preventDefault?.();e.stopPropagation?.()}
-      modal.classList.add('open');
-      modal.setAttribute('aria-hidden','false');
-      modal.style.display='grid';
-      modal.style.opacity='1';
-      modal.style.visibility='visible';
-      modal.style.pointerEvents='auto';
-      requestAnimationFrame(()=>input?.focus?.({preventScroll:true}));
-    };
-
-    button.addEventListener('pointerdown',e=>{if(e.button===0)open(e)});
-    button.addEventListener('click',open);
-    modal.querySelector('.dm-broadcast-close').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();close()});
-    modal.addEventListener('click',e=>{if(e.target===modal)close()});
+    dialog.querySelector('.dm-broadcast-close').addEventListener('click',e=>{e.preventDefault();closeComposer()});
+    dialog.addEventListener('click',e=>{
+      const rect=dialog.getBoundingClientRect();
+      const inside=e.clientX>=rect.left&&e.clientX<=rect.right&&e.clientY>=rect.top&&e.clientY<=rect.bottom;
+      if(!inside)closeComposer();
+    });
+    dialog.addEventListener('cancel',e=>{e.preventDefault();closeComposer()});
     input.addEventListener('input',()=>count.textContent=`${input.value.length} / 160`);
-    input.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();send.click()}});
+    input.addEventListener('keydown',e=>{
+      if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+        e.preventDefault();
+        send.click();
+      }
+    });
+
     send.addEventListener('click',async()=>{
       const message=input.value.trim();
       if(!message){status.textContent='Type a message first.';status.className='dm-broadcast-status error';return}
-      const session=ownerSession();if(!session){status.textContent='Owner login required.';status.className='dm-broadcast-status error';return}
-      send.disabled=true;status.textContent='Sending…';status.className='dm-broadcast-status';
+      const session=ownerSession();
+      if(!session){status.textContent='Owner login required.';status.className='dm-broadcast-status error';return}
+      send.disabled=true;
+      status.textContent='Sending…';
+      status.className='dm-broadcast-status';
       try{
         const d=await post({action:'broadcast_send',ownerSession:session,message});
-        status.textContent='Sent to everyone online.';status.className='dm-broadcast-status ok';input.value='';count.textContent='0 / 160';if(d.broadcast)showBroadcast(d.broadcast);setTimeout(close,500);
-      }catch(err){status.textContent=err?.message||'Could not send.';status.className='dm-broadcast-status error'}finally{send.disabled=false}
+        status.textContent='Sent to everyone online.';
+        status.className='dm-broadcast-status ok';
+        input.value='';
+        count.textContent='0 / 160';
+        if(d.broadcast)showBroadcast(d.broadcast);
+        setTimeout(closeComposer,450);
+      }catch(err){
+        status.textContent=err?.message||'Could not send.';
+        status.className='dm-broadcast-status error';
+      }finally{send.disabled=false}
     });
-    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))close()});
-
-    /* Capture fallback for sites with global click handlers. */
-    document.addEventListener('click',e=>{
-      const target=e.target instanceof Element?e.target:null;
-      if(target?.closest?.('#dmBroadcastAdminButton'))open(e);
-    },true);
-
-    window.dmOpenBroadcast=open;
   };
+
+  /* Reliable keyboard path: Alt + M opens broadcast without relying on a clickable overlay. */
+  document.addEventListener('keydown',e=>{
+    if(!ownerSession())return;
+    if(e.altKey&&!e.ctrlKey&&!e.metaKey&&String(e.key||'').toLowerCase()==='m'){
+      e.preventDefault();
+      e.stopPropagation();
+      openComposer();
+    }
+  },true);
+
+  window.dmOpenBroadcast=openComposer;
 
   const poll=async()=>{
-    if(polling||document.hidden)return;polling=true;
-    try{const d=await post({action:'broadcast_latest'});if(d.broadcast)showBroadcast(d.broadcast)}catch(_){}finally{polling=false}
+    if(polling||document.hidden)return;
+    polling=true;
+    try{
+      const d=await post({action:'broadcast_latest'});
+      if(d.broadcast)showBroadcast(d.broadcast);
+    }catch(_){}
+    finally{polling=false}
   };
 
-  const start=()=>{ensureLayer();ensureOwnerButton();poll()};
+  const start=()=>{ensureLayer();ensureOwnerUI();poll()};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
-  document.addEventListener('dm:pagechange',()=>setTimeout(()=>{ensureOwnerButton();poll()},0));
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden){ensureOwnerButton();poll()}});
-  window.addEventListener('storage',e=>{if(e.key===OWNER_KEY)ensureOwnerButton()});
-  setInterval(()=>{ensureOwnerButton();poll()},2000);
+  document.addEventListener('dm:pagechange',()=>setTimeout(()=>{ensureOwnerUI();poll()},0));
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden){ensureOwnerUI();poll()}});
+  window.addEventListener('storage',e=>{if(e.key===OWNER_KEY)ensureOwnerUI()});
+  setInterval(()=>{ensureOwnerUI();poll()},2000);
 })();
