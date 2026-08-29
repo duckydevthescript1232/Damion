@@ -25,6 +25,37 @@
     document.getElementById('dmAuthGate')?.remove();
   };
 
+  const ensureUnifiedTheme=()=>{
+    if(document.querySelector('link[data-dm-unified-theme]'))return;
+    const l=document.createElement('link');
+    l.rel='stylesheet';
+    l.href='/theme-unify-v2.css?v=20260829-1';
+    l.dataset.dmUnifiedTheme='1';
+    document.head.appendChild(l);
+  };
+
+  const ensureFastMotion=()=>{
+    if(window.__dmMotionV5)return;
+    /* Claim the old motion flag before any cached legacy script can install soft navigation. */
+    window.__dmMotionV5=true;
+    const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const selector='.service-row,.starter-card,.price-card,.card,.browse-card,.dm-preview-shell,.hero-studio-shot,.brand';
+    const mark=()=>document.querySelectorAll(selector).forEach(el=>el.classList.add('dm-hoverfx'));
+    const start=()=>{
+      mark();
+      const main=document.querySelector('main');
+      if(!main||reduced||document.body.classList.contains('dm-reduced')||typeof main.animate!=='function')return;
+      main.animate([{opacity:.985,transform:'translate3d(0,2px,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],{duration:90,easing:'cubic-bezier(.2,.8,.2,1)',fill:'both'});
+    };
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+    new MutationObserver(records=>{
+      if(records.some(r=>r.addedNodes.length))requestAnimationFrame(mark);
+    }).observe(document.documentElement,{childList:true,subtree:true});
+    document.addEventListener('dm:pagechange',()=>requestAnimationFrame(mark));
+    history.scrollRestoration='auto';
+    document.documentElement.classList.remove('dm-page-leaving','dm-motion-ready','dm-native-view','dm-soft-nav-active');
+  };
+
   const ensureSafariCompat=()=>{
     if(document.querySelector('script[data-dm-safari-compat]'))return;
     const s=document.createElement('script');
@@ -132,6 +163,8 @@
   };
 
   ensureOrderProxy();
+  ensureUnifiedTheme();
+  ensureFastMotion();
   ensureLanguageBase();
   ensureSafariCompat();
   ensureCartDrawerFix();
@@ -144,6 +177,8 @@
 
   const refreshGlobalLayers=()=>{
     clearLocks();
+    ensureUnifiedTheme();
+    ensureFastMotion();
     ensureLanguageBase();
     ensureServiceControls();
     ensureNavCleanup();
