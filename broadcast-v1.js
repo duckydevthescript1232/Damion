@@ -1,5 +1,6 @@
 (()=>{
-  if(window.__dmBroadcastV5)return;
+  if(window.__dmBroadcastV6)return;
+  window.__dmBroadcastV6=true;
   window.__dmBroadcastV5=true;
 
   const ENDPOINT='https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damian-site-presence';
@@ -41,19 +42,37 @@
     const remaining=Number.isFinite(expires)?Math.max(1800,Math.min(9000,expires-Date.now())):7000;
     const layer=ensureLayer();
     layer.replaceChildren();
+
     const toast=document.createElement('div');
-    toast.className='dm-broadcast-toast dm-broadcast-message-only';
-    const message=document.createElement('div');
+    toast.className='dm-broadcast-toast';
+    const line=document.createElement('div');
+    line.className='dm-broadcast-line';
+
+    const name=document.createElement('span');
+    name.className='dm-broadcast-name';
+    name.append(document.createTextNode('Damiøn'));
+    const check=document.createElement('span');
+    check.className='dm-broadcast-check';
+    check.textContent='✓';
+    check.setAttribute('aria-hidden','true');
+    const colon=document.createElement('span');
+    colon.className='dm-broadcast-colon';
+    colon.textContent=':';
+    name.append(check,colon);
+
+    const message=document.createElement('span');
     message.className='dm-broadcast-message';
     message.textContent=String(b.message).slice(0,160);
-    toast.appendChild(message);
+
+    line.append(name,message);
+    toast.appendChild(line);
     layer.appendChild(toast);
     requestAnimationFrame(()=>toast.classList.add('show'));
     try{window.dmUISound?.('primary')}catch(_){}
     clearTimeout(hideTimer);
     hideTimer=setTimeout(()=>{
       toast.classList.remove('show');
-      setTimeout(()=>toast.remove(),420);
+      setTimeout(()=>toast.remove(),460);
     },remaining);
   };
 
@@ -103,7 +122,6 @@
         status.textContent='Sent.';status.className='dm-broadcast-status ok';
         input.value='';count.textContent='0 / 160';
         if(d.broadcast)showBroadcast(d.broadcast);
-        setTimeout(closeComposer,350);
       }catch(err){status.textContent=err?.message||'Could not send.';status.className='dm-broadcast-status error'}finally{send.disabled=false}
     });
     return dialog;
