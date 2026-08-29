@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#050506">
-  <title>Order — Damiønmusic</title>
-  <meta name="description" content="Order music production services from Damiønmusic.">
+  <title>Secure checkout — Damiønmusic</title>
+  <meta name="description" content="Pay securely with iDEAL for Damiønmusic music production services.">
   <link rel="stylesheet" href="/styles.css?v=20260829-4">
   <link rel="stylesheet" href="/navigation-v8.css?v=20260829-1">
   <link rel="stylesheet" href="/checkout.css?v=20260829-1">
@@ -18,13 +18,13 @@
 <body class="checkout-page">
   <header class="checkout-header"><div class="checkout-shell checkout-topbar"><a class="brand" href="/"><img src="/assets/logo.svg" alt="Damiønmusic logo"><span class="brand-name">Damiønmusic</span></a><a class="checkout-back" href="/services">← Back to services</a></div></header>
   <main class="checkout-shell checkout-main">
-    <section class="checkout-intro"><div><span class="checkout-eyebrow">Order request</span><h1>Finish your booking.</h1><p>Tell me about your project and save the order. Payment is not taken yet.</p></div><div class="checkout-trust"><span>✓</span><div><b>No payment today</b><small>iDEAL checkout will be added separately</small></div></div></section>
+    <section class="checkout-intro"><div><span class="checkout-eyebrow">Secure checkout</span><h1>Finish your booking.</h1><p>Tell me about your project, then continue to a secure iDEAL payment with Mollie.</p></div><div class="checkout-trust"><span>✓</span><div><b>Protected payment</b><small>iDEAL payment handled securely by Mollie</small></div></div></section>
 
     <div id="emptyCheckout" class="checkout-empty" hidden><div class="checkout-empty-icon">♪</div><h2>Your cart is empty</h2><p>Choose a music service first, then come back here to complete your order.</p><a class="btn primary" href="/services#start">Browse services</a></div>
 
     <div id="checkoutContent" class="checkout-layout">
       <section class="checkout-card checkout-details-card">
-        <div class="checkout-step-head"><span class="checkout-step-number">1</span><div><h2>Your project</h2><p>These details will be saved to your private order room.</p></div></div>
+        <div class="checkout-step-head"><span class="checkout-step-number">1</span><div><h2>Your project</h2><p>These details stay connected to your order room after payment.</p></div></div>
         <form id="checkoutPageForm" novalidate>
           <div class="checkout-fields">
             <label class="checkout-field"><span>First name</span><input id="coFirst" required autocomplete="given-name" placeholder="First name"></label>
@@ -36,22 +36,20 @@
             <label class="checkout-field checkout-field-wide"><span>Preferred delivery</span><select id="coDelivery" required><option value="Audio files (WAV/MP3/Stems)">Audio files — WAV / MP3 / stems</option><option value="FL Studio project + audio">FL Studio project + audio</option><option value="Discuss in order chat">Not sure — discuss in order chat</option></select></label>
             <label class="checkout-field checkout-field-wide"><span>Project notes <em>Optional</em></span><textarea id="coNotes" rows="5" placeholder="What sound are you going for? Add references, deadlines or anything important."></textarea></label>
           </div>
-          <div class="checkout-summary-note" style="margin:18px 0"><span>!</span><p><b>Payment status: Pending</b><br>This creates your order request only. No money is charged.</p></div>
-          <button id="continuePayment" class="checkout-continue" type="submit"><span>Place order request</span><span>→</span></button>
+          <div class="checkout-summary-note" style="margin:18px 0"><span>✓</span><p><b>Secure payment</b><br>You will be redirected to Mollie to complete the payment with iDEAL.</p></div>
+          <button id="continuePayment" class="checkout-continue" type="submit"><span>Pay with iDEAL</span><span>→</span></button>
           <div id="checkoutMessage" class="checkout-message" aria-live="polite"></div>
         </form>
       </section>
 
-      <aside class="checkout-card checkout-summary-card"><div class="checkout-summary-title"><div><span class="checkout-eyebrow">Your order</span><h2>Order summary</h2></div><a href="/services" aria-label="Edit order">Edit</a></div><div id="checkoutItems" class="checkout-items"></div><div class="checkout-total-row"><span>Quoted total</span><strong id="checkoutPageTotal">€0.00</strong></div><div class="checkout-summary-note"><span>✓</span><p><b>Private order room</b><br>Your project details and messages stay together.</p></div><div class="checkout-summary-note"><span>✓</span><p><b>iDEAL</b><br>No payment provider is loaded on this page.</p></div></aside>
+      <aside class="checkout-card checkout-summary-card"><div class="checkout-summary-title"><div><span class="checkout-eyebrow">Your order</span><h2>Order summary</h2></div><a href="/services" aria-label="Edit order">Edit</a></div><div id="checkoutItems" class="checkout-items"></div><div class="checkout-total-row"><span>Total</span><strong id="checkoutPageTotal">€0.00</strong></div><div class="checkout-summary-note"><span>✓</span><p><b>Private order room</b><br>Track progress and message support after payment.</p></div><div class="checkout-summary-note"><span>✓</span><p><b>iDEAL via Mollie</b><br>Your payment is confirmed server-side before the order becomes Paid.</p></div></aside>
     </div>
-
-    <section id="checkoutSuccess" class="checkout-success" hidden><div class="checkout-success-mark">✓</div><span class="checkout-eyebrow">Order request saved</span><h1>Your project is in the system.</h1><p id="successText">Your order request was saved. No payment was taken.</p><div class="checkout-success-order"><span>Damiønmusic order</span><strong id="successOrderId">Saved</strong></div><div class="checkout-success-actions"><a id="successTrackOrder" class="btn primary" href="/order">Open your order room</a><a class="btn" href="/support">Get support</a></div><p class="checkout-privacy" style="margin-top:18px">Status stays <b>Pending payment</b> until iDEAL is connected and payment is confirmed.</p></section>
   </main>
 
   <footer class="checkout-footer"><div class="checkout-shell"><span>© Damiønmusic</span><div><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/refund">Refund policy</a></div></div></footer>
   <script src="/language-v1.js?v=20260829-2" defer data-dm-language="1"></script>
   <script src="/language-extra-v2.js?v=20260829-1" defer data-dm-language-extra="1"></script>
-  <script src="/motion-v5.js?v=20260829-5"></script>
-  <script src="/checkout.js?v=20260829-3"></script>
+  <script src="/safari-compat-v1.js?v=20260829-1" defer></script>
+  <script src="/checkout.js?v=20260829-10"></script>
 </body>
 </html>
