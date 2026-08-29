@@ -5,6 +5,7 @@
   const ENDPOINT='https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damian-site-presence';
   const VISITOR_KEY='damian_presence_id';
   const OWNER_KEY='dm_admin_key';
+  const OWNER_SAVED_KEY='dm_admin_key_saved';
 
   let id='';
   try{id=localStorage.getItem(VISITOR_KEY)||''}catch(_){}
@@ -13,7 +14,13 @@
     try{localStorage.setItem(VISITOR_KEY,id)}catch(_){}
   }
 
-  const ownerKey=()=>{try{return sessionStorage.getItem(OWNER_KEY)||''}catch(_){return ''}};
+  const ownerKey=()=>{
+    let key='';
+    try{key=sessionStorage.getItem(OWNER_KEY)||''}catch(_){}
+    if(!key){try{key=localStorage.getItem(OWNER_SAVED_KEY)||''}catch(_){}}
+    return key;
+  };
+  const clearOwnerKey=()=>{try{sessionStorage.removeItem(OWNER_KEY)}catch(_){}try{localStorage.removeItem(OWNER_SAVED_KEY)}catch(_){}};
   const detectDevice=()=>{const ua=navigator.userAgent||'';if(/iPad|Tablet|PlayBook|Silk/i.test(ua)||(/Android/i.test(ua)&&!/Mobile/i.test(ua)))return'Tablet';if(/Mobi|Android|iPhone|iPod/i.test(ua))return'Mobile';return'Desktop'};
   const detectBrowser=()=>{const ua=navigator.userAgent||'';if(/Edg\//.test(ua))return'Edge';if(/OPR\//.test(ua))return'Opera';if(/Firefox\//.test(ua))return'Firefox';if(/Chrome\//.test(ua))return'Chrome';if(/Safari\//.test(ua))return'Safari';return'Browser'};
   const referrerHost=()=>{try{return document.referrer?new URL(document.referrer).hostname.replace(/^www\./,''):''}catch(_){return''}};
@@ -40,7 +47,7 @@
       @media(prefers-reduced-motion:reduce){.dm-live-pill,.dm-live-panel{transition:none!important;transform:none!important}}
     `;document.head.appendChild(style);
 
-    const root=document.createElement('div');root.id='dmLiveVisitors';root.innerHTML=`<div class="dm-live-panel" aria-label="Private live visitor panel"><div class="dm-live-head"><b>Live visitors</b><span>Owner only</span></div><div class="dm-live-grid"><div class="dm-live-stat"><span>Online now</span><strong id="dmOnlineNow">—</strong></div><div class="dm-live-stat"><span>Active 5 min</span><strong id="dmActiveFive">—</strong></div><div class="dm-live-stat"><span>Today</span><strong id="dmTodayVisitors">—</strong></div><div class="dm-live-stat"><span>Total</span><strong id="dmTotalVisitors">—</strong></div></div><div class="dm-live-section-title"><span>Recent visitors</span><span>Location + page</span></div><div id="dmRecentVisitors"><div class="dm-live-empty">Loading…</div></div><div class="dm-live-updated" id="dmLiveUpdated">Connecting…</div></div><button class="dm-live-pill" type="button" aria-label="Open private live visitor stats" aria-expanded="false"><i class="dm-live-dot"></i><span class="dm-live-count" id="dmLiveCount">—</span><span class="dm-live-label">online</span></button>`;
+    const root=document.createElement('div');root.id='dmLiveVisitors';root.innerHTML=`<div class="dm-live-panel" aria-label="Private live visitor panel"><div class="dm-live-head"><b>Live visitors</b><span>Owner only</span></div><div class="dm-live-grid"><div class="dm-live-stat"><span>Online now</span><strong id="dmOnlineNow">—</strong></div><div class="dm-live-stat"><span>Active 5 min</span><strong id="dmActiveFive">—</strong></div><div class="dm-live-stat"><span>Today</span><strong id="dmTodayVisitors">—</strong></div><div class="dm-live-stat"><span>Total</span><strong id="dmTotalVisitors">—</strong></div></div><div class="dm-live-section-title"><span>Who is online</span><span>Device + page</span></div><div id="dmRecentVisitors"><div class="dm-live-empty">Loading…</div></div><div class="dm-live-updated" id="dmLiveUpdated">Connecting…</div></div><button class="dm-live-pill" type="button" aria-label="Open private live visitor stats" aria-expanded="false"><i class="dm-live-dot"></i><span class="dm-live-count" id="dmLiveCount">—</span><span class="dm-live-label">online</span></button>`;
     document.body.appendChild(root);
     const btn=root.querySelector('.dm-live-pill');btn.addEventListener('click',()=>{const open=root.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false')});
     document.addEventListener('pointerdown',e=>{if(!root.contains(e.target)){root.classList.remove('open');btn.setAttribute('aria-expanded','false')}});
@@ -50,9 +57,15 @@
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
   const countryName=code=>{if(!code)return'';try{return new Intl.DisplayNames([navigator.language||'en'],{type:'region'}).of(code)||code}catch(_){return code}};
   const shortAgo=iso=>{const s=Math.max(0,Math.round((Date.now()-new Date(iso).getTime())/1000));if(s<10)return'now';if(s<60)return`${s}s ago`;return`${Math.max(1,Math.round(s/60))}m ago`};
-  const renderRecent=recent=>{const host=document.getElementById('dmRecentVisitors');if(!host)return;if(!Array.isArray(recent)||!recent.length){host.innerHTML='<div class="dm-live-empty">No active visitors right now.</div>';return}host.innerHTML=recent.map(v=>{const place=countryName(v.country_code)||v.timezone||'Location unavailable';const tech=[v.device,v.browser].filter(Boolean).join(' · ');const source=v.referrer_host?` · from ${v.referrer_host}`:'';return`<div class="dm-visitor"><div class="dm-visitor-top"><span class="dm-visitor-name">${esc(v.visitor||'Anonymous visitor')}</span><span class="dm-visitor-place">${esc(place)}</span></div><div class="dm-visitor-meta">${esc(tech||'Unknown device')}${esc(source)} · ${esc(shortAgo(v.last_seen))}</div><div class="dm-visitor-path">On ${esc(v.path||'/')}</div></div>`}).join('')};
+  const isOnline=v=>{const t=new Date(v?.last_seen||0).getTime();return Number.isFinite(t)&&Date.now()-t<=90000};
+  const renderRecent=recent=>{
+    const host=document.getElementById('dmRecentVisitors');if(!host)return;
+    const list=Array.isArray(recent)?recent.filter(isOnline):[];
+    if(!list.length){host.innerHTML='<div class="dm-live-empty">No active visitors right now.</div>';return}
+    host.innerHTML=list.map(v=>{const place=countryName(v.country_code)||v.timezone||'Location unavailable';const tech=[v.device,v.browser].filter(Boolean).join(' · ');const source=v.referrer_host?` · from ${v.referrer_host}`:'';return`<div class="dm-visitor"><div class="dm-visitor-top"><span class="dm-visitor-name">${esc(v.visitor||'Anonymous visitor')}</span><span class="dm-visitor-place">${esc(place)}</span></div><div class="dm-visitor-meta">${esc(tech||'Unknown device')}${esc(source)} · ${esc(shortAgo(v.last_seen))}</div><div class="dm-visitor-path">On ${esc(v.path||'/')}</div></div>`}).join('')
+  };
 
-  const loadStats=async()=>{const key=ownerKey();if(!key)return;try{const r=await fetch(ENDPOINT,{method:'POST',cache:'no-store',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'stats',adminKey:key})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d?.error||'stats unavailable');setText('dmLiveCount',d.online_now??0);setText('dmOnlineNow',d.online_now??0);setText('dmActiveFive',d.active_5m??0);setText('dmTodayVisitors',d.visitors_today??0);setText('dmTotalVisitors',d.total_visitors??0);renderRecent(d.recent||[]);setText('dmLiveUpdated','Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}))}catch(err){if(String(err?.message||'').toLowerCase().includes('admin')){try{sessionStorage.removeItem(OWNER_KEY)}catch(_){}document.getElementById('dmLiveVisitors')?.remove();document.documentElement.classList.remove('dm-owner-live')}else{setText('dmLiveUpdated','Reconnecting…')}}};
+  const loadStats=async()=>{const key=ownerKey();if(!key)return;try{const r=await fetch(ENDPOINT,{method:'POST',cache:'no-store',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'stats',adminKey:key})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d?.error||'stats unavailable');setText('dmLiveCount',d.online_now??0);setText('dmOnlineNow',d.online_now??0);setText('dmActiveFive',d.active_5m??0);setText('dmTodayVisitors',d.visitors_today??0);setText('dmTotalVisitors',d.total_visitors??0);renderRecent(d.recent||[]);setText('dmLiveUpdated','Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}))}catch(err){if(String(err?.message||'').toLowerCase().includes('admin')){clearOwnerKey();document.getElementById('dmLiveVisitors')?.remove();document.documentElement.classList.remove('dm-owner-live')}else{setText('dmLiveUpdated','Reconnecting…')}}};
 
   const start=async()=>{await ping();if(ownerKey()){addGui();loadStats()}};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
