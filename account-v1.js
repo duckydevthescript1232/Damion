@@ -126,7 +126,7 @@
       const a=document.createElement('a');a.className='btn dm-account-owner-button';a.href=ADMIN_PATH;a.textContent='Owner';box.appendChild(a);return;
     }
     if(customer){
-      const a=document.createElement('a');a.className='btn dm-account-open';a.href='/account';a.textContent='Account';box.appendChild(a);return;
+      const a=document.createElement('a');a.className='btn dm-account-open';a.href='/account';a.textContent='Account';a.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();location.assign('/account')});box.appendChild(a);return;
     }
     const login=document.createElement('button');login.type='button';login.className='btn dm-account-open';login.textContent='Log in';login.addEventListener('click',()=>open('login'));
     const register=document.createElement('button');register.type='button';register.className='btn primary dm-account-register-open';register.textContent='Register';register.addEventListener('click',()=>open('register'));
@@ -185,6 +185,7 @@
   document.addEventListener('click',e=>{
     const a=e.target.closest?.('a[href]');if(!a||isAdminPage())return;
     let path='';try{path=new URL(a.href,location.href).pathname}catch(_){return}
+    if(path==='/account'){e.preventDefault();e.stopImmediatePropagation();location.assign('/account');return}
     if(path!=='/browse-services')return;
     if(customer||owner||read(CUSTOMER_KEY)||read(OWNER_KEY))return;
     e.preventDefault();e.stopImmediatePropagation();writeSession(AFTER_AUTH_KEY,'/browse-services');open('login');setStatus('Log in or register first to browse services.');
