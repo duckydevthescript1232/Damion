@@ -75,7 +75,7 @@
 
   async function poll(){
     if(polling||document.hidden)return;polling=true;
-    try{const d=await post({action:'live_state',visitor_id:visitorId(),customerSession:customerSession()});if(d.force_logout){forceCustomerLogout();return}if(d.broadcast)showBroadcast(d.broadcast);if(d.hint)showHint(d.hint);renderEvent(d.event||null);renderPoll(d.poll||null);if(d.user)showWarning(d.user)}catch(_){}finally{polling=false}
+    try{const d=await post({action:'live_state',visitor_id:visitorId(),customerSession:customerSession()});if(d.force_logout){forceCustomerLogout();return}if(d.broadcast)showBroadcast(d.broadcast);if(d.hint)showHint(d.hint);document.getElementById('dmLiveEvent')?.remove();renderPoll(d.poll||null);if(d.user)showWarning(d.user)}catch(_){}finally{polling=false}
   }
   const start=()=>{ensureLayer();ensureComposer();poll()};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();document.addEventListener('dm:pagechange',()=>setTimeout(()=>{ensureComposer();poll()},0));document.addEventListener('visibilitychange',()=>{if(!document.hidden){ensureComposer();poll()}});window.addEventListener('storage',e=>{if(e.key===OWNER_KEY)ensureComposer()});setInterval(()=>{ensureComposer();poll()},2000);setInterval(updateEventClock,1000);
 })();
