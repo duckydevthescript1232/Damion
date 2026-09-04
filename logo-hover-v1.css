@@ -1,0 +1,20 @@
+/* Smooth Damiønmusic logo hover */
+.brand img,.footer-brand img,.dm-side-brand img{
+  transform-origin:center;
+  transition:transform .28s cubic-bezier(.2,.75,.25,1),filter .28s ease,box-shadow .28s ease;
+  will-change:transform;
+}
+@media (hover:hover) and (pointer:fine){
+  .brand:hover img,.footer-brand:hover img,.dm-side-brand:hover img{
+    transform:translateY(-2px) scale(1.07) rotate(-2deg);
+    filter:brightness(1.12) saturate(1.08) drop-shadow(0 7px 14px rgba(239,63,85,.18));
+  }
+}
+.brand:active img{transform:scale(.97)}
+.brand:focus-visible img{
+  transform:translateY(-1px) scale(1.05);
+  filter:brightness(1.1) drop-shadow(0 6px 12px rgba(239,63,85,.16));
+}
+@media (prefers-reduced-motion:reduce){
+  .brand img,.footer-brand img,.dm-side-brand img{transition:none!important}
+}
