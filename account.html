@@ -7,7 +7,7 @@
   <title>Account — Damiønmusic</title>
   <meta name="description" content="Manage your Damiønmusic customer account, language and sign-in settings.">
   <link rel="stylesheet" href="/styles.css?v=20260829-4">
-  <link rel="stylesheet" href="/account-page.css?v=20260904-1">
+  <link rel="stylesheet" href="/account-page.css?v=20260904-2">
   <script src="/auth-gate.js?v=20260904-1" data-dm-auth-gate="1"></script>
 </head>
 <body class="dm-account-page">
@@ -79,6 +79,35 @@
       </div>
     </section>
 
+    <section class="dm-account-panel dm-account-referral" id="dmReferralPanel">
+      <div class="dm-account-panel-head">
+        <div>
+          <small data-copy="referralLabel">Referral program</small>
+          <h2 data-copy="referralTitle">Invite friends. Earn rewards.</h2>
+        </div>
+        <span class="dm-referral-code" id="dmReferralCode">—</span>
+      </div>
+      <p class="dm-account-panel-copy" data-copy="referralCopy">Share your personal link. A new customer gets 10% off their first order, and after their first paid order you receive a personal €5 promo reward.</p>
+      <div class="dm-referral-linkbox">
+        <label for="dmReferralLink" data-copy="referralLinkLabel">Your referral link</label>
+        <div>
+          <input id="dmReferralLink" type="text" readonly value="Loading…">
+          <button type="button" id="dmCopyReferral" data-copy="copy">Copy</button>
+          <button type="button" id="dmShareReferral" data-copy="share">Share</button>
+        </div>
+      </div>
+      <div class="dm-referral-stats">
+        <div><strong id="dmReferralClicks">0</strong><span data-copy="clicks">Clicks</span></div>
+        <div><strong id="dmReferralSignups">0</strong><span data-copy="signups">Signups</span></div>
+        <div><strong id="dmReferralPaid">0</strong><span data-copy="paidReferrals">Paid referrals</span></div>
+        <div><strong id="dmReferralEarned">€0.00</strong><span data-copy="rewardsEarned">Rewards earned</span></div>
+      </div>
+      <div class="dm-referral-rewards">
+        <div class="dm-referral-rewards-head"><b data-copy="rewardCodes">Your reward promo codes</b><span data-copy="rewardCodesHint">Created after successful referrals</span></div>
+        <div id="dmReferralRewards" class="dm-referral-reward-list"><span class="dm-referral-empty" data-copy="noRewards">No rewards yet.</span></div>
+      </div>
+    </section>
+
     <section class="dm-account-panel dm-account-danger">
       <div class="dm-account-panel-head">
         <div>
@@ -112,6 +141,6 @@
   <div class="dm-account-feedback" id="dmAccountFeedback" aria-live="polite"></div>
 </main>
 
-<script src="/account-page.js?v=20260904-1"></script>
+<script src="/account-page.js?v=20260904-2"></script>
 </body>
 </html>
