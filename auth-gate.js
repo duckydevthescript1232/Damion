@@ -81,6 +81,7 @@
   };
 
   const ensureLanguageFinal=()=>ensureScript('data-dm-language-final','/language-final-v3.js?v=20260829-2');
+  const ensureReferral=()=>ensureScript('data-dm-referral','/referral-v1.js?v=20260904-1','__dmReferralV1');
   const ensurePresence=()=>ensureScript('data-dm-presence','/presence.js?v=20260829-7','__dmPresenceLoaded');
 
   const ensureBroadcast=()=>{
@@ -119,6 +120,7 @@
       ensureUnifiedTheme();
       ensurePerformance();
       ensureLanguageBase();
+      ensureReferral();
       ensureServiceControls();
       ensureNavCleanup();
       ensureCartDrawerFix();
