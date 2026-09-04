@@ -100,7 +100,8 @@
     const btn=form.querySelector('button[type="submit"]');if(btn)btn.disabled=true;
     setStatus(action==='register'?'Creating account…':'Logging in…');
     try{
-      const out=await authApi(action,{email,password});
+      const out=await authApi(action,{email,password,referral_code:action==='register'?read('damion_referral_code'):''});
+      if(action==='register')write('damion_referral_code','');
       form.reset();setStatus('');finishCustomer(out,email);
     }catch(err){setStatus(err?.message||'Could not continue.',true)}finally{if(btn)btn.disabled=false}
   };
