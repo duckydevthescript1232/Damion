@@ -45,7 +45,7 @@
         </form>
       </section>
 
-      <aside class="checkout-card checkout-summary-card"><div class="checkout-summary-title"><div><span class="checkout-eyebrow">Your order</span><h2>Order summary</h2></div><a href="/services" aria-label="Edit order">Edit</a></div><div id="checkoutItems" class="checkout-items"></div><div class="checkout-total-row"><span>Total</span><strong id="checkoutPageTotal">€0.00</strong></div><div class="checkout-summary-note"><span>✓</span><p><b>Private order room</b><br>Track progress and message support after payment.</p></div><div class="checkout-summary-note"><span>✉</span><p><b>Confirmation + receipt</b><br>The email used at checkout receives the paid receipt and order number automatically.</p></div><div class="checkout-summary-note"><span>✓</span><p><b>iDEAL via Mollie</b><br>Your payment is confirmed server-side before the order becomes Paid.</p></div></aside>
+      <aside class="checkout-card checkout-summary-card"><div class="checkout-summary-title"><div><span class="checkout-eyebrow">Your order</span><h2>Order summary</h2></div><a href="/services" aria-label="Edit order">Edit</a></div><div id="checkoutItems" class="checkout-items"></div><div class="checkout-promo"><label for="promoCode">Promo or reward code</label><div><input id="promoCode" maxlength="40" autocomplete="off" placeholder="Enter code"><button id="applyPromo" type="button">Apply</button></div><small id="promoStatus" aria-live="polite"></small></div><div class="checkout-price-row"><span>Subtotal</span><strong id="checkoutSubtotal">€0.00</strong></div><div class="checkout-price-row checkout-discount-row" id="checkoutDiscountRow" hidden><span id="checkoutDiscountLabel">Discount</span><strong id="checkoutDiscount">−€0.00</strong></div><div class="checkout-total-row"><span>Total</span><strong id="checkoutPageTotal">€0.00</strong></div><div class="checkout-summary-note"><span>✓</span><p><b>Private order room</b><br>Track progress and message support after payment.</p></div><div class="checkout-summary-note"><span>✉</span><p><b>Confirmation + receipt</b><br>The email used at checkout receives the paid receipt and order number automatically.</p></div><div class="checkout-summary-note"><span>✓</span><p><b>iDEAL via Mollie</b><br>Your payment is confirmed server-side before the order becomes Paid.</p></div></aside>
     </div>
   </main>
 
@@ -54,7 +54,7 @@
   <script src="/language-extra-v2.js?v=20260829-1" defer data-dm-language-extra="1"></script>
   <script src="/language-final-v3.js?v=20260829-1" defer data-dm-language-final="1"></script>
   <script src="/safari-compat-v1.js?v=20260829-1" defer></script>
-  <script src="/checkout.js?v=20260829-12"></script>
+  <script src="/checkout.js?v=20260904-1"></script>
   <script src="/checkout-hardening-v1.js?v=20260829-1"></script>
 </body>
 </html>
