@@ -56,8 +56,8 @@
 
   const ensureAccountUI=()=>{
     if(isAdminPage())return;
-    ensureStyle('data-dm-account-ui','/account-v1.css?v=20260904-3');
-    ensureScript('data-dm-account-ui','/account-v1.js?v=20260904-3','__dmAccountV1');
+    ensureStyle('data-dm-account-ui','/account-v1.css?v=20260904-4');
+    ensureScript('data-dm-account-ui','/account-v1.js?v=20260904-4','__dmAccountV1');
   };
 
   const ensureInteraction=()=>{
@@ -78,7 +78,7 @@
   const ensureLanguageBase=()=>{
     ensureStyle('data-dm-language-base','/language-v1.css?v=20260829-3');
     if(window.__dmLanguageV1||has('script[data-dm-language-base]'))return;
-    const s=document.createElement('script');s.src='/language-v1.js?v=20260829-3';s.async=false;s.dataset.dmLanguageBase='1';document.head.appendChild(s);
+    const s=document.createElement('script');s.src='/language-v1.js?v=20260904-4';s.async=false;s.dataset.dmLanguageBase='1';document.head.appendChild(s);
   };
 
   const ensureLanguageFinal=()=>ensureScript('data-dm-language-final','/language-final-v3.js?v=20260829-2');
