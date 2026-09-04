@@ -55,8 +55,8 @@
 
   const ensureAccountUI=()=>{
     if(isAdminPage())return;
-    ensureStyle('data-dm-account-ui','/account-v1.css?v=20260829-4');
-    ensureScript('data-dm-account-ui','/account-v1.js?v=20260829-4','__dmAccountV1');
+    ensureStyle('data-dm-account-ui','/account-v1.css?v=20260904-2');
+    ensureScript('data-dm-account-ui','/account-v1.js?v=20260904-2','__dmAccountV1');
   };
 
   const ensureInteraction=()=>{
