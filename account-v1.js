@@ -125,7 +125,7 @@
       const a=document.createElement('a');a.className='btn dm-account-owner-button';a.href=ADMIN_PATH;a.textContent='Owner';box.appendChild(a);return;
     }
     if(customer){
-      const b=document.createElement('button');b.type='button';b.className='btn dm-account-open';b.textContent='Account';b.addEventListener('click',()=>open('login'));box.appendChild(b);return;
+      const a=document.createElement('a');a.className='btn dm-account-open';a.href='/account';a.textContent='Account';box.appendChild(a);return;
     }
     const login=document.createElement('button');login.type='button';login.className='btn dm-account-open';login.textContent='Log in';login.addEventListener('click',()=>open('login'));
     const register=document.createElement('button');register.type='button';register.className='btn primary dm-account-register-open';register.textContent='Register';register.addEventListener('click',()=>open('register'));
@@ -141,8 +141,7 @@
       return;
     }
     if(customer){
-      section.innerHTML=`<div class="dm-side-section-label">Account</div><div class="dm-side-links"><button class="dm-side-link" id="dmAccountSideManage" type="button"><span class="dm-side-link-icon">◎</span><span class="dm-side-link-copy"><b>${String(customer.email||'Customer account')}</b><small>Signed in as customer</small></span><span class="dm-side-link-arrow">›</span></button></div>`;
-      section.querySelector('#dmAccountSideManage')?.addEventListener('click',()=>open('login'));
+      section.innerHTML=`<div class="dm-side-section-label">Account</div><div class="dm-side-links"><a class="dm-side-link" id="dmAccountSideManage" href="/account"><span class="dm-side-link-icon">◎</span><span class="dm-side-link-copy"><b>${String(customer.email||'Customer account')}</b><small>Manage account settings</small></span><span class="dm-side-link-arrow">›</span></a></div>`;
     }else{
       section.innerHTML='<div class="dm-side-section-label">Account</div><div class="dm-side-links"><button class="dm-side-link" id="dmAccountSideLogin" type="button"><span class="dm-side-link-icon">◎</span><span class="dm-side-link-copy"><b>Log in</b><small>Existing customer</small></span><span class="dm-side-link-arrow">›</span></button><button class="dm-side-link dm-side-primary" id="dmAccountSideRegister" type="button"><span class="dm-side-link-icon">＋</span><span class="dm-side-link-copy"><b>Register</b><small>Create a customer account</small></span><span class="dm-side-link-arrow">›</span></button></div>';
       section.querySelector('#dmAccountSideLogin')?.addEventListener('click',()=>open('login'));
