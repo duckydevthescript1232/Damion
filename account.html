@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#08090a">
+  <title>Account — Damiønmusic</title>
+  <meta name="description" content="Manage your Damiønmusic customer account, language and sign-in settings.">
+  <link rel="stylesheet" href="/styles.css?v=20260829-4">
+  <link rel="stylesheet" href="/account-page.css?v=20260904-1">
+  <script src="/auth-gate.js?v=20260904-1" data-dm-auth-gate="1"></script>
+</head>
+<body class="dm-account-page">
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="/">
+      <img src="/assets/logo.svg" alt="Damiønmusic logo">
+      <span class="brand-name">Damiønmusic</span>
+    </a>
+    <div class="dm-account-page-title" data-copy="headerTitle">Account</div>
+    <div class="nav-actions">
+      <a class="btn" href="/" data-copy="backHome">Back home</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap dm-account-shell" id="dmAccountPage" data-dm-no-translate>
+  <section class="dm-account-page-hero">
+    <div>
+      <span class="kicker" data-copy="kicker">Customer account</span>
+      <h1 data-copy="title">Your account.</h1>
+      <p data-copy="subtitle">Manage your sign-in, language and account settings in one place.</p>
+    </div>
+    <div class="dm-account-identity" id="dmAccountIdentity">
+      <span class="dm-account-avatar" aria-hidden="true">D</span>
+      <div>
+        <small data-copy="signedInAs">Signed in as</small>
+        <strong id="dmAccountEmail">Checking…</strong>
+      </div>
+    </div>
+  </section>
+
+  <div class="dm-account-grid">
+    <section class="dm-account-panel">
+      <div class="dm-account-panel-head">
+        <div>
+          <small data-copy="profileLabel">Profile</small>
+          <h2 data-copy="profileTitle">Account access</h2>
+        </div>
+        <span class="dm-account-status-pill" id="dmAccountStatePill">Checking</span>
+      </div>
+      <p class="dm-account-panel-copy" data-copy="profileCopy">Your customer login is used for services and your private order experience.</p>
+      <div class="dm-account-row">
+        <div>
+          <b data-copy="emailLabel">Email address</b>
+          <span id="dmAccountEmailRow">—</span>
+        </div>
+      </div>
+      <button class="dm-account-action" id="dmLogoutBtn" type="button">
+        <span>
+          <b data-copy="logout">Log out</b>
+          <small data-copy="logoutHelp">Sign out on this device.</small>
+        </span>
+        <span aria-hidden="true">→</span>
+      </button>
+    </section>
+
+    <section class="dm-account-panel">
+      <div class="dm-account-panel-head">
+        <div>
+          <small data-copy="languageLabel">Language</small>
+          <h2 data-copy="languageTitle">Choose your language</h2>
+        </div>
+      </div>
+      <p class="dm-account-panel-copy" data-copy="languageCopy">This changes the language preference across Damiønmusic.</p>
+      <div class="dm-account-language" role="group" aria-label="Language">
+        <button type="button" data-account-lang="en"><span>EN</span><small>English</small></button>
+        <button type="button" data-account-lang="nl"><span>NL</span><small>Nederlands</small></button>
+      </div>
+    </section>
+
+    <section class="dm-account-panel dm-account-danger">
+      <div class="dm-account-panel-head">
+        <div>
+          <small data-copy="dangerLabel">Danger zone</small>
+          <h2 data-copy="deleteTitle">Delete account</h2>
+        </div>
+      </div>
+      <p class="dm-account-panel-copy" data-copy="deleteCopy">Permanently remove your customer login. This cannot be undone.</p>
+      <button class="dm-account-delete" id="dmDeleteStart" type="button" data-copy="deleteButton">Delete account</button>
+      <div class="dm-account-delete-confirm" id="dmDeleteConfirm" hidden>
+        <b data-copy="deleteConfirmTitle">Delete this account permanently?</b>
+        <p data-copy="deleteConfirmCopy">Your login will be removed and you will be signed out everywhere on this site.</p>
+        <div>
+          <button type="button" class="dm-account-cancel" id="dmDeleteCancel" data-copy="cancel">Cancel</button>
+          <button type="button" class="dm-account-delete-final" id="dmDeleteFinal" data-copy="deleteFinal">Delete permanently</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="dm-account-signedout" id="dmSignedOutState" hidden>
+    <span class="kicker" data-copy="signedOutKicker">Account required</span>
+    <h2 data-copy="signedOutTitle">You are not logged in.</h2>
+    <p data-copy="signedOutCopy">Log in or create a customer account to manage these settings.</p>
+    <div>
+      <button class="btn primary" type="button" id="dmAccountLoginPage" data-copy="login">Log in</button>
+      <button class="btn" type="button" id="dmAccountRegisterPage" data-copy="register">Register</button>
+    </div>
+  </section>
+
+  <div class="dm-account-feedback" id="dmAccountFeedback" aria-live="polite"></div>
+</main>
+
+<script src="/account-page.js?v=20260904-1"></script>
+</body>
+</html>
