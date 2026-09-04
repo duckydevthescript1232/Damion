@@ -5,22 +5,9 @@
 
   const getLang=()=>{try{return (localStorage.getItem('damion_lang')||window.dmGetLanguage?.()||document.documentElement.lang||'en').toLowerCase().startsWith('nl')?'nl':'en'}catch(_){return'en'}};
 
-  const ensureLangSwitcher=()=>{
-    if(document.querySelector('.dm-lang-switch'))return;
-    const host=document.querySelector('.nav-actions')||document.querySelector('.checkout-topbar')||document.querySelector('header .nav')||document.querySelector('header');
-    if(!host)return;
-    const box=document.createElement('div');
-    box.className='dm-lang-switch';
-    box.dataset.dmNoTranslate='';
-    box.setAttribute('aria-label','Language');
-    box.innerHTML='<button type="button" data-lang="en">EN</button><button type="button" data-lang="nl">NL</button>';
-    host.appendChild(box);
-  };
+  const ensureLangSwitcher=()=>document.querySelectorAll('.dm-lang-switch').forEach(el=>el.remove());
 
-  const updateSwitcher=()=>{
-    const lang=getLang();
-    document.querySelectorAll('.dm-lang-switch button[data-lang]').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.lang===lang)));
-  };
+  const updateSwitcher=()=>document.querySelectorAll('.dm-lang-switch').forEach(el=>el.remove());
 
   const applyInstantLanguage=next=>{
     if(next!=='en'&&next!=='nl')return;
