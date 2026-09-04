@@ -1,4 +1,4 @@
-(()=>{if(!window.__dmAuthGate&&!document.querySelector('script[data-dm-auth-gate]')){const s=document.createElement('script');s.src='/auth-gate.js?v=20260904-5';s.async=false;s.dataset.dmAuthGate='1';document.head.appendChild(s)}})();
+(()=>{if(!window.__dmAuthGate&&!document.querySelector('script[data-dm-auth-gate]')){const s=document.createElement('script');s.src='/auth-gate.js?v=20260905-1';s.async=false;s.dataset.dmAuthGate='1';document.head.appendChild(s)}})();
 
 const REAL_AUDIO = "/assets/preview/damionmusic-preview.mp3?v=20260828-1";
 
