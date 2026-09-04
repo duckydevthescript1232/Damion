@@ -44,6 +44,7 @@
 
   const ensureUnifiedTheme=()=>ensureStyle('data-dm-unified-theme','/theme-unify-v2.css?v=20260829-1');
   const ensurePerformance=()=>ensureStyle('data-dm-performance','/performance-v1.css?v=20260830-1');
+  const ensureLogoHover=()=>ensureStyle('data-dm-logo-hover','/logo-hover-v1.css?v=20260904-1');
 
   const ensureSiteShell=()=>{
     if(isAdminPage()||has('.dm-sidepanel')||!has('.nav-actions')||[...document.scripts].some(s=>String(s.src||'').includes('/site-v3.js')))return;
@@ -55,8 +56,8 @@
 
   const ensureAccountUI=()=>{
     if(isAdminPage())return;
-    ensureStyle('data-dm-account-ui','/account-v1.css?v=20260904-2');
-    ensureScript('data-dm-account-ui','/account-v1.js?v=20260904-2','__dmAccountV1');
+    ensureStyle('data-dm-account-ui','/account-v1.css?v=20260904-3');
+    ensureScript('data-dm-account-ui','/account-v1.js?v=20260904-3','__dmAccountV1');
   };
 
   const ensureInteraction=()=>{
@@ -81,7 +82,6 @@
   };
 
   const ensureLanguageFinal=()=>ensureScript('data-dm-language-final','/language-final-v3.js?v=20260829-2');
-  const ensureReferral=()=>ensureScript('data-dm-referral','/referral-v1.js?v=20260904-1','__dmReferralV1');
   const ensurePresence=()=>ensureScript('data-dm-presence','/presence.js?v=20260829-7','__dmPresenceLoaded');
 
   const ensureBroadcast=()=>{
@@ -106,6 +106,7 @@
   ensureOrderProxy();
   ensureUnifiedTheme();
   ensurePerformance();
+  ensureLogoHover();
   clearLocks();
 
   let refreshQueued=false;
@@ -119,8 +120,8 @@
       removeMotionSettings();
       ensureUnifiedTheme();
       ensurePerformance();
+      ensureLogoHover();
       ensureLanguageBase();
-      ensureReferral();
       ensureServiceControls();
       ensureNavCleanup();
       ensureCartDrawerFix();
