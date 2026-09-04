@@ -134,6 +134,7 @@
       ensureCartDrawerFix();
       ensurePresence();
       ensureBroadcast();
+      ensureEvents();
       ensureMaxUI();
       ensureInteraction();
       ensureUISounds();
