@@ -1,9 +1,12 @@
 const CART_KEY = "damion_cart";
 const DETAILS_KEY = "damion_checkout_details";
 const MOLLIE_CREATE_API = "/api/mollie-create";
+const AUTH_API = "https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damion-site-auth";
+const CUSTOMER_KEY = "damion_customer_session";
 const ORDER_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6Ind1dGxoY2Vxa2lvc2hlcGZieWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMDAxMDUsImV4cCI6MjEwMTU3NjEwNX0.Ad9wROEhZ2uKxKx9H5AHqCCmFa0nTezrBHkAn-Zwyws";
 
 var checkoutCart = [];
+var promoQuote = null;
 var $ = function(id){ return document.getElementById(id); };
 var eur = function(n){ return "€" + Number(n || 0).toFixed(2); };
 var escapeHtml = function(value){ return String(value == null ? "" : value).replace(/[&<>'"]/g,function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]; }); };
@@ -31,7 +34,7 @@ function renderOrder(){
     var addons=(item.addons && item.addons.length)?" · "+item.addons.map(escapeHtml).join(", "):"";
     return '<div class="checkout-item"><div><b>'+escapeHtml(item.name||"Music service")+'</b><small>'+escapeHtml(item.package||"Selected package")+addons+'</small></div><strong>'+eur(item.price)+'</strong></div>';
   }).join("");
-  if($("checkoutPageTotal"))$("checkoutPageTotal").textContent=eur(orderTotal());
+  renderTotals();
 }
 function saveDetails(){
   var data={first:$("coFirst")?$("coFirst").value:"",last:$("coLast")?$("coLast").value:"",email:$("coEmail")?$("coEmail").value:"",artist:$("coArtist")?$("coArtist").value:"",country:$("coCountry")?$("coCountry").value:"",project:$("coProject")?$("coProject").value:"",delivery:$("coDelivery")?$("coDelivery").value:"Audio files (WAV/MP3/Stems)",notes:$("coNotes")?$("coNotes").value:""};
@@ -45,6 +48,38 @@ function restoreDetails(){
   }catch(_){}
 }
 function setMessage(text,type){var el=$("checkoutMessage");if(!el)return;el.textContent=text||"";el.className=("checkout-message "+(type||"")).trim();}
+function setPromoStatus(text,type){var el=$("promoStatus");if(!el)return;el.textContent=text||"";el.className=(type||"").trim();}
+function readCustomerSession(){try{return localStorage.getItem(CUSTOMER_KEY)||"";}catch(_){return "";}}
+function renderTotals(){
+  var subtotal=orderTotal();
+  var discount=(promoQuote&&Math.abs(Number(promoQuote.subtotal||0)-subtotal)<0.01)?Number(promoQuote.discount||0):0;
+  var total=Math.max(0,subtotal-discount);
+  if($("checkoutSubtotal"))$("checkoutSubtotal").textContent=eur(subtotal);
+  if($("checkoutPageTotal"))$("checkoutPageTotal").textContent=eur(total);
+  var row=$("checkoutDiscountRow");
+  if(row){row.hidden=!(discount>0);}
+  if($("checkoutDiscount"))$("checkoutDiscount").textContent="−"+eur(discount);
+  if($("checkoutDiscountLabel")&&promoQuote){
+    $("checkoutDiscountLabel").textContent=promoQuote.source==="referral"?tr("Referral discount","Referralkorting"):tr("Promo discount","Promokorting");
+  }
+}
+async function refreshDiscountQuote(showError){
+  if(!checkoutCart.length)return;
+  var code=$("promoCode")?$("promoCode").value.trim().toUpperCase():"";
+  if($("promoCode"))$("promoCode").value=code;
+  try{
+    var response=await fetch(AUTH_API,{method:"POST",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"promo_quote",subtotal:orderTotal(),promo_code:code,session_token:readCustomerSession(),email:$("coEmail")?$("coEmail").value.trim():""})});
+    var result={};try{result=await response.json();}catch(_){}
+    if(!response.ok)throw new Error(result.error||tr("This promo code could not be applied.","Deze promotiecode kon niet worden toegepast."));
+    promoQuote=result;renderTotals();
+    if(result.source==="promo")setPromoStatus((result.promo_code||code)+" · −"+eur(result.discount), "ok");
+    else if(result.source==="referral")setPromoStatus(code?tr("Your referral discount is better, so it was applied instead.","Je referralkorting is hoger en is daarom toegepast."):tr("Referral welcome discount applied automatically.","Referralkorting is automatisch toegepast."),"ok");
+    else setPromoStatus(code?tr("No discount was applied.","Er is geen korting toegepast."):"","");
+  }catch(err){
+    promoQuote=null;renderTotals();
+    if(showError||code)setPromoStatus((err&&err.message)||tr("Promo code is invalid.","Promocode is ongeldig."),"error");
+  }
+}
 function safeCartForServer(){return checkoutCart.map(function(item){return {id:String(item.id||""),package:String(item.package||""),addons:Array.isArray(item.addons)?item.addons.slice(0,20):[]};});}
 
 async function startIdealPayment(){
@@ -57,7 +92,7 @@ async function startIdealPayment(){
   try{
     var response=await fetch(MOLLIE_CREATE_API,{
       method:"POST",cache:"no-store",headers:{"Content-Type":"application/json","apikey":ORDER_ANON,"Authorization":"Bearer "+ORDER_ANON,"Cache-Control":"no-cache"},
-      body:JSON.stringify({email:d.email,first_name:d.first,last_name:d.last,artist_name:d.artist,country:d.country,project_name:d.project,delivery_format:d.delivery,notes:d.notes,cart:safeCartForServer()})
+      body:JSON.stringify({email:d.email,first_name:d.first,last_name:d.last,artist_name:d.artist,country:d.country,project_name:d.project,delivery_format:d.delivery,notes:d.notes,cart:safeCartForServer(),promo_code:$("promoCode")?$("promoCode").value.trim().toUpperCase():"",customer_session:readCustomerSession()})
     });
     var result={};try{result=await response.json();}catch(_){}
     if(!response.ok)throw new Error(result.error||tr("Could not start iDEAL payment.","iDEAL-betaling kon niet worden gestart."));
@@ -78,5 +113,9 @@ async function startIdealPayment(){
 window.addEventListener("DOMContentLoaded",function(){
   populateCountries();readCart();renderOrder();restoreDetails();
   var form=$("checkoutPageForm");if(form)form.addEventListener("submit",function(e){e.preventDefault();startIdealPayment();});
+  var apply=$("applyPromo");if(apply)apply.addEventListener("click",function(){refreshDiscountQuote(true);});
+  var promo=$("promoCode");if(promo)promo.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();refreshDiscountQuote(true);}});
+  var email=$("coEmail");if(email)email.addEventListener("change",function(){if($("promoCode")&&$("promoCode").value.trim())refreshDiscountQuote(false);});
+  setTimeout(function(){refreshDiscountQuote(false);},120);
 });
-document.addEventListener("dm:languagechange",function(){renderOrder();});
+document.addEventListener("dm:languagechange",function(){renderOrder();refreshDiscountQuote(false);});
