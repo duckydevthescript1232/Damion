@@ -1,15 +1,2 @@
-/* Damiønmusic homepage boot sequence — fast and fail-safe */
-.dm-boot{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;overflow:hidden;background:#020203;color:#fff;opacity:1;visibility:visible;transition:opacity .22s ease,visibility .22s ease;animation:dmBootFailsafe 1.45s ease forwards}
-.dm-boot:before{content:"";position:absolute;inset:-28%;background:radial-gradient(circle at 62% 44%,rgba(118,6,28,.18),transparent 33%),radial-gradient(circle at 22% 68%,rgba(62,0,15,.13),transparent 29%),linear-gradient(135deg,#020203 0%,#050204 50%,#020203 100%);animation:dmBootAura 5.4s ease-in-out infinite alternate}
-.dm-boot:after{content:"";position:absolute;inset:0;opacity:.075;background:repeating-linear-gradient(90deg,transparent 0 104px,rgba(172,20,45,.10) 104px 105px),repeating-linear-gradient(0deg,transparent 0 104px,rgba(255,255,255,.015) 104px 105px);mask-image:linear-gradient(to bottom,transparent,#000 26%,#000 74%,transparent);pointer-events:none}
-.dm-boot.is-out{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
-.dm-boot-card{position:relative;z-index:2;width:min(520px,calc(100% - 44px));padding:0;background:transparent}
-.dm-boot-brand{display:flex;align-items:center;gap:13px;margin-bottom:32px}.dm-boot-brand img{width:42px;height:42px;object-fit:contain;filter:brightness(.86)}.dm-boot-brand b{font-size:20px;letter-spacing:-.035em;color:#f4f4f5}.dm-boot-brand span{display:block;margin-top:3px;color:#5f6268;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
-.dm-boot-line{position:relative;height:1px;overflow:hidden;background:rgba(255,255,255,.055)}.dm-boot-line i{position:absolute;inset:0 auto 0 0;width:34%;background:linear-gradient(90deg,transparent,#a71935 38%,#d9445d 67%,transparent);box-shadow:0 0 15px rgba(174,20,49,.30);animation:dmBootScan 1.1s cubic-bezier(.45,0,.2,1) infinite}
-.dm-boot-copy{display:flex;justify-content:space-between;gap:18px;margin-top:14px;color:#5e6167;font-size:10px;font-weight:760;letter-spacing:.11em;text-transform:uppercase}.dm-boot-copy strong{color:#aeb0b5;font-weight:800}
-.dm-boot-word{margin-top:34px;font-size:clamp(32px,8vw,62px);line-height:.92;letter-spacing:-.065em;font-weight:900;color:#ececef}.dm-boot-word em{color:#c6344b;font-style:normal;text-shadow:0 0 20px rgba(138,17,39,.16)}
-@keyframes dmBootScan{from{transform:translateX(-120%)}to{transform:translateX(380%)}}
-@keyframes dmBootAura{from{transform:translate3d(-1.5%,0,0) scale(.985);opacity:.62}to{transform:translate3d(2%,1%,0) scale(1.025);opacity:1}}
-@keyframes dmBootFailsafe{0%,72%{opacity:1;visibility:visible;pointer-events:auto}100%{opacity:0;visibility:hidden;pointer-events:none}}
-@media(max-width:640px){.dm-boot-card{width:min(430px,calc(100% - 34px))}.dm-boot-copy{font-size:9px}.dm-boot-word{font-size:clamp(38px,14vw,58px)}}
-@media(prefers-reduced-motion:reduce){.dm-boot:before,.dm-boot-line i{animation:none}.dm-boot{transition:opacity .12s ease,visibility .12s ease;animation:dmBootFailsafe .75s ease forwards}}
+/* Loading screen removed. */
+.dm-boot{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
