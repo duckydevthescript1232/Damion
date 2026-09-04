@@ -25,7 +25,7 @@
     document.documentElement.classList.remove('dm-auth-locking','dm-page-leaving','dm-motion-ready','dm-native-view','dm-soft-nav-active','dm-ui-motion');
     document.body?.classList.remove('dm-auth-locking','dm-reduced');
     document.getElementById('dmAuthGate')?.remove();
-    document.querySelectorAll('.dm-boot').forEach(el=>el.remove());
+    document.querySelectorAll('.dm-boot,#dmAuthGate,[data-dm-loader],[data-loading-screen]').forEach(el=>el.remove());
   };
 
   const removeBuggyNav=()=>document.querySelectorAll('.navlinks').forEach(el=>el.remove());
@@ -57,8 +57,8 @@
 
   const ensureAccountUI=()=>{
     if(isAdminPage())return;
-    ensureStyle('data-dm-account-ui','/account-v1.css?v=20260904-4');
-    ensureScript('data-dm-account-ui','/account-v1.js?v=20260904-4','__dmAccountV1');
+    ensureStyle('data-dm-account-ui','/account-v1.css?v=20260905-1');
+    ensureScript('data-dm-account-ui','/account-v1.js?v=20260905-1','__dmAccountV1');
   };
 
   const ensureInteraction=()=>{
@@ -79,7 +79,7 @@
   const ensureLanguageBase=()=>{
     ensureStyle('data-dm-language-base','/language-v1.css?v=20260829-3');
     if(window.__dmLanguageV1||has('script[data-dm-language-base]'))return;
-    const s=document.createElement('script');s.src='/language-v1.js?v=20260904-4';s.async=false;s.dataset.dmLanguageBase='1';document.head.appendChild(s);
+    const s=document.createElement('script');s.src='/language-v1.js?v=20260905-1';s.async=false;s.dataset.dmLanguageBase='1';document.head.appendChild(s);
   };
 
   const ensureLanguageFinal=()=>ensureScript('data-dm-language-final','/language-final-v3.js?v=20260829-2');
@@ -92,7 +92,7 @@
 
   const ensureMaxUI=()=>{
     ensureStyle('data-dm-max-ui','/max-ui-v1.css?v=20260829-1');
-    ensureScript('data-dm-max-ui','/max-ui-v1.js?v=20260829-2','__dmMaxUIV1');
+    ensureScript('data-dm-max-ui','/max-ui-v1.js?v=20260905-1','__dmMaxUIV1');
   };
 
   const ensureNavCleanup=()=>ensureScript('data-dm-nav-cleanup','/nav-cleanup-v1.js?v=20260829-2','__dmNavCleanupV1');
