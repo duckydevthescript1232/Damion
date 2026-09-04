@@ -25,6 +25,7 @@
     document.documentElement.classList.remove('dm-auth-locking','dm-page-leaving','dm-motion-ready','dm-native-view','dm-soft-nav-active','dm-ui-motion');
     document.body?.classList.remove('dm-auth-locking','dm-reduced');
     document.getElementById('dmAuthGate')?.remove();
+    document.querySelectorAll('.dm-boot').forEach(el=>el.remove());
   };
 
   const removeBuggyNav=()=>document.querySelectorAll('.navlinks').forEach(el=>el.remove());
