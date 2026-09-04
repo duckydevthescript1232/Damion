@@ -87,7 +87,13 @@
 
   const ensureBroadcast=()=>{
     ensureStyle('data-dm-broadcast','/broadcast-v1.css?v=20260829-5');
-    ensureScript('data-dm-broadcast','/broadcast-v1.js?v=20260829-5','__dmBroadcastV5');
+    ensureScript('data-dm-broadcast','/broadcast-v1.js?v=20260905-2','__dmBroadcastV5');
+  };
+
+  const ensureEvents=()=>{
+    if(isAdminPage())return;
+    ensureStyle('data-dm-events','/events-v1.css?v=20260905-1');
+    ensureScript('data-dm-events','/events-v1.js?v=20260905-1','__dmEventsV1');
   };
 
   const ensureMaxUI=()=>{
