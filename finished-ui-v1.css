@@ -181,3 +181,141 @@ html.dm-ui-motion [data-reveal].is-visible,html.dm-ui-motion [data-stagger]>.is-
   html.dm-ui-motion [data-reveal],html.dm-ui-motion [data-stagger]>*{opacity:1;transform:none;transition:none}
   .home .studio-trailer-frame,.btn,.drawer,.modal,.faq-list summary::after{transition:none!important}
 }
+
+
+/* Premium Home + Services hover pass v2 */
+@media(hover:hover) and (pointer:fine){
+  .home .btn:hover,.services .btn:hover{
+    transform:translateY(-4px) scale(1.022);
+    box-shadow:0 14px 34px rgba(0,0,0,.26),0 0 0 1px rgba(255,255,255,.035);
+  }
+  .home .btn.primary:hover,.services .btn.primary:hover{
+    transform:translateY(-4px) scale(1.026);
+    box-shadow:0 16px 38px rgba(239,79,95,.28),0 0 0 5px rgba(239,79,95,.07),inset 0 1px 0 rgba(255,255,255,.18);
+  }
+
+  .trustbar-grid>div{
+    transition:background-color .34s ease,transform .38s var(--dm-ease),box-shadow .38s ease;
+  }
+  .trustbar-grid>div:hover{
+    z-index:1;
+    background:linear-gradient(180deg,rgba(239,79,95,.055),rgba(255,255,255,.012));
+    transform:translateY(-3px);
+    box-shadow:inset 0 -2px rgba(239,79,95,.22);
+  }
+  .trustbar-grid strong{transition:color .28s ease,transform .34s var(--dm-ease)}
+  .trustbar-grid>div:hover strong{color:#fff;transform:translateX(3px)}
+
+  .home-popular .service-row{
+    transition:transform .38s var(--dm-ease),background-color .34s ease,box-shadow .38s ease!important;
+  }
+  .home-popular .service-row:hover,.home-popular .service-row:focus-within{
+    transform:translateX(6px);
+    background:linear-gradient(90deg,rgba(239,79,95,.055),transparent 76%)!important;
+    box-shadow:inset 3px 0 rgba(239,79,95,.42)!important;
+  }
+  .home-popular .service-row .title b{
+    transition:color .28s ease,transform .36s var(--dm-ease);
+  }
+  .home-popular .service-row:hover .title b{color:#fff;transform:translateX(2px)}
+
+  .studio-note{
+    transition:transform .42s var(--dm-ease),border-color .34s ease,filter .34s ease;
+  }
+  .studio-note:hover{
+    transform:translateX(6px);
+    border-color:#ff6678;
+    filter:drop-shadow(0 12px 32px rgba(239,79,95,.08));
+  }
+  .studio-note::before{transition:transform .38s var(--dm-ease),box-shadow .38s ease}
+  .studio-note:hover::before{transform:scale(1.24);box-shadow:0 0 34px rgba(239,79,95,.58)}
+
+  .process-ledger li{
+    position:relative;
+    overflow:hidden;
+    transition:padding-left .36s var(--dm-ease),background-color .32s ease,box-shadow .36s ease,transform .36s var(--dm-ease);
+  }
+  .process-ledger li:hover{
+    padding-left:13px;
+    transform:translateX(3px);
+    background:linear-gradient(90deg,rgba(239,79,95,.075),transparent 66%);
+    box-shadow:inset 3px 0 rgba(239,79,95,.42);
+  }
+  .process-ledger li>span{transition:transform .34s var(--dm-ease),text-shadow .3s ease}
+  .process-ledger li:hover>span{transform:scale(1.08);text-shadow:0 0 16px rgba(239,79,95,.3)}
+
+  .proof-status{
+    transition:transform .38s var(--dm-ease),background-color .32s ease,border-color .32s ease;
+  }
+  .proof-status:hover{
+    transform:translateX(5px);
+    background:linear-gradient(90deg,rgba(239,79,95,.045),transparent);
+  }
+  .proof-status>span{transition:transform .4s var(--dm-ease),box-shadow .36s ease}
+  .proof-status:hover>span{transform:rotate(-8deg) scale(1.08);box-shadow:0 0 26px rgba(239,79,95,.12)}
+
+  .faq-list summary{
+    transition:color .28s ease,padding-left .36s var(--dm-ease),background-color .3s ease;
+  }
+  .faq-list details:hover summary{
+    padding-left:7px;
+    color:#fff;
+    background:linear-gradient(90deg,rgba(239,79,95,.04),transparent 70%);
+  }
+  .faq-list summary::after{
+    transition:transform .36s var(--dm-ease),background .3s ease,border-color .3s ease,box-shadow .32s ease;
+  }
+  .faq-list details:hover summary::after{
+    border-color:rgba(239,79,95,.38);
+    background:rgba(239,79,95,.09);
+    box-shadow:0 0 22px rgba(239,79,95,.08);
+    transform:rotate(90deg) scale(1.06);
+  }
+  .faq-list details[open] summary::after{transform:rotate(45deg) scale(1.06)}
+
+  .final-band{
+    transition:transform .48s var(--dm-ease),border-color .4s ease,box-shadow .48s ease,background .48s ease;
+  }
+  .final-band:hover{
+    transform:translateY(-5px);
+    border-color:rgba(239,79,95,.44);
+    background:linear-gradient(115deg,#141417,#0b0b0e);
+    box-shadow:0 26px 70px rgba(0,0,0,.28),0 0 48px rgba(239,79,95,.055);
+  }
+  .final-band::after{transition:transform .7s var(--dm-ease),opacity .5s ease}
+  .final-band:hover::after{transform:translate(-18px,18px) scale(1.08);opacity:1}
+
+  .service-proof-strip>div,.service-clarity article{
+    transition:transform .38s var(--dm-ease),background-color .32s ease,box-shadow .34s ease;
+  }
+  .service-proof-strip>div:hover,.service-clarity article:hover{
+    transform:translateY(-3px);
+    background:linear-gradient(180deg,rgba(239,79,95,.045),transparent);
+    box-shadow:inset 0 -2px rgba(239,79,95,.2);
+  }
+  .service-proof-strip span,.clarity-no{
+    transition:transform .34s var(--dm-ease),text-shadow .3s ease;
+  }
+  .service-proof-strip>div:hover span,.service-clarity article:hover .clarity-no{
+    transform:scale(1.08);
+    text-shadow:0 0 16px rgba(239,79,95,.26);
+  }
+
+  .services #start .service-row:hover,.services #start .service-row:focus-within{
+    border-color:rgba(239,79,95,.42)!important;
+    box-shadow:0 30px 70px rgba(0,0,0,.32),0 0 38px rgba(239,79,95,.055)!important;
+    transform:translateY(-7px) scale(1.008);
+  }
+  .services #start .service-row .title b{
+    transition:transform .36s var(--dm-ease),color .28s ease;
+  }
+  .services #start .service-row:hover .title b{transform:translateX(3px);color:#fff}
+
+  .text-link:hover{color:#fff;text-shadow:0 0 18px rgba(239,79,95,.10)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .trustbar-grid>div,.trustbar-grid strong,.home-popular .service-row,.home-popular .service-row .title b,.studio-note,.studio-note::before,.process-ledger li,.process-ledger li>span,.proof-status,.proof-status>span,.faq-list summary,.faq-list summary::after,.final-band,.final-band::after,.service-proof-strip>div,.service-clarity article,.service-proof-strip span,.clarity-no,.services #start .service-row,.services #start .service-row .title b{
+    transition:none!important;
+  }
+}
