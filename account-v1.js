@@ -2,7 +2,7 @@
   if(window.__dmAccountV4)return;
   window.__dmAccountV4=true;window.__dmAccountV3=true;window.__dmAccountV2=true;window.__dmAccountV1=true;
 
-  const AUTH_API='https://wutlhceqkioshepfbykf.supabase.co/functions/v1/damion-site-auth';
+  const AUTH_API='/api/auth';
   const CUSTOMER_KEY='damion_customer_session';
   const OWNER_KEY='damion_site_session';
   const AFTER_AUTH_KEY='dm_after_auth';
