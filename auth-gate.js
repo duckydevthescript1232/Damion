@@ -83,7 +83,7 @@
   };
 
   const ensureLanguageFinal=()=>ensureScript('data-dm-language-final','/language-final-v3.js?v=20260829-2');
-  const ensurePresence=()=>ensureScript('data-dm-presence','/presence.js?v=20260829-7','__dmPresenceLoaded');
+  const ensurePresence=()=>ensureScript('data-dm-presence','/presence.js?v=20260905-8','__dmPresenceLoaded');
 
   const ensureBroadcast=()=>{
     ensureStyle('data-dm-broadcast','/broadcast-v1.css?v=20260829-5');
